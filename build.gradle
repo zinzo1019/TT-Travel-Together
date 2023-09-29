@@ -85,6 +85,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation group: 'org.apache.commons', name: 'commons-lang3'
 
+    // Google Maps API
+    implementation 'com.google.maps:google-maps-services:0.15.0'
+
 }
 
 tasks.named('test') {
