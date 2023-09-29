@@ -20,4 +20,16 @@ public class CommunityController {
         return "community/travel_together";
     }
 
+    /** 여행에 대해 궁금해요 */
+    @GetMapping("/my_travel/upcoming_travel")
+    public String upcomingTravelPage() {
+        return "my_travel/upcoming_travel";
+    }
+
+    /** 여행에 대해 궁금해요 */
+    @GetMapping("/my_travel/interesting_travel")
+    public String interestingTravelPage() {
+        return "my_travel/interesting_travel";
+    }
+
 }

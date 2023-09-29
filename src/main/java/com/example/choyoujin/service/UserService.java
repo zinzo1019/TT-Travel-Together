@@ -3,9 +3,12 @@ package com.example.choyoujin.service;
 import com.example.choyoujin.dao.UserDao;
 import com.example.choyoujin.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -19,6 +22,19 @@ public class UserService {
     private FileService fileService;
     @Autowired
     private BCryptPasswordEncoder pwdEncoder;
+
+    public void getUserAndAddModel(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String email = ((UserDetails) principal).getUsername();
+            UserDto userDto = findUserByEmail(email);
+            model.addAttribute("user", userDto);
+        }
+    }
+
+    public UserDto findUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
+    }
 
     /** 사용자 저장 */
     public boolean saveUser(UserDto userDto, String role, int enabled, int imageId) {

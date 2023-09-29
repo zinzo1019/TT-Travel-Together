@@ -6,7 +6,6 @@
 <html>
 <meta charset="UTF-8">
 <title>여행에 대해 궁금해요!</title>
-
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -54,27 +53,7 @@
         margin-top: 5%;
         margin-left: 1%;
     }
-
-    .img-container {
-        display: flex;
-        gap: 30px;
-        justify-content: space-between; /* 이미지 사이 여백을 나누어 정렬 */
-    }
-
-    .img {
-        flex: 1;
-        margin-bottom: 10px;
-    }
-
-    /* 이미지 비율을 1:1로 설정 */
-    .img img {
-        width: 90%;
-        height: 300px;
-        aspect-ratio: 1 / 1;
-    }
-
 </style>
-
 <body>
 <div class="content">
     <div class="main-container">
