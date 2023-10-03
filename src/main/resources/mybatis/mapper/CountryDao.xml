@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.CountryDao">
+
+    <!--    모든 나라 가져오기-->
+    <select id="findAllCountries" resultType="com.example.choyoujin.dto.CountryDto">
+        select *
+        from country_city
+    </select>
+
+</mapper>

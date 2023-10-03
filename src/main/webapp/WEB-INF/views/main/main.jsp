@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="base_view/header.jsp" %>
-<%@ include file="base_view/navigation.jsp" %>
+<%@ include file="../base_view/header.jsp" %>
+<%@ include file="../base_view/navigation.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -73,6 +73,16 @@
         aspect-ratio: 1 / 1;
     }
 
+    .img p {
+        font-size: large;
+        font-weight: bold;
+    }
+
+    .img div {
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+    }
 </style>
 
 <body>
@@ -87,29 +97,54 @@
             <div class="img-container">
                 <div class="img">
                     <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <p>미국</p>
+                    <div>
+                        <p>미국</p>
+                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
+                    </div>
                 </div>
 
                 <div class="img">
                     <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <p>미국</p>
+                    <div>
+                        <p>미국</p>
+                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
+                    </div>
                 </div>
-            </div> <br>
+            </div>
+            <br>
 
             <div class="img-container">
                 <div class="img">
                     <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <p>미국</p>
+                    <div>
+                        <p>미국</p>
+                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
+                    </div>
                 </div>
 
                 <div class="img">
                     <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <p>미국</p>
+                    <div>
+                        <p>미국</p>
+                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    /** 이미지를 포함한 div 태그를 선택하면 페이지 이동 */
+    var imgElements = document.querySelectorAll('.img');
+    imgElements.forEach(function (element) {
+        element.addEventListener('click', function () {
+            var newPageUrl = '/'; // 페이지 이동 주소
+            window.location.href = newPageUrl; // 현재 창에서 이동
+        });
+    });
+</script>
+
 </body>
 </html>
-<%@ include file="base_view/footer.jsp" %>
+<%@ include file="../base_view/footer.jsp" %>

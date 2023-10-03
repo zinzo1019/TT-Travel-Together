@@ -2,6 +2,7 @@ package com.example.choyoujin.controller;
 
 import com.example.choyoujin.dto.UserDto;
 import com.example.choyoujin.service.UserService;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,14 @@ public class MainController {
     @GetMapping({"", "/", "ROLE_GUEST", "ROLE_USER"})
     public String redirectMainPage(Model model) {
         userService.getUserAndAddModel(model); // 사용자 정보 담기
-        return "main";
+        return "main/main";
+    }
+
+    /** 여행지 상세 페이지 */
+    @GetMapping( "/ROLE_GUEST/travel/product/detail")
+    public String countryDetailPage(@RequestParam("country") String country, Model model) {
+        userService.getUserAndAddModel(model); // 사용자 정보 담기
+        return "main/travel_product_detail";
     }
 
     /** 로그인 페이지 */

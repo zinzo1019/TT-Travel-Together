@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>여행에 대해 궁금해요.</title>
+<title>여행에 대해 궁금해요!</title>
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -116,29 +116,12 @@
 <body>
 <div class="content">
     <div class="main-container">
-        <div class="background-container">
-            <div class="country-container">
-                <label> 어느 나라가 궁금한가요? </label>
-                <select id="options" name="options">
-                    <c:forEach items="${options}" var="option">
-                        <option value="${option.country}-${option.city}">
-                                ${option.country} - ${option.city}</option>
-                    </c:forEach>
-                </select>
-            </div>
-            <div class="country-container" style="margin-top: 3%">
-                <label> 무엇이 궁금한가요? </label>
-                <input type="text" class="" placeholder="">
-            </div>
-        </div>
-
         <div class="travel-container">
             <div class="header-container">
                 <div style="flex: 1; display: flex; align-items: center;">
-                    <h1>여행에 대해 궁금해요!</h1>
+                    <h1>나의 '여행에 대해 궁금해요!'</h1>
                     <p style="margin-left: 2%">5건의 질문</p>
                 </div>
-                <button class="post-button" id="postButton">게시글 작성하기</button>
             </div>
 
             <ul class="post-list">
@@ -176,15 +159,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    /** 게시글 작성하기 버튼 클릭 -> 작성하기 페이지 */
-    var postButton = document.getElementById('postButton'); // 게시글 작성 버튼
-    postButton.addEventListener('click', function() {
-        window.location.href = 'curious/post';
-    });
-</script>
-
 </body>
 </html>
 <%@ include file="../base_view/footer.jsp" %>

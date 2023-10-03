@@ -57,10 +57,6 @@
 <body>
 <div class="content">
     <div class="main-container">
-        <div class="search-container">
-            <input type="text" class="search-box" placeholder="어디로 여행을 떠날까요?">
-            <button class="search-button">검색</button>
-        </div>
         <div class="travel-container">
             <h1>이 여행지에 관심 있어요.</h1>
 
