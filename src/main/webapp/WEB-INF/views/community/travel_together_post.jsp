@@ -285,7 +285,6 @@
             alert('모집 마감 날짜는 현재 날짜보다 이전일 수 없습니다.');
             return false;
         }
-
         else { // 게시글 저장
             var formData = new FormData();
             formData.append("country", countryValue); // 나라

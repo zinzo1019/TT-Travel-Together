@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.TravelProductDao">
+
+    <!--    모든 상품 가져오기-->
+    <select id="findAllProducts" resultType="com.example.choyoujin.dto.ProductDto">
+        select *
+        from travel_product
+    </select>
+
+    <!--    나라별 상품 가져오기-->
+    <select id="findAllProductsByCountryId" resultType="com.example.choyoujin.dto.ProductDto">
+        select tb_user_id as userId, *
+        from travel_product
+        where country_id = #{countryId}
+    </select>
+
+    <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려)-->
+    <select id="findAllProductsByCountryIdAndKeyword" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT tb_user_id AS userId, tp.*
+        FROM travel_product tp
+        WHERE (tp.name LIKE '%' || #{keyword} || '%'
+            OR tp.description LIKE '%' || #{keyword} || '%')
+            AND tp.country_id = #{countryId}
+        ORDER BY tp.like DESC
+    </select>
+
+    <!--    아이디로 상품 가져오기-->
+    <select id="findProductByProductId" resultType="com.example.choyoujin.dto.ProductDto">
+        select tp.tb_user_id as userId, tp.*, c.*
+        from travel_product tp
+                 left join country c
+                           on tp.country_id = c.id
+        where tp.id = #{productId}
+    </select>
+
+</mapper>

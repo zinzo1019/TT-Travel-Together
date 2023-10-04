@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <%@ include file="../base_view/header.jsp" %>
 <%@ include file="../base_view/navigation.jsp" %>
 
@@ -26,12 +28,13 @@
     .search-container {
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
+        width: 100%;
     }
 
     /* 검색창 스타일 */
     .search-box {
         margin-top: 5%;
-        padding: 10px;
+        padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
         width: 90%;
@@ -52,13 +55,12 @@
     /* 검색창 컨테이너 스타일 */
     .travel-container {
         margin-top: 5%;
-        margin-left: 1%;
     }
 
     .img-container {
         display: flex;
         gap: 30px;
-        justify-content: space-between; /* 이미지 사이 여백을 나누어 정렬 */
+        justify-content: flex-start; /* 왼쪽 정렬 (기본값) */
     }
 
     .img {
@@ -66,11 +68,9 @@
         margin-bottom: 10px;
     }
 
-    /* 이미지 비율을 1:1로 설정 */
     .img img {
-        width: 90%;
-        height: 300px;
-        aspect-ratio: 1 / 1;
+        width: 200px;
+        height: 200px;
     }
 
     .img p {
@@ -79,9 +79,54 @@
     }
 
     .img div {
-        display: flex;
-        justify-content: space-between;
         width: 90%;
+    }
+
+    .pagination {
+        margin-bottom: 5%;
+        text-align: center;
+        padding-right: 5%;
+        margin-top: 5%;
+    }
+
+    .pagination .page-item {
+        display: inline;
+        margin: 0 4px;
+    }
+
+    .pagination .page-link {
+        padding: 10px 15px;
+        border: 1px solid #ddd; /* Optional: Border style */
+        background-color: #f8f9fa; /* Optional: Background color */
+        color: #333; /* Optional: Text color */
+        border-radius: 4px; /* Optional: Rounded corners */
+    }
+
+    .pagination .page-link:hover {
+        background-color: #333; /* Optional: Hover background color */
+        color: #fff; /* Optional: Hover text color */
+        border-color: #333; /* Optional: Hover border color */
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #333; /* Optional: Active page background color */
+        color: #fff; /* Optional: Active page text color */
+        border-color: #333; /* Optional: Active page border color */
+    }
+
+    .pagination .page-link:focus {
+        outline: none; /* Optional: Remove focus outline */
+    }
+
+    /* Optional: Adjust the style of previous and next buttons */
+    .pagination .page-item:first-child .page-link {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+    }
+
+    .pagination .page-item:last-child .page-link {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
     }
 </style>
 
@@ -89,60 +134,81 @@
 <div class="content">
     <div class="main-container">
         <div class="search-container">
-            <input type="text" class="search-box" placeholder="어디로 여행을 떠날까요?">
-            <button class="search-button">검색</button>
+            <input type="text" class="search-box" id="searchInput" placeholder="어디로 여행을 떠날까요?">
+            <button class="search-button" onclick="search(event)">검색</button>
         </div>
-        <div class="travel-container">
+        <div class="travel-container" id="main_search_result">
             <h1>최근 뜨는 여행지</h1>
             <div class="img-container">
-                <div class="img">
-                    <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <div>
-                        <p>미국</p>
-                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
-                    </div>
-                </div>
-
-                <div class="img">
-                    <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <div>
-                        <p>미국</p>
-                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
-                    </div>
-                </div>
+                <c:forEach var="country" items="${countries}">
+                    <a href="/ROLE_GUEST/country?country_id=${country.countryId}"
+                       style="text-decoration: none; color: inherit;">
+                        <div class="img" style="display: inline-block; margin-right: 20px;">
+                            <img src="${country.image}">
+                            <div>
+                                <p>${country.country} - ${country.city}</p>
+                                <p style="font-weight: normal; font-size: medium">좋아요 ${country.totalLikes}</p>
+                            </div>
+                        </div>
+                    </a>
+                </c:forEach>
             </div>
-            <br>
-
-            <div class="img-container">
-                <div class="img">
-                    <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <div>
-                        <p>미국</p>
-                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
-                    </div>
+            <div class="travel-container">
+                <h1>이 여행지는 어떠세요?</h1>
+                <div class="img-container">
+                    <c:forEach var="country" items="${countriesExcept4.content}">
+                        <a href="/ROLE_GUEST/country?country_id=${country.countryId}"
+                           style="text-decoration: none; color: inherit;">
+                            <div class="img" style="display: inline-block; margin-right: 20px;">
+                                <img src="${country.image}">
+                                <div>
+                                    <p>${country.country} - ${country.city}</p>
+                                    <p style="font-weight: normal; font-size: medium">좋아요 ${country.totalLikes}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </c:forEach>
                 </div>
-
-                <div class="img">
-                    <img src="https://img.freepik.com/premium-photo/scene-of-flag-of-america-over-new-york-cityscape-river-side-which-location-is-lower-manhattan_41418-3340.jpg">
-                    <div>
-                        <p>미국</p>
-                        <p style="font-weight: normal; font-size: medium">좋아요 11</p>
-                    </div>
-                </div>
+                <!-- 페이징 처리 -->
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <c:forEach begin="1" end="${pagination.endPage}" varStatus="status">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=${status.index}">${status.index}</a>
+                        </li>
+                    </c:forEach>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    /** 이미지를 포함한 div 태그를 선택하면 페이지 이동 */
-    var imgElements = document.querySelectorAll('.img');
-    imgElements.forEach(function (element) {
-        element.addEventListener('click', function () {
-            var newPageUrl = '/'; // 페이지 이동 주소
-            window.location.href = newPageUrl; // 현재 창에서 이동
+    /** 최근 게시글 중 검색 */
+    function search(event) {
+        event.preventDefault();
+        var keyword = document.getElementById('searchInput').value;
+        $.ajax({
+            type: 'POST',
+            url: '/ROLE_GUEST/search',
+            data: {"keyword": keyword}, // 서버에 전달할 데이터
+            success: function (response) {
+                $("#main_search_result").html(response);
+            },
+            error: function (error) {
+
+            }
         });
-    });
+    }
 </script>
 
 </body>

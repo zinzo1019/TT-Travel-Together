@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.TagDao">
+
+    <!--    여행 상품별 태그 리스트 가져오기-->
+    <select id="findAllByProductId" resultType="com.example.choyoujin.dto.TagDto">
+        select *
+        from travel_product_tag
+        where travel_product_id = #{productId}
+    </select>
+
+</mapper>

@@ -1,8 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<%--콤마 추가--%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <%@ include file="../base_view/header.jsp" %>
 <%@ include file="../base_view/navigation.jsp" %>
-<%--콤마 추가--%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -82,7 +84,7 @@
     .tag-div {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 7%;
+        padding-top: 3%;
         font-size: medium;
     }
 
@@ -91,79 +93,62 @@
         height: 400px;
     }
 
-    .coupon-form {
-        display: flex;
-        margin-top: 7%;
-        margin-bottom: 7%;
-    }
-
-    button {
-        padding: 10px 20px;
-        background-color: #007BFF;
-        color: #fff;
-        border: none;
-        border-radius: 3px;
-        cursor: pointer;
-    }
-
-    .result {
-        display: none;
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #e5f9e5;
-        border: 1px solid #00a74a;
-        border-radius: 3px;
-    }
-
-    #coupon-message {
-        color: #00a74a;
-    }
 </style>
 
 <body>
 <div class="content">
     <div class="main-container">
         <div class="search-container">
-            <input type="text" class="search-box" placeholder="어디로 여행을 떠날까요?">
-            <button class="search-button">검색</button>
+            <input type="text" class="search-box" id="searchInput" placeholder="어디로 여행을 떠날까요?">
+            <button class="search-button" onclick="search(event)">검색</button>
         </div>
-        <div class="travel-container">
-            <div class="img-container">
-                <div class="img" style="display: inline-block;">
-                    <img src="${product.image}">
+        <div class="travel-container" id="products_search_result">
+            <h1>${country.country} - ${country.city} (${count}건)</h1>
+            <c:forEach var="product" items="${products}">
+                <div class="img-container">
+                    <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+                       style="text-decoration: none; color: inherit;">
+                        <div class="img" style="display: inline-block;">
+                            <img src="${product.image}">
+                        </div>
+                    </a>
+                    <div class="text">
+                        <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+                           style="text-decoration: none; color: inherit;">
+                            [${country.city}] ${product.name}${product.descriptions}
+                            <br><br>
+                            <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
+                        </a><br><br>
+                        <div class="tag-div">
+                            <c:forEach var="tag" items="${product.tags}" varStatus="status">
+                                # ${tag.tag}&nbsp;&nbsp;
+                            </c:forEach>
+                        </div>
+                    </div>
                 </div>
-                <div class="text">
-                    [${product.city}] ${product.name}${product.descriptions}
-                    <br><br>
-                    <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-
-                    <!-- 쿠폰 창 -->
-                    <div class="coupon-form">
-                        <input type="text" id="coupon-code" placeholder="쿠폰 코드를 입력하세요">
-                        <button id="apply-coupon">적용</button>
-                    </div>
-                    <div class="result">
-                        <p id="coupon-message"></p>
-                    </div>
-
-                    <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-
-                    <div class="tag-div">
-                        <c:forEach var="tag" items="${product.tags}" varStatus="status">
-                            # ${tag.tag}&nbsp;&nbsp;
-                        </c:forEach>
-                    </div>
-
-                </div>
-            </div>
-            <br><br>
+                <br><br>
+            </c:forEach>
         </div>
     </div>
 </div>
-
 <script>
-</script>
+    /** 최근 게시글 중 검색 */
+    function search(event) {
+        event.preventDefault();
+        var keyword = document.getElementById('searchInput').value;
+        $.ajax({
+            type: 'POST',
+            url: 'country/search?country_id=${country.countryId}',
+            data: {"keyword": keyword}, // 서버에 전달할 데이터
+            success: function (response) {
+                $("#products_search_result").html(response);
+            },
+            error: function (error) {
 
+            }
+        });
+    }
+</script>
 </body>
 </html>
 <%@ include file="../base_view/footer.jsp" %>

@@ -163,7 +163,6 @@
                 </select>
             </div>
             <div class="country-container" style="margin-top: 3%">
-
                 <label>언제 갈까요?</label>
                 <input type="text" id="start-date" placeholder="날짜 선택" readonly>
                 <input type="text" id="end-date" placeholder="날짜 선택" readonly>

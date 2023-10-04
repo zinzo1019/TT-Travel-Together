@@ -8,7 +8,61 @@
     <!--    모든 나라 가져오기-->
     <select id="findAllCountries" resultType="com.example.choyoujin.dto.CountryDto">
         select *
-        from country_city
+        from country
+    </select>
+
+    <!--    나라 아이디로 나라 데이터 가져오기-->
+    <select id="findCountryByCountryId" resultType="com.example.choyoujin.dto.CountryDto">
+        select id as countryId, *
+        from country
+        where id = #{countryId}
+    </select>
+
+    <!--    모든 나라 개수 세기-->
+    <select id="countAllContries" resultType="int">
+        select count(id)
+        from country
+    </select>
+
+    <!--    나라별 좋아요가 많은 순으로 상위 4개 나라 가져오기-->
+    <select id="findAllCountriesByCountryLike" resultType="com.example.choyoujin.dto.CountryDto">
+        SELECT MAX(tp.id) AS id, c.id AS countryId, c.*, SUM(tp.like) AS totalLikes
+        FROM country c
+                 LEFT JOIN travel_product tp ON c.id = tp.country_id
+        GROUP BY c.id
+        ORDER BY totalLikes DESC LIMIT 4;
+    </select>
+
+    <!--    나라별 좋아요가 많은 순으로 상위 4개 제외 나라 가져오기-->
+    <select id="findAllCountriesExcept4" resultType="com.example.choyoujin.dto.CountryDto">
+        SELECT MAX(tp.id) AS id, c.id AS countryId, c.*, SUM(tp.like) AS totalLikes
+        FROM country c
+                 LEFT JOIN travel_product tp ON c.id = tp.country_id
+        GROUP BY c.id
+        ORDER BY totalLikes DESC
+            LIMIT #{size}
+        OFFSET #{page}
+    </select>
+
+    <!-- 메인 페이지 - 나라 검색 -->
+    <select id="findAllCountriesByKeyword" resultType="com.example.choyoujin.dto.CountryDto">
+        SELECT MAX(tp.id) AS id, c.id AS countryId, c.*, SUM(tp.like) AS totalLikes
+        FROM country c
+                 LEFT JOIN travel_product tp ON c.id = tp.country_id
+        WHERE (c.country LIKE '%' || #{keyword} || '%'
+            OR c.city LIKE '%' || #{keyword} || '%')
+        GROUP BY c.id
+        ORDER BY totalLikes DESC
+            LIMIT #{size}
+        OFFSET #{page}
+    </select>
+
+    <!-- 메인 페이지 - 나라 검색 결과 개수 -->
+    <select id="countAllCountriesByKeyword" resultType="int">
+        SELECT COUNT(id)
+        FROM country
+        WHERE (country LIKE '%' || #{keyword} || '%'
+            OR city LIKE '%' || #{keyword} || '%')
     </select>
 
 </mapper>

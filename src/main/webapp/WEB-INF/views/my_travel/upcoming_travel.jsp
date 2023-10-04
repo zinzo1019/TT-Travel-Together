@@ -30,7 +30,7 @@
     /* 검색창 스타일 */
     .search-box {
         margin-top: 5%;
-        padding: 10px;
+        padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
         width: 90%;
