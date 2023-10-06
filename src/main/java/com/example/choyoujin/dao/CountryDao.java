@@ -10,9 +10,9 @@ import java.util.List;
 public interface CountryDao {
     List<CountryDto> findAllCountries();
     int countAllContries();
-    List<ProductDto> findAllCountriesByCountryLike();
-    List<CountryDto> findAllCountriesExcept4(int page, int size);
+    List<CountryDto> findAllCountriesOrderByLike(int page, int size);
     CountryDto findCountryByCountryId(int countryId);
     int countAllCountriesByKeyword(String keyword);
     List<CountryDto> findAllCountriesByKeyword(String keyword, int page, int size);
+    List<ProductDto> find4CountriesByCountryLike();
 }

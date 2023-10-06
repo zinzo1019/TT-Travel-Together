@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.CommentDao">
+
+    <!--    여행에 대해 궁금해요 - 게시글 아이디로 댓글 리스트 가져오기-->
+    <select id="findAllCuriousCommentsByPostId" parameterType="int" resultType="com.example.choyoujin.dto.CommentDto">
+        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, curious_post_id, parent_comment_id, level, PATH, CYCLE) as (
+            SELECT cc.id,
+                   cc.content,
+                   cc.tb_user_id,
+                   cc.curious_post_id,
+                   cc.parent_comment_id,
+                   1,
+                   ARRAY[cc.id] as PATH,
+                   false       as CYCLE
+            FROM curious_comment cc
+            WHERE cc.parent_comment_id = 0
+              AND cc.curious_post_id = #{postId}
+            UNION ALL
+            SELECT cc.id,
+                   cc.content,
+                   cc.tb_user_id,
+                   cc.curious_post_id,
+                   cc.parent_comment_id,
+                   B.level + 1,
+                   ARRAY_APPEND(B.PATH, cc.id),
+                   cc.id = any (B.PATH)
+            FROM curious_comment cc
+                     JOIN CODE_LIST B on cc.parent_comment_id = B.ID
+            WHERE cc.parent_comment_id = B.id
+              AND NOT CYCLE)
+        SELECT cc.id,
+               content,
+               tb_user_id,
+               curious_post_id,
+               parent_comment_id,
+               path,
+               level,
+               tu.name as userName
+--                i.pic_byte
+        FROM CODE_LIST cc
+                 LEFT JOIN tb_user tu ON cc.tb_user_id = tu.id
+--                  LEFT JOIN gps.yujin.image i ON u.image_id = i.id
+        ORDER BY path
+    </select>
+
+    <!--    같이 여행 가요 - 게시글 아이디로 댓글 리스트 가져오기-->
+    <select id="findAllTogetherCommentsByPostId" parameterType="int" resultType="com.example.choyoujin.dto.CommentDto">
+        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, travel_together_post_id, parent_comment_id, level, PATH, CYCLE) as (
+            SELECT ttc.id,
+                   ttc.content,
+                   ttc.tb_user_id,
+                   ttc.travel_together_post_id,
+                   ttc.parent_comment_id,
+                   1,
+                   ARRAY[ttc.id] as PATH,
+                   false       as CYCLE
+            FROM travel_together_comment ttc
+            WHERE ttc.parent_comment_id = 0
+              AND ttc.travel_together_post_id = #{postId}
+            UNION ALL
+            SELECT ttc.id,
+                   ttc.content,
+                   ttc.tb_user_id,
+                   ttc.travel_together_post_id,
+                   ttc.parent_comment_id,
+                   B.level + 1,
+                   ARRAY_APPEND(B.PATH, ttc.id),
+                   ttc.id = any (B.PATH)
+            FROM travel_together_comment ttc
+                     JOIN CODE_LIST B on ttc.parent_comment_id = B.ID
+            WHERE ttc.parent_comment_id = B.id
+              AND NOT CYCLE)
+        SELECT ttc.id,
+               content,
+               tb_user_id,
+               travel_together_post_id,
+               parent_comment_id,
+               path,
+               level,
+               tu.name as userName
+--                i.pic_byte
+        FROM CODE_LIST ttc
+                 LEFT JOIN tb_user tu ON ttc.tb_user_id = tu.id
+--                  LEFT JOIN gps.yujin.image i ON u.image_id = i.id
+        ORDER BY path
+    </select>
+
+    <!--    여행에 대해 궁금해요 - 댓글 저장하기-->
+    <insert id="saveCuriousComment" parameterType="com.example.choyoujin.dto.CommentDto">
+        insert into curious_comment (curious_post_id, content, create_date, tb_user_id, level, parent_comment_id)
+        values (#{postId}, #{content}, #{createDate}, #{userId}, #{level}, #{parentCommentId})
+    </insert>
+
+    <!--    같이 여행 가요 - 댓글 저장하기-->
+    <insert id="saveTogetherComment" parameterType="com.example.choyoujin.dto.CommentDto">
+        insert into travel_together_comment (travel_together_post_id, content, create_date, tb_user_id, level, parent_comment_id)
+        values (#{postId}, #{content}, #{createDate}, #{userId}, #{level}, #{parentCommentId})
+    </insert>
+</mapper>

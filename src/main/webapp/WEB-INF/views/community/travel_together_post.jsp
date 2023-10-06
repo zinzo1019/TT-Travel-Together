@@ -137,8 +137,9 @@
             <div class="country-container">
                 <label>어느 나라로 갈까요?</label>
                 <select id="options" name="options">
+                    <option value="0">선택 없음</option>
                     <c:forEach items="${options}" var="option">
-                        <option value="${option.country}-${option.city}">
+                        <option value="${option.countryId}">
                                 ${option.country} - ${option.city}
                         </option>
                     </c:forEach>
@@ -151,7 +152,7 @@
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>몇 명을 모집할까요?</label>
-                <input type="number" id="recruitedNum" placeholder="0에서 300 사이 숫자 입력">
+                <input type="number" id="totalNum" placeholder="0에서 300 사이 숫자 입력">
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>언제까지 모집할까요?</label>
@@ -207,13 +208,13 @@
     });
 
     /** 모집 인원 - 0 ~ 300명 */
-    var recruitedNum = document.getElementById('recruitedNum');
-    recruitedNum.addEventListener('input', function () {
-        var inputValue = parseFloat(recruitedNum.value);
+    var totalNum = document.getElementById('totalNum');
+    totalNum.addEventListener('input', function () {
+        var inputValue = parseFloat(totalNum.value);
         // 값이 0 이상 300 이하인지 확인
         if (inputValue < 0 || inputValue > 300) {
             alert('모집 인원은 0명 이상 300명 이하입니다.');
-            recruitedNum.value = '';
+            totalNum.value = '';
         }
     });
 
@@ -221,10 +222,10 @@
     var submitButton = document.getElementById('submitButton');
     submitButton.addEventListener('click', function () {
         event.preventDefault(); // 기본 동작 중단
-        var countryValue = document.getElementById('options').value;
+        var countryValue = document.getElementById('options').value; // 나라 아이디 (기본키)
         var startDateValue = document.getElementById('start-date').value;
         var endDateValue = document.getElementById('end-date').value;
-        var recruitedNumValue = parseFloat(document.getElementById('recruitedNum').value);
+        var totalNumValue = parseFloat(document.getElementById('totalNum').value);
         var deadlineValue = document.getElementById('deadline').value;
         var titleValue = document.getElementById('title').value;
         var contentValue = document.getElementById('content').value;
@@ -248,7 +249,7 @@
             alert('도착 날짜를 선택하세요.');
             return false;
         }
-        if (!recruitedNumValue) {
+        if (!totalNumValue) {
             alert('인원 수를 입력하세요.');
             return false;
         }
@@ -258,7 +259,7 @@
         }
         if (deadlineValue < 0 || deadlineValue > 300) {
             alert('모집 인원은 0명 이상 300명 이하입니다.');
-            recruitedNum.value = '';
+            totalNum.value = '';
             return false;
         }
         if (!titleValue) {
@@ -287,10 +288,10 @@
         }
         else { // 게시글 저장
             var formData = new FormData();
-            formData.append("country", countryValue); // 나라
+            formData.append("countryId", countryValue); // 나라 아이디
             formData.append("startDate", startDateValue); // 시작 날짜
             formData.append("endDate", endDateValue); // 종료 날짜
-            formData.append("recruitedNum", recruitedNumValue); // 모집 인원
+            formData.append("totalNum", totalNumValue); // 모집 인원
             formData.append("deadline", deadlineValue); // 마감 날짜
             formData.append("title", titleValue); // 제목
             formData.append("content", contentValue); // 제목

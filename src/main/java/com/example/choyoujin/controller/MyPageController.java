@@ -18,14 +18,14 @@ public class MyPageController {
     /** 나의 '같이 여행 가요' */
     @GetMapping("/mypage/together")
     public String upcomingTravelPage(Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
+       model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         return "my_page/travel_together";
     }
 
     /** 나의 '여행에 대해 궁금해요' */
     @GetMapping("mypage/curious")
     public String interestingTravelPage(Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
+       model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         return "my_page/curious_about_travel";
     }
 

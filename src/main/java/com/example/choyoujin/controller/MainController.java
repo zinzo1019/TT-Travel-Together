@@ -36,42 +36,36 @@ public class MainController {
     /** 메인 페이지 */
     @GetMapping("/ROLE_GUEST")
     public String mainPage(Model model, @RequestParam(defaultValue = "2") int page) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
-
-        List<ProductDto> countries = travelProductService.findAllCountriesByCountryLike();
-        model.addAttribute("countries", countries); // 최근 뜨는 여행지 담기
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("countries", travelProductService.find4CountriesByCountryLike()); // 최근 뜨는 여행지 담기
+        model.addAttribute("countriesExcept4", countryService.findAllCountriesOrderByLike(page, 4)); // 전체 여행지 가져오기
 
         Pagination pagination = getPagination();
-        Page<CountryDto> countriesExcept4 = countryService.findAllCountriesExcept4(page, 4);
-        pagination.setTotalCount(countryService.countAllCountries() - 4); // 총 개수 - 4
-
+        pagination.setTotalCount(countryService.countAllCountries()); // 총 개수
         model.addAttribute("pagination", pagination); // 페이징 담기
-        model.addAttribute("countriesExcept4", countriesExcept4); // 최근 4개 여행지 제외 전체 여행지 가져오기
         return "main/main";
     }
 
     /** 메인 페이지 - 검색 */
     @PostMapping("/ROLE_GUEST/search")
     public String searchMainPage(String keyword, Model model, @RequestParam(defaultValue = "1") int page) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
-        Pagination pagination = getPagination();
-        Page<CountryDto> searchResults = countryService.findAllCountriesByKeyword(keyword, page, 4); // 나라 이름으로 검색
-        pagination.setTotalCount(countryService.countAllCountriesByKeyword(keyword)); // 나라 이름으로 검색된 개수
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("searchResults", countryService.findAllCountriesByKeyword(keyword, page, 4)); // 검색 결과 담기
 
+        Pagination pagination = getPagination();
+        pagination.setTotalCount(countryService.countAllCountriesByKeyword(keyword)); // 나라 이름으로 검색된 개수
         model.addAttribute("pagination", pagination); // 페이징 담기
-        model.addAttribute("searchResults", searchResults); // 검색 결과 담기
         return "main/main_search_result";
     }
 
     /** 나라별 상품 리스트 페이지 */
     @GetMapping("/ROLE_GUEST/country")
     public String countryProductsListPage(@RequestParam("country_id") int countryId, Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
-        CountryDto countryDto = countryService.findCountryByCountryId(countryId);
-        model.addAttribute("country", countryDto); // 나라 정보 담기
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
 
         List<ProductDto> productDtos = travelProductService.findAllProductsByCountryId(countryId);
-        model.addAttribute("products", productDtos); // 여행 상품 리스트 담기
+        model.addAttribute("products", travelProductService.findAllProductsByCountryId(countryId)); // 여행 상품 리스트 담기
         model.addAttribute("count", productDtos.size()); // 여행 상품 개수 담기
         return "main/country_products_list";
     }
@@ -79,9 +73,8 @@ public class MainController {
     /** 나라별 상품 리스트 페이지 - 검색 */
     @PostMapping("/ROLE_GUEST/country/search")
     public String SearchCountryProductsListPage(@RequestParam("country_id") int countryId, String keyword, Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
-        CountryDto countryDto = countryService.findCountryByCountryId(countryId);
-        model.addAttribute("country", countryDto); // 나라 정보 담기
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
 
         List<ProductDto> productDtos = travelProductService.findAllProductsByCountryIdAndKeyword(countryId, keyword);
         model.addAttribute("products", productDtos); // 여행 상품 리스트 담기
@@ -92,11 +85,8 @@ public class MainController {
     /** 여행지 상세 페이지 */
     @GetMapping( "/ROLE_GUEST/product/detail")
     public String countryDetailPage(@RequestParam("product_id") int productId, Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         ProductDto productDto = travelProductService.findProductByProductId(productId);
-
-        System.out.println(productDto);
-
         model.addAttribute("product", productDto);
         return "main/travel_product_detail";
     }

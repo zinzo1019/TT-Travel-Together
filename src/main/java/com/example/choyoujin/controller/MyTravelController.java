@@ -17,14 +17,14 @@ public class MyTravelController {
     /** 곧 여기로 떠나요 */
     @GetMapping("/mytravel/upcoming")
     public String upcomingTravelPage(Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         return "my_travel/upcoming_travel";
     }
 
     /** 이 여행지에 관심 있어요 */
     @GetMapping("mytravel/interesting")
     public String interestingTravelPage(Model model) {
-        userService.getUserAndAddModel(model); // 사용자 정보 담기
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         return "my_travel/interesting_travel";
     }
 

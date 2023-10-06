@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.CuriousDao">
+
+    <!--    게시글 작성하기-->
+    <insert id="saveCuriousPost">
+        insert into curious_post (title, content, country_id, create_date, tb_user_id)
+        values (#{title},
+                #{content},
+                #{countryId},
+                #{createDate},
+                #{userId})
+    </insert>
+
+    <!--    전체 게시글 가져오기-->
+    <select id="findAllPosts"  resultType="com.example.choyoujin.dto.PostDto">
+        select *, tu.email as email
+        from curious_post cp
+        left join tb_user tu
+        on cp.tb_user_id = tu.id
+        ORDER BY cp.create_date DESC;
+    </select>
+
+    <!--    게시글 아이디로 게시글 가져오기-->
+    <select id="findOneByPostId"  resultType="com.example.choyoujin.dto.PostDto">
+        select *, tu.email as email, tu.name as userName
+        from curious_post cp
+        left join tb_user tu
+        on cp.tb_user_id = tu.id
+        where cp.id = #{postId}
+    </select>
+
+    <!--    게시글 아이디로 게시글 가져오기-->
+    <select id="findAllByCountryId"  resultType="com.example.choyoujin.dto.PostDto">
+        select *, tu.email as email, tu.name as userName
+        from curious_post cp
+        left join tb_user tu
+        on cp.tb_user_id = tu.id
+        where cp.id > 0
+        <if test="countryId != 0">-- 나라를 입력받았다면
+            AND cp.country_id = #{countryId}
+        </if>
+        <if test="keyword != ''">-- 검색어를 입력받았다면
+            AND cp.title LIKE CONCAT('%', #{keyword}, '%')
+            OR cp.content LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+    </select>
+</mapper>

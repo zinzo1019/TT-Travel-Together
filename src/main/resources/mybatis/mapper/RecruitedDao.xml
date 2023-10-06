@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.RecruitedDao">
+
+    <!--    모집 지원자 저장하기-->
+    <insert id="saveRecruitedMember">
+        insert into recruited_member (tb_user_id, travel_together_post_id)
+        values (#{userId}, #{postId})
+    </insert>
+
+    <!--    사용자 아이디와 게시글 아이디로 지원 여부 확인하기-->
+    <select id="findOneByPostIdAndUserId" resultType="com.example.choyoujin.dto.RecruitedDto">
+        select tb_user_id as userId, travel_together_post_id as postId
+        from recruited_member rm
+        where tb_user_id = #{userId}
+        and travel_together_post_id = #{postId}
+    </select>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.TravelTogetherDao">
+
+    <!--    모집 아이디로 모집글 가져오기-->
+    <select id="findOneByPostId" resultType="com.example.choyoujin.dto.PostDto">
+        SELECT ttp.*,
+               ttp.recruited_number AS recruitedNumber,
+               ttp.total_number     AS totalNum,
+               tu.email,
+               tu.name              AS userName,
+               c.country,
+               c.city,
+               CASE
+                   WHEN ttp.end_date >= CURRENT_DATE THEN
+                       DATE_PART('day', AGE(ttp.end_date, CURRENT_DATE))::integer -- 모집 마감까지 남은 날짜 계산
+        ELSE
+            0 -- end_date가 현재 날짜보다 이전인 경우 0
+        END
+        AS remainingDays
+        FROM travel_together_post ttp
+        LEFT JOIN tb_user tu ON ttp.tb_user_id = tu.id
+        LEFT JOIN country c ON ttp.country_id  = c.id
+        WHERE ttp.id =
+        #{postId};
+    </select>
+
+    <!--    모든 모집글 가져오기-->
+    <select id="findAllTogetherPostsByEnabled" resultType="com.example.choyoujin.dto.PostDto">
+        SELECT ttp.*, tu.email
+        FROM travel_together_post ttp
+                 LEFT JOIN tb_user tu
+                           ON ttp.tb_user_id = tu.id
+        where ttp.enabled = #{enabled}
+        ORDER BY ttp.deadline ASC
+    </select>
+
+    <!--    모집글 검색하기 (나라와 날짜)-->
+    <select id="findAllByCountryIdAndEnabled" resultType="com.example.choyoujin.dto.PostDto">
+        SELECT ttp.*, tu.email
+        FROM travel_together_post ttp
+        LEFT JOIN tb_user tu
+        ON ttp.tb_user_id = tu.id
+        WHERE ttp.enabled = #{enabled}
+        <if test="searchDto.countryId != 0">-- 나라를 입력받았다면
+            AND ttp.country_id = #{searchDto.countryId}
+        </if>
+        <if test="searchDto.startDate != null">-- 시작 날짜를 입력받았다면
+            AND end_date &gt;= #{searchDto.startDate} -- 내 출발 날짜는 여행 마감 날짜보다 이전이어야 함
+        </if>
+        <if test="searchDto.endDate != null">-- 마지막 날짜를 입력받았다면
+            AND start_date &lt;= #{searchDto.endDate} -- 내 마감 날짜는 여행 출발 날짜보다 이후여야 함
+        </if>
+        ORDER BY ttp.deadline DESC
+    </select>
+
+    <!--    모집글 작성하기-->
+    <insert id="saveTogetherPost">
+        insert into travel_together_post (title, content, country_id, tb_user_id, start_date, end_date, deadline,
+                                          total_number, create_date, enabled)
+        values (#{title},
+                #{content},
+                #{countryId},
+                #{userId},
+                #{startDate},
+                #{endDate},
+                #{deadline},
+                #{totalNum},
+                #{createDate},
+                true)
+    </insert>
+
+    <!--    모집 기한이 지나면 모집 마감 처리-->
+    <update id="disableExpiredPosts">
+        UPDATE travel_together_post
+        SET enabled = false
+        WHERE deadline &lt; #{now}
+          AND enabled = true
+    </update>
+
+    <!--    모집 or 모집 마감 처리-->
+    <update id="updateEnabledByPostId">
+        UPDATE travel_together_post
+        SET enabled = #{enabled}
+        WHERE id = #{postId}
+    </update>
+
+    <!--    모집된 인원수 1 증가-->
+    <update id="updateRecruitedNumber">
+        UPDATE travel_together_post
+        SET recruited_number = recruited_number + 1
+        WHERE id = #{postId}
+    </update>
+</mapper>

@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <%@ include file="../base_view/header.jsp" %>
 <%@ include file="../base_view/navigation.jsp" %>
 
@@ -6,12 +11,6 @@
 <html>
 <meta charset="UTF-8">
 <title>같이 여행 가요!</title>
-<!-- jQuery 라이브러리 추가 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- datepicker 라이브러리 추가 -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -103,9 +102,8 @@
         position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
     }
 
-    /** 지원하기 / 취소하기 / 지원마감 버튼 */
     .search-button {
-        background-color: #666;
+        background-color: #333;
         color: white;
         border: none;
         padding: 8px 16px;
@@ -118,7 +116,7 @@
 
     /** 지원하기 / 취소하기 / 지원마감 버튼 */
     .support-button {
-        background-color: #666;
+        background-color: #333;
         color: white;
         border: none;
         padding: 8px 16px;
@@ -130,12 +128,12 @@
     }
 
     .post h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+        margin: 0;
     }
 
     .post p {
         font-size: 16px;
+        margin: 3% 0%;
     }
 
     /* 게시글 목록 스타일 */
@@ -155,8 +153,9 @@
             <div class="country-container">
                 <label>어느 나라로 갈까요?</label>
                 <select id="options" name="options">
+                    <option value="0">선택 없음</option>
                     <c:forEach items="${options}" var="option">
-                        <option value="${option.country}-${option.city}">
+                        <option value="${option.countryId}">
                                 ${option.country} - ${option.city}
                         </option>
                     </c:forEach>
@@ -166,51 +165,67 @@
                 <label>언제 갈까요?</label>
                 <input type="text" id="start-date" placeholder="날짜 선택" readonly>
                 <input type="text" id="end-date" placeholder="날짜 선택" readonly>
-            <button class="search-button">검색하기</button>
+                <button class="search-button" id="search-button">검색하기</button>
             </div>
         </div>
-        <div class="travel-container">
+        <div class="travel-container" id="together_search_result">
             <div class="header-container">
                 <div style="flex: 1; display: flex; align-items: center;">
                     <h1>같이 여행 가요!</h1>
-                    <p style="margin-left: 2%">5건의 여행 모집</p>
+                    <p style="margin-left: 2%">${fn:length(postsByTrue)}건의 여행 모집</p>
                 </div>
                 <button class="post-button" id="postButton">게시글 작성하기</button>
             </div>
-            <ul class="post-list">
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 1</h2>
-                        <p>게시글 내용 1...</p>
-                        <button class="support-button">지원하기</button>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                        <button class="support-button">취소하기</button>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                        <button class="support-button" style="background-color: #333">지원마감</button>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
+            <ul class="post-list" id="postList">
+                <%--                모집 마감 전--%>
+                <c:forEach var="post" items="${postsByTrue}">
+                    <li class="post-list-item">
+                        <a href="together/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+                            <div class="post">
+                                <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
+                                <h2>${post.title}</h2>
+                                <p>${post.content}</p>
+                                <c:choose>
+                                    <c:when test="${post.email eq user.email}">
+                                        <!-- 만약 현재 사용자가 글의 작성자라면 '모집 마감하기' 버튼을 표시 -->
+                                        <button class="support-button closeRecruitmentButton" data-post-id="${post.id}"
+                                                style="background-color: #1633b9">모집 마감하기
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- 그렇지 않으면 '지원하기' 버튼을 표시 -->
+                                        <button class="support-button pushRecruitmentButton" data-post-id="${post.id}"
+                                                style="background-color: #c40000">지원하기
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${post.remainingDays eq 0}">
+                                        <%--                                        지원 마감 날짜가 오늘이라면--%>
+                                        <p style="position: absolute; top: 18%; right: 2%; font-size: small">모집 마감
+                                            D-DAY</p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <%--                                        지원 마감 날짜가 오늘이 아니라면--%>
+                                        <p style="position: absolute; top: 18%; right: 2%; font-size: small">모집 마감
+                                            D-${post.remainingDays}</p>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </a>
+                    </li>
+                </c:forEach>
+                <%--                모집 마감 후--%>
+                <c:forEach var="post" items="${postsByFalse}">
+                    <li class="post-list-item">
+                        <div class="post">
+                            <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
+                            <h2>${post.title}</h2>
+                            <p>${post.content}</p>
+                            <button class="support-button">모집 마감</button>
+                        </div>
+                    </li>
+                </c:forEach>
             </ul>
 
         </div>
@@ -220,7 +235,6 @@
     // 선택지 변경 이벤트 처리
     const selectBox = document.getElementById("options");
     selectBox.addEventListener("change", () => {
-        // 선택한 값을 가져옴
         const selectedValue = selectBox.value;
         console.log("선택한 값: " + selectedValue);
     });
@@ -245,10 +259,98 @@
         });
     });
 
+    /** 날짜 유효성 검사 */
+    function validation() {
+        var currentDate = new Date(); // 현재 날짜
+        var startDateValue = document.getElementById('start-date').value; // 시작 날짜
+        var endDateValue = document.getElementById('end-date').value; // 마감 날짜
+        var startDate = new Date(startDateValue); // Date 타입 변환
+        var endDate = new Date(endDateValue);
+
+        if (startDateValue > endDateValue) {
+            alert('시작 날짜는 종료 날짜보다 이후일 수 없습니다.');
+            return false;
+        }
+        if (startDate < currentDate) {
+            alert('시작 날짜는 현재 날짜보다 이전일 수 없습니다.');
+            return false;
+        }
+        if (endDate < currentDate) {
+            alert('종료 날짜는 현재 날짜보다 이전일 수 없습니다.');
+            return false;
+        } else return true;
+    }
+
+    /** 검색 버튼 클릭 이벤트 핸들러 */
+    $("#search-button").click(function () {
+        var countryId = $("#options").val(); // 나라 아이디
+        var startDate = $("#start-date").val(); // 시작 날짜
+        var endDate = $("#end-date").val(); // 마지막 날짜
+
+        var dateCheck = true;
+        if (startDate !== '' && endDate !== '') { // 시작 날짜와 마지막 날짜가 모두 존재하는 경우
+            dateCheck = validation(); // 유효성 검사 함수 호출
+        }
+
+        if (dateCheck) { // 유효성 검사에 통과했다면
+            $.ajax({
+                url: "together/search",
+                method: "POST",
+                data: {
+                    countryId: countryId,
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                success: function (response) {
+                    $("#together_search_result").html(response);
+                },
+                error: function (error) {
+                }
+            });
+        }
+    });
+
     /** 게시글 작성하기 버튼 클릭 -> 작성하기 페이지 */
     var postButton = document.getElementById('postButton'); // 게시글 작성 버튼
-    postButton.addEventListener('click', function() {
+    postButton.addEventListener('click', function () {
         window.location.href = 'together/post';
+    });
+
+    /** '모집 마감하기' 버튼 클릭 이벤트 핸들러 */
+    $(document).ready(function () {
+        $(".closeRecruitmentButton").click(function () {
+            var postId = $(this).data("post-id");
+            $.ajax({
+                url: "together/close?postId=" + postId,
+                method: "POST",
+                success: function (data) {
+                    alert("모집이 마감되었습니다.");
+                    location.reload();
+                },
+                error: function (error) {
+                    alert("모집 마감에 실패했습니다.");
+                }
+            });
+        });
+    });
+
+    /** '지원하기' 버튼 클릭 이벤트 핸들러 */
+    $(document).ready(function () {
+        $(".pushRecruitmentButton").click(function () {
+            var postId = $(this).data("post-id");
+            $.ajax({
+                url: "together/apply?postId=" + postId,
+                method: "POST",
+                success: function (data) {
+                    alert("지원을 완료했습니다.");
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
+                    location.reload();
+                }
+            });
+        });
     });
 </script>
 </body>

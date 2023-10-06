@@ -18,11 +18,11 @@ public class CountryService {
     private CountryDao countryDao;
 
     /**
-     * 최근 뜨는 여행지 제외 모든 여행지 가져오기 - 페이징 처리
+     * 모든 여행지 가져오기 - 페이징 처리
      */
-    public Page<CountryDto> findAllCountriesExcept4(int page, int size) {
+    public Page<CountryDto> findAllCountriesOrderByLike(int page, int size) {
         int start = (page - 1) * size;
-        List<CountryDto> productDtos = countryDao.findAllCountriesExcept4(start, size);
+        List<CountryDto> productDtos = countryDao.findAllCountriesOrderByLike(start, size);
         int total = countryDao.countAllContries();
         return new PageImpl<>(productDtos, PageRequest.of(page -1, size), total);
     }
@@ -34,11 +34,6 @@ public class CountryService {
         return countryDao.findAllCountries();
     }
 
-    /** 모든 나라 데이터 모델에 담기 */
-    public void getCountriesAndAddModel(Model model) {
-
-        model.addAttribute("options", findAllCountries());
-    }
     /** 모든 나라 개수 세기  */
     public int countAllCountries() {
         return countryDao.countAllContries();

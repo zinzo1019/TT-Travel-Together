@@ -8,7 +8,6 @@
 <html>
 <meta charset="UTF-8">
 <title>어느 상품이 좋으세요?</title>
-
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -119,14 +118,9 @@
         color: #00a74a;
     }
 </style>
-
 <body>
 <div class="content">
     <div class="main-container">
-        <div class="search-container">
-            <input type="text" class="search-box" placeholder="어디로 여행을 떠날까요?">
-            <button class="search-button">검색</button>
-        </div>
         <div class="travel-container">
             <div class="img-container">
                 <div class="img" style="display: inline-block;">
@@ -153,17 +147,14 @@
                             # ${tag.tag}&nbsp;&nbsp;
                         </c:forEach>
                     </div>
-
                 </div>
             </div>
             <br><br>
         </div>
     </div>
 </div>
-
 <script>
 </script>
-
 </body>
 </html>
 <%@ include file="../base_view/footer.jsp" %>

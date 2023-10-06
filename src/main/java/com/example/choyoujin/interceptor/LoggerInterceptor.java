@@ -17,12 +17,6 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
             // 세션 만료 시간을 30분
             long sessionTimeoutMillis = 30 * 60 * 10000;
-
-//            System.out.println("세션 생성 시간: " + sessionCreationTime);
-//            System.out.println("현재 시간: " + currentTime);
-//            System.out.println("현재 시간 - 세션 생성 시간: " + (currentTime - sessionCreationTime));
-//            System.out.println("세션 만료 시간: " + sessionTimeoutMillis);
-
             if (currentTime - sessionCreationTime >= sessionTimeoutMillis) {
                 // 세션 만료 시 로그아웃 처리 또는 다른 작업 수행
                 System.out.println("세션 만료로 인한 로그아웃 처리");

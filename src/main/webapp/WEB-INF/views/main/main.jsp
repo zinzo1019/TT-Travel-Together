@@ -210,7 +210,6 @@
         });
     }
 </script>
-
 </body>
 </html>
 <%@ include file="../base_view/footer.jsp" %>

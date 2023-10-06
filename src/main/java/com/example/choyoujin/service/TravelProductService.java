@@ -24,8 +24,8 @@ public class TravelProductService {
     private TagDao tagDao;
 
     /** 최근 뜨는 여행지 4개 (좋아요 순으로 정렬) */
-    public List<ProductDto> findAllCountriesByCountryLike() {
-        return countryDao.findAllCountriesByCountryLike();
+    public List<ProductDto> find4CountriesByCountryLike() {
+        return countryDao.find4CountriesByCountryLike();
     }
 
     /** 나라별 여행 상품 리스트 가져오기 */

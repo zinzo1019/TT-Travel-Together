@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!-- jQuery 라이브러리 추가 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <%@ include file="../base_view/header.jsp" %>
 <%@ include file="../base_view/navigation.jsp" %>
 
@@ -138,8 +142,9 @@
             <div class="country-container">
                 <label>어느 나라에 대해 궁금하신가요?</label>
                 <select id="options" name="options">
+                    <option value="0">선택 없음</option>
                     <c:forEach items="${options}" var="option">
-                        <option value="${option.country}-${option.city}">
+                        <option value="${option.countryId}">
                                 ${option.country} - ${option.city}
                         </option>
                     </c:forEach>
@@ -184,11 +189,12 @@
             alert(errorMessage);
         } else { // 게시글 저장
             var formData = new FormData();
-            formData.append("country", countryValue); // 나라
+            formData.append("countryId", countryValue); // 나라
             formData.append("title", titleValue); // 제목
             formData.append("content", contentValue); // 내용
             $.ajax({
                 type: 'POST',
+                url: 'post',
                 data: formData,
                 processData: false,
                 contentType: false,

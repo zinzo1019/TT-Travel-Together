@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <%@ include file="../base_view/header.jsp" %>
 <%@ include file="../base_view/navigation.jsp" %>
 
@@ -27,6 +30,8 @@
         padding: 20px; /* 내부 여백 추가 */
         border-radius: 10px; /* 모서리 둥글게 만들기 */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+        position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
+        padding-bottom: 65px;
     }
 
     .search-container label {
@@ -94,6 +99,18 @@
         border-radius: 5px;
     }
 
+    .search-button {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 7%;
+        right: 2.5%;
+    }
+
     .post h2 {
         font-size: 24px;
         margin-bottom: 10px;
@@ -120,58 +137,39 @@
             <div class="country-container">
                 <label> 어느 나라가 궁금한가요? </label>
                 <select id="options" name="options">
+                    <option value="0">선택 없음</option>
                     <c:forEach items="${options}" var="option">
-                        <option value="${option.country}-${option.city}">
-                                ${option.country} - ${option.city}</option>
+                        <option value="${option.countryId}">
+                                ${option.country} - ${option.city}
+                        </option>
                     </c:forEach>
                 </select>
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label> 무엇이 궁금한가요? </label>
-                <input type="text" class="" placeholder="">
+                <input type="text" id="keyword" placeholder="한국 문화에 대해 궁금해">
+                <button class="search-button" id="search-button">검색하기</button>
             </div>
         </div>
-
-        <div class="travel-container">
+        <div class="travel-container" id="curious_search_result">
             <div class="header-container">
                 <div style="flex: 1; display: flex; align-items: center;">
                     <h1>여행에 대해 궁금해요!</h1>
-                    <p style="margin-left: 2%">5건의 질문</p>
+                    <p style="margin-left: 2%">${fn:length(posts)}건의 질문</p>
                 </div>
                 <button class="post-button" id="postButton">게시글 작성하기</button>
             </div>
-
             <ul class="post-list">
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 1</h2>
-                        <p>게시글 내용 1...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
+                <c:forEach var="post" items="${posts}">
+                    <li class="post-list-item">
+                        <a href="curious/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+                            <div class="post">
+                                <h2>${post.title}</h2>
+                                <p style="margin: 3% 0">${post.content}</p>
+                            </div>
+                        </a>
+                    </li>
+                </c:forEach>
             </ul>
         </div>
     </div>
@@ -180,11 +178,29 @@
 <script>
     /** 게시글 작성하기 버튼 클릭 -> 작성하기 페이지 */
     var postButton = document.getElementById('postButton'); // 게시글 작성 버튼
-    postButton.addEventListener('click', function() {
+    postButton.addEventListener('click', function () {
         window.location.href = 'curious/post';
     });
-</script>
 
-</body>
+    /** 검색 버튼 클릭 이벤트 핸들러 */
+    $("#search-button").click(function () {
+        var countryId = $("#options").val(); // 나라 아이디
+        var keyword = $("#keyword").val(); // 검색어
+        $.ajax({
+            url: "curious/search",
+            method: "POST",
+            data: {
+                countryId: countryId,
+                keyword: keyword
+            },
+            success: function (response) {
+                $("#curious_search_result").html(response);
+            },
+            error: function (error) {
+            }
+        });
+    });
+</script>
+    </body>
 </html>
 <%@ include file="../base_view/footer.jsp" %>
