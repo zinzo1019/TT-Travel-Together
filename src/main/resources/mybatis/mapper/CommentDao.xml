@@ -100,4 +100,10 @@
         insert into travel_together_comment (travel_together_post_id, content, create_date, tb_user_id, level, parent_comment_id)
         values (#{postId}, #{content}, #{createDate}, #{userId}, #{level}, #{parentCommentId})
     </insert>
+
+    <!--    여행 상품 - 댓글 저장하기-->
+    <insert id="saveProductComment" parameterType="com.example.choyoujin.dto.CommentDto">
+        insert into travel_product_comment (travel_product_id, content, create_date, tb_user_id, level, parent_comment_id)
+        values (#{productId}, #{content}, #{createDate}, #{userId}, #{level}, #{parentCommentId})
+    </insert>
 </mapper>

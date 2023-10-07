@@ -11,4 +11,5 @@ public interface CommentDao {
     void saveCuriousComment(CommentDto comment);
     List<CommentDto> findAllTogetherCommentsByPostId(int postId);
     void saveTogetherComment(CommentDto comment);
+    void saveProductComment(CommentDto comment);
 }

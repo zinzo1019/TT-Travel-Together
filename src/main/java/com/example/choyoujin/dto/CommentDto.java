@@ -8,7 +8,8 @@ import java.time.LocalDate;
 public class CommentDto {
     private int id;
     private String content;
-    private int postId;
+    private int postId; // 게시글 아이디
+    private int productId; // 여행 상품 아이디
     private int parentCommentId;
     private int userId;
     private String userName;

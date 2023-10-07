@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!-- jQuery 라이브러리 추가 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
@@ -207,7 +206,6 @@
                 data: {
                     content: content,
                     postId: ${post.id},
-                    commentId: 0 // 부모 댓글이라는 의미
                 },
                 success: function (response) {
                     location.reload();
@@ -232,7 +230,7 @@
             const content = $(this).closest(".reply-form").find(".reply-textarea").val();
             var commentId = $(this).data("comment-id");
             $.ajax({
-                url: "reply",
+                url: "comment",
                 method: "POST",
                 data: {
                     content: content,

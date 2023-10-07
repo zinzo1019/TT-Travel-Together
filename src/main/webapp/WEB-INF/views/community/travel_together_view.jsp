@@ -243,7 +243,6 @@
                 data: {
                     content: content,
                     postId: ${post.id},
-                    commentId: 0 // 부모 댓글이라는 의미
                 },
                 success: function (response) {
                     location.reload();
@@ -268,7 +267,7 @@
             const content = $(this).closest(".reply-form").find(".reply-textarea").val();
             var commentId = $(this).data("comment-id");
             $.ajax({
-                url: "reply",
+                url: "comment",
                 method: "POST",
                 data: {
                     content: content,

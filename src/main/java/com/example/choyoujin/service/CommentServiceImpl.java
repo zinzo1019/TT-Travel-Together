@@ -20,7 +20,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public void saveCuriousComment(CommentDto comment) {
-        comment.setLevel(0); // 레벨 Set
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
         comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
         commentDao.saveCuriousComment(comment);
@@ -31,9 +30,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public void saveTogetherComment(CommentDto comment) {
-        comment.setLevel(0); // 레벨 Set
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
         comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
         commentDao.saveTogetherComment(comment);
+    }
+
+    @Override
+    public void saveProductComment(CommentDto comment) {
+        comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
+        comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
+        commentDao.saveProductComment(comment);
     }
 }

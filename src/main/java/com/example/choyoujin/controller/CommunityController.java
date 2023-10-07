@@ -90,18 +90,18 @@ public class CommunityController {
         }
     }
 
-    /**
-     * 여행에 대해 궁금해요 - 대댓글 작성하기 동작
-     */
-    @PostMapping("/curious/reply")
-    public ResponseEntity<String> curiousAboutTravelReplyPostAction(CommentDto comment) {
-        try {
-            commentService.saveCuriousComment(comment); // 댓글 저장
-            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
-        }
-    }
+//    /**
+//     * 여행에 대해 궁금해요 - 대댓글 작성하기 동작
+//     */
+//    @PostMapping("/curious/reply")
+//    public ResponseEntity<String> curiousAboutTravelReplyPostAction(CommentDto comment) {
+//        try {
+//            commentService.saveCuriousComment(comment); // 댓글 저장
+//            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
+//        }
+//    }
 
     /** 여행에 대해 궁금해요 - 검색하기 */
     @PostMapping("/curious/search")
@@ -109,9 +109,6 @@ public class CommunityController {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
         model.addAttribute("posts", curiousService.findAllByCountryId(searchDto)); // 검색 결과 담기
-
-        System.out.println(searchDto);
-
         return "community/curious_search_result";
     }
 
@@ -122,7 +119,6 @@ public class CommunityController {
     public String travelTogetherPage(Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
-
         List<PostDto> postsByTrue = togetherService.findAllTogetherPostsByEnabled(true); // 마감 전
         List<PostDto> postsByFalse = togetherService.findAllTogetherPostsByEnabled(false); // 마감 후
         model.addAttribute("postsByTrue", postsByTrue); // 모집 게시글 리스트 담기 (마감 전)
@@ -190,18 +186,18 @@ public class CommunityController {
         }
     }
 
-    /**
-     * 같이 여행 가요 - 대댓글 작성하기 동작
-     */
-    @PostMapping("/together/reply")
-    public ResponseEntity<String> togetherReplyPostAction(CommentDto comment) {
-        try {
-            commentService.saveTogetherComment(comment); // 댓글 저장
-            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
-        }
-    }
+//    /**
+//     * 같이 여행 가요 - 대댓글 작성하기 동작
+//     */
+//    @PostMapping("/together/reply")
+//    public ResponseEntity<String> togetherReplyPostAction(CommentDto comment) {
+//        try {
+//            commentService.saveTogetherComment(comment); // 댓글 저장
+//            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
+//        }
+//    }
 
     /**
      * 모집 마감하기

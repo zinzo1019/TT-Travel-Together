@@ -93,6 +93,17 @@
         height: 400px;
     }
 
+    .like-img {
+        width: 20px;
+        height: 20px;
+        margin-top: 5%;
+        margin-right: 2%;
+    }
+
+    .like-container {
+        display: flex;
+        align-items: center; /* 세로 중앙 정렬 */
+    }
 </style>
 
 <body>
@@ -123,6 +134,10 @@
                             <c:forEach var="tag" items="${product.tags}" varStatus="status">
                                 # ${tag.tag}&nbsp;&nbsp;
                             </c:forEach>
+                        </div>
+                        <div class="like-container">
+                            <img src="/images/like.png" class="like-img">
+                            <p style="font-size: medium; margin-top: 5%">${product.like}</p>
                         </div>
                     </div>
                 </div>

@@ -1,9 +1,7 @@
 package com.example.choyoujin.controller;
 
 import com.example.choyoujin.dto.*;
-import com.example.choyoujin.service.CountryService;
-import com.example.choyoujin.service.TravelProductService;
-import com.example.choyoujin.service.UserService;
+import com.example.choyoujin.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,6 +24,8 @@ public class MainController {
     private TravelProductService travelProductService;
     @Autowired
     private CountryService countryService;
+    @Autowired
+    private CommentServiceImpl commentService;
 
     /** 리다이렉션 */
     @GetMapping({"", "/", "ROLE_USER"})
@@ -89,6 +89,19 @@ public class MainController {
         ProductDto productDto = travelProductService.findProductByProductId(productId);
         model.addAttribute("product", productDto);
         return "main/travel_product_detail";
+    }
+
+    /**
+     * 여행에 대해 궁금해요 - 댓글 작성하기 동작
+     */
+    @PostMapping("/ROLE_GUEST/product/comment")
+    public ResponseEntity<String> productCommentPostAction(CommentDto comment) {
+        try {
+            commentService.saveProductComment(comment); // 댓글 저장
+            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
+        }
     }
 
     /** 로그인 페이지 */
