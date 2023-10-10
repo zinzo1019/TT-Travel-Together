@@ -144,9 +144,9 @@
             <div class="country-container">
                 <label>어느 나라로 갈까요?</label>
                 <select id="options" name="options">
-                    <option value="0">선택 없음</option>
+                    <option value="0" ${post.countryId == 0 ? 'selected' : ''}>선택 없음</option>
                     <c:forEach items="${options}" var="option">
-                        <option value="${option.countryId}">
+                        <option value="${option.countryId}" ${post.countryId == option.countryId ? 'selected' : ''}>
                                 ${option.country} - ${option.city}
                         </option>
                     </c:forEach>
@@ -154,23 +154,23 @@
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>언제 갈까요?</label>
-                <input type="text" id="start-date" placeholder="날짜 선택" readonly>
-                <input type="text" id="end-date" placeholder="날짜 선택" readonly>
+                <input type="text" id="start-date" placeholder="날짜 선택" readonly value="${post.startDate}">
+                <input type="text" id="end-date" placeholder="날짜 선택" readonly value="${post.endDate}">
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>몇 명을 모집할까요?</label>
-                <input type="number" id="totalNum" placeholder="0에서 300 사이 숫자 입력">
+                <input type="number" id="totalNum" placeholder="0에서 300 사이 숫자 입력" value="${post.totalNum}">
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>언제까지 모집할까요?</label>
-                <input type="text" id="deadline" placeholder="날짜 선택" readonly>
+                <input type="text" id="deadline" placeholder="날짜 선택" readonly value="${post.deadline}">
             </div>
         </div>
         <div class="background-container" style="margin-top: 4%; padding-bottom: 4%">
             <label for="title" class="label">제목</label>
-            <input type="text" id="title" name="title" required>
+            <input type="text" id="title" name="title" required value="${post.title}">
             <label for="content" class="label">내용</label>
-            <textarea id="content" required></textarea><br><br>
+            <textarea id="content" required>${post.content}</textarea><br><br>
             <button class="search-button" id="submitButton">작성하기</button>
         </div>
     </div>
@@ -293,8 +293,10 @@
             alert('모집 마감 날짜는 현재 날짜보다 이전일 수 없습니다.');
             return false;
         }
-        else { // 게시글 저장
+        else { // 게시글 수정
             var formData = new FormData();
+            formData.append("id", ${post.id}); // 게시글 아이디
+            formData.append("userId", ${post.userId}); // 게시글 아이디
             formData.append("countryId", countryValue); // 나라 아이디
             formData.append("startDate", startDateValue); // 시작 날짜
             formData.append("endDate", endDateValue); // 종료 날짜
@@ -303,15 +305,16 @@
             formData.append("title", titleValue); // 제목
             formData.append("content", contentValue); // 제목
             $.ajax({
+                url: 'view',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    alert('게시글이 작성되었습니다.');
+                    alert('게시글이 수정되었습니다.');
                 },
-                error: function (error) {
-                    alert('게시글 작성에 실패했습니다.');
+                error: function (xhr, error) {
+                    alert(xhr.responseText);
                 }
             });
         }

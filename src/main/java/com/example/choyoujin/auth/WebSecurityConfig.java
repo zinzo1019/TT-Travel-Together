@@ -29,15 +29,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/signup").permitAll()
-                .antMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                .antMatchers("/", "/signup/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/images/**").permitAll() // 이미지 경로에 대한 접근 허용
                 .antMatchers("/ROLE_GUEST/**").permitAll() // guest 게시판 -> 모두 접근 허용
                 .antMatchers("/ROLE_USER/**").hasAnyRole("USER", "ADMIN") // user 게시판 -> 사용자만 접근 허용
                 .antMatchers("/ROLE_ADMIN/**").hasRole("ADMIN") // admin 게시판 -> 관리자만 접근 허용
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                        .accessDeniedHandler(accessDeniedHandler);
+                .accessDeniedHandler(accessDeniedHandler);
 
         http.formLogin()
                 .loginPage("/login") // 로그인 페이지의 디폴트 경로 설정

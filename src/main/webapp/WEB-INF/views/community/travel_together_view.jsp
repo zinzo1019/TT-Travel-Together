@@ -3,7 +3,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
-<%@ include file="../base_view/navigation.jsp" %>
+<c:choose>
+    <c:when test="${user.role eq 'ROLE_ADMIN'}">
+        <%@ include file="/WEB-INF/views/admin/base_view/navigation.jsp" %>
+    </c:when>
+    <c:otherwise>
+        <%@ include file="../base_view/navigation.jsp" %>
+    </c:otherwise>
+</c:choose>
 
 <!DOCTYPE html>
 <html>
@@ -71,6 +78,15 @@
     .post-header p {
         display: inline;
         margin-right: 10px; /* 원하는 간격 설정 */
+    }
+
+    /*수정하기 & 삭제하기 버튼*/
+    .post-button {
+        background-color: black;
+        color: white;
+        border-radius: 5px;
+        border: 0;
+        padding: 5px 10px;
     }
 
     /* 게시글 스타일 */
@@ -144,6 +160,7 @@
         background: none; /* 배경 없애기 */
         border: none;
         padding: 0;
+        color: #3f3f3f;
     }
 
     .country-container {
@@ -167,10 +184,12 @@
     <div class="main-container">
         <div class="post-header">
             <h1>같이 여행 가요!</h1>
-            <div class="post-details">
+            <div style="display: flex; align-items: center">
                 <p>${post.userName}</p>
                 <p>${post.createDate}</p>
                 <p>${post.updateDate}</p>
+                <button class="post-button" id="edit-button" style="display: none;">수정하기</button>
+                <button class="post-button" id="delete-button" style="display: none; margin-left: 5px;">삭제하기</button>
             </div>
         </div>
 
@@ -216,6 +235,7 @@
                             <p style="font-size: small; font-weight: bold;">${comment.userName}</p>
                             <p>${comment.content}</p>
                             <button class="reply-button" style="margin-top: 0%">답글 달기</button>
+                            <button class="reply-button delete-button" style="margin-top: 0%; color: red;" data-comment-id="${comment.id}">삭제</button>
                         </div>
                         <!-- 대댓글 입력 칸 (초기에는 숨김) -->
                         <div class="reply-form" style="display: none;">
@@ -229,10 +249,49 @@
             </ul>
         </div>
     </div>
-
 </div>
-
 <script>
+    /** 수정하기 & 삭제하기 버튼 */
+    document.addEventListener("DOMContentLoaded", function () {
+        var loggedInUserId = "${user.id}"; // 로그인한 사용자
+        var postUserId = "${post.userId}"; // 게시글을 작성한 사용자
+        if (loggedInUserId === postUserId) {
+            document.getElementById("edit-button").style.display = "block"; // 수정 버튼 표시
+            document.getElementById("delete-button").style.display = "block"; // 삭제 버튼 표시
+        } else {
+            // 다른 사용자의 게시글인 경우 버튼을 숨김
+            document.getElementById("edit-button").style.display = "none"; // 수정 버튼 숨김
+            document.getElementById("delete-button").style.display = "none"; // 삭제 버튼 숨김
+        }
+    });
+
+    // 수정하기 버튼 클릭 이벤트
+    $("#edit-button").click(function() {
+        window.location.href = 'modify/view?postId=' + ${post.id}
+    });
+
+    // 삭제하기 버튼 클릭 이벤트
+    $("#delete-button").click(function() {
+        var confirmDelete = confirm("게시글을 삭제하시겠습니까?");
+        if (confirmDelete) {
+            $.ajax({
+                url: "delete/view",
+                method: "POST",
+                data: {
+                    userId: ${post.userId},
+                    id: ${post.id},
+                },
+                success: function(data) {
+                    alert("게시글을 삭제했습니다.");
+                    window.location.href = '../../mypage/together';
+                },
+                error: function(error) {
+                    alert("게시글 삭제에 실패했습니다.");
+                }
+            });
+        }
+    });
+
     /** 댓글 작성 */
     $(document).ready(function () {
         $("#submitButton").click(function () {

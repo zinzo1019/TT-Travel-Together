@@ -7,31 +7,31 @@
 
     <!--    여행에 대해 궁금해요 - 게시글 아이디로 댓글 리스트 가져오기-->
     <select id="findAllCuriousCommentsByPostId" parameterType="int" resultType="com.example.choyoujin.dto.CommentDto">
-        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, curious_post_id, parent_comment_id, level, PATH, CYCLE) as (
-            SELECT cc.id,
-                   cc.content,
-                   cc.tb_user_id,
-                   cc.curious_post_id,
-                   cc.parent_comment_id,
-                   1,
-                   ARRAY[cc.id] as PATH,
-                   false       as CYCLE
-            FROM curious_comment cc
-            WHERE cc.parent_comment_id = 0
-              AND cc.curious_post_id = #{postId}
-            UNION ALL
-            SELECT cc.id,
-                   cc.content,
-                   cc.tb_user_id,
-                   cc.curious_post_id,
-                   cc.parent_comment_id,
-                   B.level + 1,
-                   ARRAY_APPEND(B.PATH, cc.id),
-                   cc.id = any (B.PATH)
-            FROM curious_comment cc
-                     JOIN CODE_LIST B on cc.parent_comment_id = B.ID
-            WHERE cc.parent_comment_id = B.id
-              AND NOT CYCLE)
+        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, curious_post_id, parent_comment_id, level, PATH, CYCLE)
+                           as (SELECT cc.id,
+                                      cc.content,
+                                      cc.tb_user_id,
+                                      cc.curious_post_id,
+                                      cc.parent_comment_id,
+                                      1,
+                                      ARRAY[cc.id] as PATH,
+                                      false        as CYCLE
+                               FROM curious_comment cc
+                               WHERE cc.parent_comment_id = 0
+                                 AND cc.curious_post_id = #{postId}
+                               UNION ALL
+                               SELECT cc.id,
+                                      cc.content,
+                                      cc.tb_user_id,
+                                      cc.curious_post_id,
+                                      cc.parent_comment_id,
+                                      B.level + 1,
+                                      ARRAY_APPEND(B.PATH, cc.id),
+                                      cc.id = any (B.PATH)
+                               FROM curious_comment cc
+                                        JOIN CODE_LIST B on cc.parent_comment_id = B.ID
+                               WHERE cc.parent_comment_id = B.id
+                                 AND NOT CYCLE)
         SELECT cc.id,
                content,
                tb_user_id,
@@ -49,31 +49,31 @@
 
     <!--    같이 여행 가요 - 게시글 아이디로 댓글 리스트 가져오기-->
     <select id="findAllTogetherCommentsByPostId" parameterType="int" resultType="com.example.choyoujin.dto.CommentDto">
-        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, travel_together_post_id, parent_comment_id, level, PATH, CYCLE) as (
-            SELECT ttc.id,
-                   ttc.content,
-                   ttc.tb_user_id,
-                   ttc.travel_together_post_id,
-                   ttc.parent_comment_id,
-                   1,
-                   ARRAY[ttc.id] as PATH,
-                   false       as CYCLE
-            FROM travel_together_comment ttc
-            WHERE ttc.parent_comment_id = 0
-              AND ttc.travel_together_post_id = #{postId}
-            UNION ALL
-            SELECT ttc.id,
-                   ttc.content,
-                   ttc.tb_user_id,
-                   ttc.travel_together_post_id,
-                   ttc.parent_comment_id,
-                   B.level + 1,
-                   ARRAY_APPEND(B.PATH, ttc.id),
-                   ttc.id = any (B.PATH)
-            FROM travel_together_comment ttc
-                     JOIN CODE_LIST B on ttc.parent_comment_id = B.ID
-            WHERE ttc.parent_comment_id = B.id
-              AND NOT CYCLE)
+        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, travel_together_post_id, parent_comment_id, level, PATH,
+                                 CYCLE) as (SELECT ttc.id,
+                                                   ttc.content,
+                                                   ttc.tb_user_id,
+                                                   ttc.travel_together_post_id,
+                                                   ttc.parent_comment_id,
+                                                   1,
+                                                   ARRAY[ttc.id] as PATH,
+                                                   false         as CYCLE
+                                            FROM travel_together_comment ttc
+                                            WHERE ttc.parent_comment_id = 0
+                                              AND ttc.travel_together_post_id = #{postId}
+                                            UNION ALL
+                                            SELECT ttc.id,
+                                                   ttc.content,
+                                                   ttc.tb_user_id,
+                                                   ttc.travel_together_post_id,
+                                                   ttc.parent_comment_id,
+                                                   B.level + 1,
+                                                   ARRAY_APPEND(B.PATH, ttc.id),
+                                                   ttc.id = any (B.PATH)
+                                            FROM travel_together_comment ttc
+                                                     JOIN CODE_LIST B on ttc.parent_comment_id = B.ID
+                                            WHERE ttc.parent_comment_id = B.id
+                                              AND NOT CYCLE)
         SELECT ttc.id,
                content,
                tb_user_id,
@@ -85,6 +85,48 @@
 --                i.pic_byte
         FROM CODE_LIST ttc
                  LEFT JOIN tb_user tu ON ttc.tb_user_id = tu.id
+--                  LEFT JOIN gps.yujin.image i ON u.image_id = i.id
+        ORDER BY path
+    </select>
+
+    <!--    여행지 상품 상세 페이지 - 게시글 아이디로 댓글 리스트 가져오기-->
+    <select id="findAllProductCommentsByPostId" parameterType="int" resultType="com.example.choyoujin.dto.CommentDto">
+        WITH RECURSIVE CODE_LIST(id, content, tb_user_id, travel_product_id, parent_comment_id, level, PATH, CYCLE)
+                           as (SELECT tpc.id,
+                                      tpc.content,
+                                      tpc.tb_user_id,
+                                      tpc.travel_product_id,
+                                      tpc.parent_comment_id,
+                                      1,
+                                      ARRAY[tpc.id] as PATH,
+                                      false         as CYCLE
+                               FROM travel_product_comment tpc
+                               WHERE tpc.parent_comment_id = 0
+                                 AND tpc.travel_product_id = #{postId}
+                               UNION ALL
+                               SELECT tpc.id,
+                                      tpc.content,
+                                      tpc.tb_user_id,
+                                      tpc.travel_product_id,
+                                      tpc.parent_comment_id,
+                                      B.level + 1,
+                                      ARRAY_APPEND(B.PATH, tpc.id),
+                                      tpc.id = any (B.PATH)
+                               FROM travel_product_comment tpc
+                                        JOIN CODE_LIST B on tpc.parent_comment_id = B.ID
+                               WHERE tpc.parent_comment_id = B.id
+                                 AND NOT CYCLE)
+        SELECT tpc.id,
+               content,
+               tb_user_id,
+               travel_product_id,
+               parent_comment_id,
+               path,
+               level,
+               tu.name as userName
+--                i.pic_byte
+        FROM CODE_LIST tpc
+                 LEFT JOIN tb_user tu ON tpc.tb_user_id = tu.id
 --                  LEFT JOIN gps.yujin.image i ON u.image_id = i.id
         ORDER BY path
     </select>
@@ -103,7 +145,50 @@
 
     <!--    여행 상품 - 댓글 저장하기-->
     <insert id="saveProductComment" parameterType="com.example.choyoujin.dto.CommentDto">
-        insert into travel_product_comment (travel_product_id, content, create_date, tb_user_id, level, parent_comment_id)
+        insert into travel_product_comment (travel_product_id, content, create_date, tb_user_id, level,
+                                            parent_comment_id)
         values (#{productId}, #{content}, #{createDate}, #{userId}, #{level}, #{parentCommentId})
     </insert>
+
+    <!--    여행에 대해 궁금해요 -  댓글 리스트 삭제하기-->
+    <delete id="deleteCuriousCommentsByPostId">
+        delete
+        from curious_comment
+        where curious_post_id = #{postId}
+    </delete>
+
+    <!--    함께 여행 가요 - 댓글 리스트 삭제하기-->
+    <delete id="deleteTogetherCommentsByPostId">
+        delete
+        from travel_together_comment
+        where travel_together_post_id = #{postId}
+    </delete>
+
+    <!--    여행 상품 - 댓글 리스트 삭제하기-->
+    <delete id="deleteProductCommentsByPostId">
+        delete
+        from travel_product_comment
+        where travel_product_id = #{postId}
+    </delete>
+
+    <!--    여행에 대해 궁금해요 -  개별 댓글 삭제하기-->
+    <update id="deleteCuriousComment">
+        update curious_comment
+        set content = '삭제된 댓글입니다.'
+        where id = #{commentId}
+    </update>
+
+    <!--    함께 여행 가요 - 개별 댓글 삭제하기-->
+    <update id="deleteTogetherComment">
+        update travel_together_comment
+        set content = '삭제된 댓글입니다.'
+        where id = #{commentId}
+    </update>
+
+    <!--    여행 상품 - 개별 댓글 삭제하기-->
+    <update id="deleteProductComment">
+        update travel_product_comment
+        set content = '삭제된 댓글입니다.'
+        where id = #{commentId}
+    </update>
 </mapper>

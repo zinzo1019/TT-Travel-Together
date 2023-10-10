@@ -65,7 +65,7 @@
     }
 
     .email-input {
-        width: 70%;
+        width: 53%;
         margin-right: 5%;
         padding: 10px;
         margin-bottom: 0px;
@@ -75,15 +75,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>일반 회원가입</title>
+    <title>관리자 회원가입</title>
 </head>
 <body>
 <div class="container">
-    <h1>일반 회원가입</h1>
+    <h1>관리자 회원가입</h1>
     <form>
-            <label for="email" style="padding-right: 5%">이메일</label>
         <div class="email-container">
-
+            <label for="email" style="padding-right: 5%">이메일</label>
             <input type="email" id="email" name="email" class="email-input" required>
 
             <button id="idCheck" name="idDuplication" type="submit">중복 확인</button>
@@ -107,8 +106,8 @@
         <p id="imageErrorMessage" class="text-danger"></p>
 
         <div style="display: flex; justify-content: center;">
-        <button type="button" onclick="validation()" style="margin-right: 3%">가입하기</button>
-        <button type="button" id="admin-button">관리자입니까?</button>
+            <button type="button" onclick="validation()" style="margin-right: 3%">가입하기</button>
+            <button type="button" id="user-button">사용자입니까?</button>
         </div>
     </form>
 </div>
@@ -204,13 +203,13 @@
 
         $.ajax({
             type: "POST",
-            url: "/ROLE_GUEST/signup-process",
+            url: "/ROLE_GUEST/admin/signup-process",
             data: formData,
             processData: false,
             contentType: false,
             success: function () {
                 alert("회원가입 성공!");
-                window.location.href = "login";
+                window.location.href = "/login";
             },
             error: function () {
                 alert("회원가입 실패!");
@@ -218,8 +217,8 @@
         });
     }
 
-    // 관리자입니까 - 버튼 클릭
-    document.getElementById("admin-button").addEventListener("click", function() {
-        window.location.href = "/signup/admin";
+    // 회원입니까 - 버튼 클릭
+    document.getElementById("user-button").addEventListener("click", function() {
+        window.location.href = "/signup";
     });
 </script>

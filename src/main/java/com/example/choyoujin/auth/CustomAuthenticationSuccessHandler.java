@@ -12,7 +12,11 @@ import java.io.IOException;
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String email = authentication.getName(); // 사용자 이메일
-        response.sendRedirect("/ROLE_USER"); // 로그인 성공 후 리다이렉션
+        String role = authentication.getAuthorities().toString(); // 사용자 권한
+        // 로그인 권한에 따른 리다이렉션
+        if (role.equals("[ROLE_USER]"))
+            response.sendRedirect("/ROLE_USER");
+        else if (role.equals("[ROLE_ADMIN]"))
+            response.sendRedirect("/ROLE_ADMIN");
     }
 }

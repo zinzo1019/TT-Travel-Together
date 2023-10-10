@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../base_view/header.jsp" %>
-<%@ include file="../base_view/navigation.jsp" %>
+<c:choose>
+    <c:when test="${user.role eq 'ROLE_ADMIN'}">
+        <%@ include file="/WEB-INF/views/admin/base_view/navigation.jsp" %>
+    </c:when>
+    <c:otherwise>
+        <%@ include file="../base_view/navigation.jsp" %>
+    </c:otherwise>
+</c:choose>
 
 <!DOCTYPE html>
 <html>

@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
@@ -83,20 +84,13 @@
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
         padding-top: 3%;
-        font-size: x-large;
+        font-size: large;
         font-weight: bold;
     }
 
-    .tag-div {
-        flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
-        align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 3%;
-        font-size: medium;
-    }
-
     .img img {
-        width: 400px;
-        height: 400px;
+        width: 200px;
+        height: 200px;
     }
 
     .like-img {
@@ -109,6 +103,7 @@
     .like-container {
         display: flex;
         align-items: center; /* 세로 중앙 정렬 */
+        height: 0;
     }
 </style>
 <body>
@@ -119,7 +114,7 @@
             <button class="search-button" onclick="search(event)">검색</button>
         </div>
         <div class="travel-container" id="products_search_result">
-            <h1>${country.country} - ${country.city} (${count}건)</h1>
+            <h1 style="margin-top: 5%">관리자님이 등록한 ${fn:length(products)} 건의 여행 상품이예요.</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
                     <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
@@ -131,10 +126,13 @@
                     <div class="text">
                         <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
-                            [${country.city}] ${product.name}${product.descriptions}
+                            [${product.city}] ${product.name}${product.descriptions}
                             <br><br>
                             <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-                        </a><br><br>
+                        </a>
+                        <div>
+                            <p style="font-size: medium">${product.description}</p>
+                        </div>
                         <div class="tag-div">
                             <c:forEach var="tag" items="${product.tags}" varStatus="status">
                                 # ${tag.tag}&nbsp;&nbsp;
@@ -152,14 +150,14 @@
     </div>
 </div>
 <script>
-    /** 최근 게시글 중 검색 */
+    /** 여행 상품 중 검색 */
     function search(event) {
         event.preventDefault();
         var keyword = document.getElementById('searchInput').value;
         $.ajax({
             type: 'POST',
-            url: 'country/search?country_id=${country.countryId}',
-            data: {"keyword": keyword}, // 서버에 전달할 데이터
+            url: 'my-travel-places/search',
+            data: {"keyword": keyword},
             success: function (response) {
                 $("#products_search_result").html(response);
             },

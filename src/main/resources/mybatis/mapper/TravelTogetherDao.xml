@@ -10,6 +10,7 @@
         SELECT ttp.*,
                ttp.recruited_number AS recruitedNumber,
                ttp.total_number     AS totalNum,
+               tu.id as userId,
                tu.email,
                tu.name              AS userName,
                c.country,
@@ -35,6 +36,15 @@
                  LEFT JOIN tb_user tu
                            ON ttp.tb_user_id = tu.id
         where ttp.enabled = #{enabled}
+        ORDER BY ttp.deadline ASC
+    </select>
+
+    <!--    마이페이지 - 사용자별 모집글 가져오기-->
+    <select id="findAllTogetherPostsByEnabledAndUserId" resultType="com.example.choyoujin.dto.PostDto">
+        SELECT ttp.*
+        FROM travel_together_post ttp
+        where ttp.enabled = #{enabled}
+          and ttp.tb_user_id = #{userId}
         ORDER BY ttp.deadline ASC
     </select>
 
@@ -72,6 +82,25 @@
                 #{createDate},
                 true)
     </insert>
+
+    <!--    게시글 수정하기-->
+    <update id="updateTogetherPostByPostDto">
+        UPDATE travel_together_post
+        SET title = #{title},
+            content = #{content},
+            country_id = #{countryId},
+            total_number = #{totalNum},
+            recruited_number = #{recruitedNumber},
+            deadline = #{deadline}
+        WHERE id = #{id}
+    </update>
+
+    <!--    게시글 삭제하기-->
+    <delete id="deletetogetherPost">
+        delete
+        from travel_together_post
+        WHERE id = #{id}
+    </delete>
 
     <!--    모집 기한이 지나면 모집 마감 처리-->
     <update id="disableExpiredPosts">

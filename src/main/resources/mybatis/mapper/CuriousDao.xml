@@ -16,25 +16,53 @@
     </insert>
 
     <!--    전체 게시글 가져오기-->
-    <select id="findAllPosts"  resultType="com.example.choyoujin.dto.PostDto">
+    <select id="findAllPosts" resultType="com.example.choyoujin.dto.PostDto">
         select *, tu.email as email
         from curious_post cp
-        left join tb_user tu
-        on cp.tb_user_id = tu.id
+                 left join tb_user tu
+                           on cp.tb_user_id = tu.id
+                 left join country c
+                           on cp.country_id = c.id
         ORDER BY cp.create_date DESC;
     </select>
 
-    <!--    게시글 아이디로 게시글 가져오기-->
-    <select id="findOneByPostId"  resultType="com.example.choyoujin.dto.PostDto">
-        select *, tu.email as email, tu.name as userName
+    <!--    사용자별 게시글 리스트 가져오기-->
+    <select id="findAllByUserId" resultType="com.example.choyoujin.dto.PostDto">
+        select *
         from curious_post cp
-        left join tb_user tu
-        on cp.tb_user_id = tu.id
-        where cp.id = #{postId}
+                 left join country c
+                           on cp.country_id = c.id
+        where tb_user_id = #{userId}
+        ORDER BY create_date DESC;
     </select>
 
     <!--    게시글 아이디로 게시글 가져오기-->
-    <select id="findAllByCountryId"  resultType="com.example.choyoujin.dto.PostDto">
+    <select id="findOneByPostId" resultType="com.example.choyoujin.dto.PostDto">
+        select *, tu.id as userId, tu.email as email, tu.name as userName
+        from curious_post cp
+                 left join tb_user tu
+                           on cp.tb_user_id = tu.id
+        where cp.id = #{postId}
+    </select>
+
+    <!--    게시글 수정하기-->
+    <update id="updateCuriousPostByPostDto">
+        UPDATE curious_post
+        SET title      = #{title},
+            content    = #{content},
+            country_id = #{countryId}
+        WHERE id = #{id}
+    </update>
+
+    <!--    게시글 삭제하기-->
+    <delete id="deleteCuriousPost">
+        delete
+        from curious_post
+        WHERE id = #{id}
+    </delete>
+
+    <!--     게시글 검색하기 (나라와 검색어)-->
+    <select id="findAllByCountryId" resultType="com.example.choyoujin.dto.PostDto">
         select *, tu.email as email, tu.name as userName
         from curious_post cp
         left join tb_user tu

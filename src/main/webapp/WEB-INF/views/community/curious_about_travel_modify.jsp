@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!-- jQuery 라이브러리 추가 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
@@ -16,13 +15,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>여행에 대해 궁금해요! - 작성 페이지</title>
-<!-- jQuery 라이브러리 추가 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- datepicker 라이브러리 추가 -->
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+<title>여행에 대해 궁금해요.</title>
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -149,24 +142,23 @@
             <div class="country-container">
                 <label>어느 나라에 대해 궁금하신가요?</label>
                 <select id="options" name="options">
-                    <option value="0">선택 없음</option>
+                    <option value="0" ${post.countryId == 0 ? 'selected' : ''}>선택 없음</option>
                     <c:forEach items="${options}" var="option">
-                        <option value="${option.countryId}">
+                        <option value="${option.countryId}" ${post.countryId == option.countryId ? 'selected' : ''}>
                                 ${option.country} - ${option.city}
                         </option>
                     </c:forEach>
                 </select>
             </div>
             <label for="title" class="label">제목</label>
-            <input type="text" id="title" name="title" required>
+            <input type="text" id="title" name="title" required value="${post.title}">
             <label for="content" class="label">내용</label>
-            <textarea id="content" required></textarea>
+            <textarea id="content" required>${post.content}</textarea>
             <button class="search-button" id="submitButton">작성하기</button>
         </div>
     </div>
 </div>
 <script>
-    /** 어느 나라로 갈까요? */
     const selectBox = document.getElementById("options");
     selectBox.addEventListener("change", () => {
         // 선택한 값을 가져옴
@@ -174,7 +166,6 @@
         console.log("선택한 값: " + selectedValue);
     });
 
-    /** 제출 버튼 클릭 - 유효성 검사 */
     var submitButton = document.getElementById('submitButton');
     submitButton.addEventListener('click', function () {
         event.preventDefault(); // 기본 동작 중단
@@ -183,7 +174,7 @@
         var contentValue = document.getElementById('content').value;
         var errorMessage = '';
 
-        if (!countryValue) {
+        if (countryValue == 0) {
             errorMessage += '어느 나라로 갈지 선택하세요.\n';
         }
         if (!titleValue) {
@@ -194,23 +185,25 @@
         }
         if (errorMessage) {
             alert(errorMessage);
-        } else { // 게시글 저장
+        } else { // 게시글 수정
             var formData = new FormData();
+            formData.append("id", ${post.id}) // 게시글 아이디
             formData.append("countryId", countryValue); // 나라
             formData.append("title", titleValue); // 제목
             formData.append("content", contentValue); // 내용
+            formData.append("userId", ${post.userId}); // 내용
             $.ajax({
                 type: 'POST',
-                url: 'post',
+                url: 'view',
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    alert('게시글이 작성되었습니다.');
-                    window.location.href = '../curious'
+                    alert('게시글이 수정되었습니다.');
+                    window.location.href = '/ROLE_USER/community/curious/view?postId=' + ${post.id};
                 },
-                error: function (error) {
-                    alert('게시글 작성에 실패했습니다.');
+                error: function (xhr, error) {
+                    alert(xhr.responseText);
                 }
             });
         }

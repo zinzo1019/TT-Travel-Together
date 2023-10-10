@@ -41,4 +41,39 @@ public class CommentServiceImpl implements CommentService {
         comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
         commentDao.saveProductComment(comment);
     }
+
+    @Override
+    public List<CommentDto> findAllProductCommentsByPostId(int postId) {
+        return commentDao.findAllProductCommentsByPostId(postId);
+    }
+
+    @Override
+    public void deleteCuriousCommentsByPostId(int postId) {
+        commentDao.deleteCuriousCommentsByPostId(postId);
+    }
+
+    @Override
+    public void deleteTogetherCommentsByPostId(int postId) {
+        commentDao.deleteTogetherCommentsByPostId(postId);
+    }
+
+    @Override
+    public void deleteProductCommentsByPostId(int postId) {
+        commentDao.deleteProductCommentsByPostId(postId);
+    }
+
+    @Override
+    public void deleteCuriousComment(int commentId) {
+        commentDao.deleteCuriousComment(commentId);
+    }
+
+    @Override
+    public void deleteTogetherComment(int commentId) {
+        commentDao.deleteTogetherComment(commentId);
+    }
+
+    @Override
+    public void deleteProductComment(int commentId) {
+        commentDao.deleteProductComment(commentId);
+    }
 }

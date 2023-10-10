@@ -1,4 +1,4 @@
-package com.example.choyoujin.controller;
+package com.example.choyoujin.controller.userController;
 
 import com.example.choyoujin.dto.CommentDto;
 import com.example.choyoujin.dto.PostDto;
@@ -9,13 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/ROLE_USER/community")
-public class CommunityController {
+@RequestMapping("/ROLE_USER/community/together")
+public class TravelTogetherController {
 
     @Autowired
     private CountryService countryService;
@@ -26,96 +29,12 @@ public class CommunityController {
     @Autowired
     private RecruitedService recruitedService;
     @Autowired
-    private CuriousService curiousService;
-    @Autowired
     private CommentServiceImpl commentService;
 
     /**
-     * 여행에 대해 궁금해요
+     * 같이 여행 가요 - 리스트 페이지
      */
-    @GetMapping("/curious")
-    public String curiousAboutTravelPage(Model model) {
-        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-        model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
-        List<PostDto> posts = curiousService.findAllPosts();
-        model.addAttribute("posts", posts);
-        return "community/curious_about_travel";
-    }
-
-    /**
-     * 여행에 대해 궁금해요 - 뷰 페이지
-     */
-    @GetMapping("/curious/view")
-    public String curiousAboutTravelViewPage(@RequestParam("postId") int postId, Model model) {
-        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-        model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
-        model.addAttribute("post", curiousService.findOneByPostId(postId)); // 게시글 정보 담기
-        model.addAttribute("comments", commentService.findAllCuriousCommentsByPostId(postId)); // 댓글 정보 담기
-        return "community/curious_about_travel_view";
-    }
-
-    /**
-     * 여행에 대해 궁금해요 - 작성하기 페이지
-     */
-    @GetMapping("/curious/post")
-    public String curiousAboutTravelPost(Model model) {
-        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-        model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
-        return "community/curious_about_travel_post";
-    }
-
-    /**
-     * 여행에 대해 궁금해요 - 작성하기 동작
-     */
-    @PostMapping("/curious/post")
-    public ResponseEntity<String> curiousAboutTravelPostAction(PostDto postDto) {
-        try {
-            curiousService.saveCuriousPost(postDto); // 게시글 저장
-            return ResponseEntity.ok("게시글 저장에 성공했습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글 저장에 실패했습니다.");
-        }
-    }
-
-    /**
-     * 여행에 대해 궁금해요 - 댓글 작성하기 동작
-     */
-    @PostMapping("/curious/comment")
-    public ResponseEntity<String> curiousAboutTravelCommentPostAction(CommentDto comment) {
-        try {
-            commentService.saveCuriousComment(comment); // 댓글 저장
-            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
-        }
-    }
-
-//    /**
-//     * 여행에 대해 궁금해요 - 대댓글 작성하기 동작
-//     */
-//    @PostMapping("/curious/reply")
-//    public ResponseEntity<String> curiousAboutTravelReplyPostAction(CommentDto comment) {
-//        try {
-//            commentService.saveCuriousComment(comment); // 댓글 저장
-//            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
-//        }
-//    }
-
-    /** 여행에 대해 궁금해요 - 검색하기 */
-    @PostMapping("/curious/search")
-    public String searchTravelCurious(SearchDto searchDto, Model model) {
-        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-        model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
-        model.addAttribute("posts", curiousService.findAllByCountryId(searchDto)); // 검색 결과 담기
-        return "community/curious_search_result";
-    }
-
-    /**
-     * 같이 여행 가요
-     */
-    @GetMapping("/together")
+    @GetMapping("")
     public String travelTogetherPage(Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
@@ -126,8 +45,10 @@ public class CommunityController {
         return "community/travel_together";
     }
 
-    /** 같이 여행 가요 - 검색하기 */
-    @PostMapping("/together/search")
+    /**
+     * 같이 여행 가요 - 검색하기
+     */
+    @PostMapping("/search")
     public String searchTravelTogether(SearchDto searchDto, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
@@ -140,7 +61,7 @@ public class CommunityController {
     /**
      * 같이 여행 가요 - 작성하기 페이지
      */
-    @GetMapping("/together/post")
+    @GetMapping("/post")
     public String travelTogetherPost(Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
@@ -150,7 +71,7 @@ public class CommunityController {
     /**
      * 같이 여행 가요 - 작성하기 동작
      */
-    @PostMapping("/together/post")
+    @PostMapping("/post")
     public ResponseEntity<String> travelTogetherPostAction(PostDto postDto) {
         try {
             togetherService.saveTogetherPost(postDto); // 게시글 저장
@@ -163,7 +84,7 @@ public class CommunityController {
     /**
      * 같이 여행 가요 - 뷰 페이지
      */
-    @GetMapping("/together/view")
+    @GetMapping("/view")
     public String travelTogetherViewPage(@RequestParam("postId") int postId, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
@@ -172,11 +93,10 @@ public class CommunityController {
         return "community/travel_together_view";
     }
 
-
     /**
      * 같이 여행 가요 - 댓글 작성하기 동작
      */
-    @PostMapping("/together/comment")
+    @PostMapping("/comment")
     public ResponseEntity<String> togetherCommentPostAction(CommentDto comment) {
         try {
             commentService.saveTogetherComment(comment); // 댓글 저장
@@ -186,23 +106,60 @@ public class CommunityController {
         }
     }
 
-//    /**
-//     * 같이 여행 가요 - 대댓글 작성하기 동작
-//     */
-//    @PostMapping("/together/reply")
-//    public ResponseEntity<String> togetherReplyPostAction(CommentDto comment) {
-//        try {
-//            commentService.saveTogetherComment(comment); // 댓글 저장
-//            return ResponseEntity.ok("댓글 저장에 성공했습니다.");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
-//        }
-//    }
+    /**
+     * 같이 여행 가요 - 댓글 삭제하기 동작
+     */
+    @PostMapping("/comment/delete")
+    public ResponseEntity<String> togetherCommentDelete(@RequestParam("commentId") int commentId) {
+        try {
+            commentService.deleteTogetherComment(commentId); // 댓글 삭제
+            return ResponseEntity.ok("댓글을 삭제했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 삭제에 실패했습니다.");
+        }
+    }
+
+    /**
+     * 같이 여행 가요 - 수정 페이지
+     */
+    @GetMapping("/modify/view")
+    public String travelTogetherModifyViewPage(@RequestParam("postId") int postId, Model model) {
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
+        model.addAttribute("post", togetherService.findOneByPostId(postId)); // 게시글 정보 담기
+        return "community/travel_together_modify";
+    }
+
+    /**
+     * 같이 여행 가요  - 수정하기 동작
+     */
+    @PostMapping("/modify/view")
+    public ResponseEntity<String> togetherAboutTravelModify(PostDto postDto) {
+        try {
+            togetherService.updateTogetherPostByPostDto(postDto);
+            return ResponseEntity.ok("게시글을 수정했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글 수정에 실패했습니다: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 같이 여행 가요  - 삭제하기 동작
+     */
+    @PostMapping("/delete/view")
+    public ResponseEntity<String> togetherAboutTravelDelete(PostDto postDto) {
+        try {
+            togetherService.deletetogetherPost(postDto);
+            return ResponseEntity.ok("게시글을 삭제했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글 삭제에 실패했습니다: " + e.getMessage());
+        }
+    }
 
     /**
      * 모집 마감하기
      */
-    @PostMapping("/together/close")
+    @PostMapping("/close")
     public ResponseEntity<String> closeRecruitment(@RequestParam("postId") int postId) {
         try {
             togetherService.updateEnabledByPostId(postId, false); // 모집 마감 처리
@@ -215,7 +172,7 @@ public class CommunityController {
     /**
      * 모집글에 지원하기
      */
-    @PostMapping("/together/apply")
+    @PostMapping("/apply")
     public ResponseEntity<String> applyRecruitment(@RequestParam("postId") int postId) {
         try {
             recruitedService.applyToRecruitment(postId); // 모집글에 지원하기

@@ -1,134 +1,134 @@
-.content {
-    margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
-    padding: 20px; /* 적절한 여백 */
-    display: flex;
-    justify-content: center; /* 가로 중앙 정렬 */
-    margin-bottom: 5%;
-    overflow-y: auto; /* 네비게이션 바 내용이 화면을 벗어날 경우 스크롤 바 추가 */
-}
+/*.content {*/
+/*    margin-left: 18%; !* 네비게이션 바의 넓이와 일치하도록 설정 *!*/
+/*    padding: 20px; !* 적절한 여백 *!*/
+/*    display: flex;*/
+/*    justify-content: center; !* 가로 중앙 정렬 *!*/
+/*    margin-bottom: 5%;*/
+/*    overflow-y: auto; !* 네비게이션 바 내용이 화면을 벗어날 경우 스크롤 바 추가 *!*/
+/*}*/
 
-.main-container {
-    width: 70%;
-    padding: 20px; /* 내부 여백 추가 */
-    margin-top: 4%;
-}
+/*.main-container {*/
+/*    width: 70%;*/
+/*    padding: 20px; !* 내부 여백 추가 *!*/
+/*    margin-top: 4%;*/
+/*}*/
 
-.background-container {
-    background-color: #f0f0f0; /* 원하는 배경 색상으로 설정 */
-    padding: 20px; /* 내부 여백 추가 */
-    border-radius: 10px; /* 모서리 둥글게 만들기 */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
-    position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
-    padding-bottom: 65px;
-}
+/*.background-container {*/
+/*    background-color: #f0f0f0; !* 원하는 배경 색상으로 설정 *!*/
+/*    padding: 20px; !* 내부 여백 추가 *!*/
+/*    border-radius: 10px; !* 모서리 둥글게 만들기 *!*/
+/*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); !* 그림자 효과 추가 *!*/
+/*    position: relative; !* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 *!*/
+/*    padding-bottom: 65px;*/
+/*}*/
 
-.search-container label {
-    font-size: 15px; /* 라벨의 글꼴 크기 설정 */
-}
+/*.search-container label {*/
+/*    font-size: 15px; !* 라벨의 글꼴 크기 설정 *!*/
+/*}*/
 
-/* 검색창 컨테이너 스타일 */
-.travel-container {
-    margin-top: 5%;
-    margin-left: 1%;
-}
+/*!* 검색창 컨테이너 스타일 *!*/
+/*.travel-container {*/
+/*    margin-top: 5%;*/
+/*    margin-left: 1%;*/
+/*}*/
 
-.country-container {
-    display: flex;
-    align-items: center; /* 세로 중앙 정렬 */
-}
+/*.country-container {*/
+/*    display: flex;*/
+/*    align-items: center; !* 세로 중앙 정렬 *!*/
+/*}*/
 
-.country-container label {
-    flex: 1; /* 라벨 요소가 가능한 한 더 크게 확장됨 */
-    font-size: 18px;
-    font-weight: bold;
-}
+/*.country-container label {*/
+/*    flex: 1; !* 라벨 요소가 가능한 한 더 크게 확장됨 *!*/
+/*    font-size: 18px;*/
+/*    font-weight: bold;*/
+/*}*/
 
-.country-container select, input {
-    flex: 2; /* 입력 상자 요소가 라벨보다 두 배로 확장됨 */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
+/*.country-container select, input {*/
+/*    flex: 2; !* 입력 상자 요소가 라벨보다 두 배로 확장됨 *!*/
+/*    padding: 10px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 5px;*/
+/*    font-size: 16px;*/
+/*}*/
 
-.header-container {
-    display: flex;
-    align-items: center;
-}
+/*.header-container {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*}*/
 
-.header-container h1 {
-    margin: 0;
-}
+/*.header-container h1 {*/
+/*    margin: 0;*/
+/*}*/
 
-.header-container p {
-    font-size: large;
-    font-weight: bold;
-    color: #555555;
-}
+/*.header-container p {*/
+/*    font-size: large;*/
+/*    font-weight: bold;*/
+/*    color: #555555;*/
+/*}*/
 
-/* 게시글 작성하기 버튼 */
-.post-button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    margin-left: 10px;
-    cursor: pointer;
-}
+/*!* 게시글 작성하기 버튼 *!*/
+/*.post-button {*/
+/*    padding: 10px 20px;*/
+/*    background-color: #333;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    border-radius: 5px;*/
+/*    margin-left: 10px;*/
+/*    cursor: pointer;*/
+/*}*/
 
-/* 게시글 스타일 */
-.post {
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
-}
+/*!* 게시글 스타일 *!*/
+/*.post {*/
+/*    padding: 20px;*/
+/*    margin-bottom: 20px;*/
+/*    border-radius: 5px;*/
+/*    background-color: #fff;*/
+/*    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/
+/*    border-radius: 5px;*/
+/*    position: relative; !* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 *!*/
+/*}*/
 
-/** 지원하기 / 취소하기 / 지원마감 버튼 */
-.search-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    position: absolute; /* 절대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
-    bottom: 7%;
-    right: 2.5%;
-}
+/*!** 지원하기 / 취소하기 / 지원마감 버튼 *!*/
+/*.search-button {*/
+/*    background-color: #333;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 8px 16px;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*    position: absolute; !* 절대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 *!*/
+/*    bottom: 7%;*/
+/*    right: 2.5%;*/
+/*}*/
 
-/** 지원하기 / 취소하기 / 지원마감 버튼 */
-.support-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    position: absolute; /* 절대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
-    top: 10%; /* 위에서 10px 떨어진 위치 */
-    right: 2%; /* 오른쪽에서 10px 떨어진 위치 */
-}
+/*!** 지원하기 / 취소하기 / 지원마감 버튼 *!*/
+/*.support-button {*/
+/*    background-color: #333;*/
+/*    color: white;*/
+/*    border: none;*/
+/*    padding: 8px 16px;*/
+/*    border-radius: 4px;*/
+/*    cursor: pointer;*/
+/*    position: absolute; !* 절대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 *!*/
+/*    top: 10%; !* 위에서 10px 떨어진 위치 *!*/
+/*    right: 2%; !* 오른쪽에서 10px 떨어진 위치 *!*/
+/*}*/
 
-.post h2 {
-    margin: 0;
-}
+/*.post h2 {*/
+/*    margin: 0;*/
+/*}*/
 
-.post p {
-    font-size: 16px;
-    margin: 3% 0%;
-}
+/*.post p {*/
+/*    font-size: 16px;*/
+/*    margin: 3% 0%;*/
+/*}*/
 
-/* 게시글 목록 스타일 */
-.post-list {
-    list-style: none;
-    padding: 0;
-}
+/*!* 게시글 목록 스타일 *!*/
+/*.post-list {*/
+/*    list-style: none;*/
+/*    padding: 0;*/
+/*}*/
 
-.post-list-item {
-    margin-bottom: 10px;
-}
+/*.post-list-item {*/
+/*    margin-bottom: 10px;*/
+/*}*/

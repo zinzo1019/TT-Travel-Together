@@ -3,7 +3,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
-<%@ include file="../base_view/navigation.jsp" %>
+<c:choose>
+    <c:when test="${user.role eq 'ROLE_ADMIN'}">
+        <%@ include file="/WEB-INF/views/admin/base_view/navigation.jsp" %>
+    </c:when>
+    <c:otherwise>
+        <%@ include file="../base_view/navigation.jsp" %>
+    </c:otherwise>
+</c:choose>
 
 <!DOCTYPE html>
 <html>
@@ -112,8 +119,7 @@
     }
 
     .post h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+        margin: 0;
     }
 
     .post p {
@@ -164,6 +170,7 @@
                     <li class="post-list-item">
                         <a href="curious/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
                             <div class="post">
+                                <p>${post.country} - ${post.city}</p>
                                 <h2>${post.title}</h2>
                                 <p style="margin: 3% 0">${post.content}</p>
                             </div>

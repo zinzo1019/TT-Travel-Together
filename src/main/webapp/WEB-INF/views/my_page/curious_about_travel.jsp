@@ -1,6 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <%@ include file="../base_view/header.jsp" %>
-<%@ include file="../base_view/navigation.jsp" %>
+<c:choose>
+    <c:when test="${user.role eq 'ROLE_ADMIN'}">
+        <%@ include file="/WEB-INF/views/admin/base_view/navigation.jsp" %>
+    </c:when>
+    <c:otherwise>
+        <%@ include file="../base_view/navigation.jsp" %>
+    </c:otherwise>
+</c:choose>
 
 <!DOCTYPE html>
 <html>
@@ -95,8 +107,7 @@
     }
 
     .post h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+        margin: 0;
     }
 
     .post p {
@@ -120,45 +131,33 @@
             <div class="header-container">
                 <div style="flex: 1; display: flex; align-items: center;">
                     <h1>나의 '여행에 대해 궁금해요!'</h1>
-                    <p style="margin-left: 2%">5건의 질문</p>
+                    <p style="margin-left: 2%">${fn:length(posts)}건의 질문</p>
                 </div>
+                <button class="post-button" id="postButton">게시글 작성하기</button>
             </div>
-
             <ul class="post-list">
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 1</h2>
-                        <p>게시글 내용 1...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
-                <li class="post-list-item">
-                    <div class="post">
-                        <h2>게시글 제목 2</h2>
-                        <p>게시글 내용 2...</p>
-                    </div>
-                </li>
+                <c:forEach var="post" items="${posts}">
+                    <li class="post-list-item">
+                        <a href="../community/curious/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+                            <div class="post">
+                                <p>${post.country} - ${post.city}</p>
+                                <h2>${post.title}</h2>
+                                <p style="margin: 3% 0">${post.content}</p>
+                            </div>
+                        </a>
+                    </li>
+                </c:forEach>
             </ul>
         </div>
     </div>
 </div>
 </body>
+<script>
+    /** 게시글 작성하기 버튼 클릭 -> 작성하기 페이지 */
+    var postButton = document.getElementById('postButton'); // 게시글 작성 버튼
+    postButton.addEventListener('click', function () {
+        window.location.href = '../community/curious/post';
+    });
+</script>
 </html>
 <%@ include file="../base_view/footer.jsp" %>

@@ -1,8 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!-- jQuery 라이브러리 추가 -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
     <c:when test="${user.role eq 'ROLE_ADMIN'}">
@@ -16,7 +12,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>여행에 대해 궁금해요! - 작성 페이지</title>
+<title>여행에 대해 궁금해요!</title>
 <!-- jQuery 라이브러리 추가 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- datepicker 라이브러리 추가 -->
@@ -42,7 +38,6 @@
     .background-container {
         background-color: #f0f0f0; /* 원하는 배경 색상으로 설정 */
         padding: 20px; /* 내부 여백 추가 */
-        padding-bottom: 6%;
         border-radius: 10px; /* 모서리 둥글게 만들기 */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
         position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
@@ -61,13 +56,21 @@
     .country-container {
         display: flex;
         align-items: center; /* 세로 중앙 정렬 */
-        margin-bottom: 2%;
     }
 
     .country-container label {
         flex: 1; /* 라벨 요소가 가능한 한 더 크게 확장됨 */
         font-size: 18px;
         font-weight: bold;
+    }
+
+    .country-container button {
+        background-color: black;
+        color: white;
+        border-radius: 5px;
+        border: 0;
+        padding: 10px 10px;
+        margin-left: 3%;
     }
 
     .country-container select, input {
@@ -102,7 +105,7 @@
         border-radius: 4px;
         cursor: pointer;
         position: absolute; /* 절대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
-        bottom: 3.5%;
+        bottom: 4%;
         right: 3%;
     }
 
@@ -123,7 +126,6 @@
         border-radius: 5px;
         margin-bottom: 10px;
     }
-
     textarea {
         height: 150px;
     }
@@ -141,13 +143,14 @@
         <div class="travel-container">
             <div class="header-container">
                 <div style="flex: 1; display: flex; align-items: center;">
-                    <h1>여행에 대해 궁금해요.</h1>
+                    <h1>어떤 여행지를 등록할까요?</h1>
                 </div>
             </div>
         </div>
+
         <div class="background-container" style="margin-top: 4%">
             <div class="country-container">
-                <label>어느 나라에 대해 궁금하신가요?</label>
+                <label>어느 나라인가요?</label>
                 <select id="options" name="options">
                     <option value="0">선택 없음</option>
                     <c:forEach items="${options}" var="option">
@@ -157,57 +160,112 @@
                     </c:forEach>
                 </select>
             </div>
-            <label for="title" class="label">제목</label>
-            <input type="text" id="title" name="title" required>
-            <label for="content" class="label">내용</label>
-            <textarea id="content" required></textarea>
+            <div id="descriptions">
+                <div class="country-container" style="margin-top: 3%">
+                    <label>간단한 설명을 추가하세요.</label>
+                    <input type="text" class="simple-desc" style="flex: 1.72">
+                    <button class="add-description-button">추가</button>
+                </div>
+            </div>
+
+            <div id="tags">
+                <div class="country-container" style="margin-top: 3%">
+                    <label>태그를 추가하세요.</label>
+                    <input type="text" class="tag" style="flex: 1.72">
+                    <button class="add-tag-button">추가</button>
+                </div>
+            </div>
+            <div class="country-container" style="margin-top: 3%">
+                <label>얼마인가요?</label>
+                <input type="number" id="cost">
+            </div>
+        </div>
+        <div class="background-container" style="margin-top: 4%; padding-bottom: 4%">
+            <label for="name" class="label">상품 이름</label>
+            <input type="text" id="name" name="name" required>
+            <label for="description" class="label">세부 설명</label>
+            <textarea id="description" required></textarea><br><br>
             <button class="search-button" id="submitButton">작성하기</button>
         </div>
     </div>
 </div>
 <script>
-    /** 어느 나라로 갈까요? */
-    const selectBox = document.getElementById("options");
-    selectBox.addEventListener("change", () => {
-        // 선택한 값을 가져옴
-        const selectedValue = selectBox.value;
-        console.log("선택한 값: " + selectedValue);
+    var descriptionsData = [];
+    var tagsData = [];
+
+    // 설명 추가 버튼 클릭 시
+    document.querySelectorAll(".add-description-button").forEach(function(button) {
+        button.addEventListener("click", function() {
+            var descriptionContainer = button.parentElement;
+            var input = descriptionContainer.querySelector(".simple-desc").value;
+
+            // 입력 내용을 화면에 표시
+            var descriptionDiv = document.createElement("div");
+            descriptionDiv.textContent = input;
+            document.getElementById("descriptions").appendChild(descriptionDiv);
+            descriptionsData.push(input); // 배열에 넣기
+            var inputField = document.querySelector(".simple-desc");
+            inputField.value = "";
+        });
+    });
+
+    // 태그 추가 버튼 클릭 시
+    document.querySelectorAll(".add-tag-button").forEach(function(button) {
+        button.addEventListener("click", function() {
+            var tagContainer = button.parentElement;
+            var input = tagContainer.querySelector(".tag").value;
+
+            // 입력 내용을 화면에 표시
+            var tagDiv = document.createElement("div");
+            tagDiv.textContent = input;
+            document.getElementById("tags").appendChild(tagDiv);
+            tagsData.push(input);
+            var inputField = document.querySelector(".tag");
+            inputField.value = "";
+        });
     });
 
     /** 제출 버튼 클릭 - 유효성 검사 */
     var submitButton = document.getElementById('submitButton');
     submitButton.addEventListener('click', function () {
         event.preventDefault(); // 기본 동작 중단
-        var countryValue = document.getElementById('options').value;
-        var titleValue = document.getElementById('title').value;
-        var contentValue = document.getElementById('content').value;
-        var errorMessage = '';
+        var countryValue = document.getElementById('options').value; // 나라 아이디 (기본키)
+        var cost = document.getElementById('cost').value; // 가격
+        var name = document.getElementById('name').value; // 상품 이름
+        var description = document.getElementById('description').value; // 상품 설명
 
-        if (!countryValue) {
-            errorMessage += '어느 나라로 갈지 선택하세요.\n';
+        if (countryValue == 0) {
+            alert('어느 나라로 갈지 선택하세요.');
+            return false;
         }
-        if (!titleValue) {
-            errorMessage += '제목을 입력하세요.\n';
+        if (!cost) {
+            alert('상품 가격을 입력하세요.');
+            return false;
         }
-        if (!contentValue) {
-            errorMessage += '내용을 입력하세요.\n';
+        if (!name) {
+            alert('상품 이름을 입력하세요.');
+            return false;
         }
-        if (errorMessage) {
-            alert(errorMessage);
-        } else { // 게시글 저장
+        if (!description) {
+            alert('상품 설명을 입력하세요.');
+            return false;
+        }
+        else { // 게시글 저장
             var formData = new FormData();
-            formData.append("countryId", countryValue); // 나라
-            formData.append("title", titleValue); // 제목
-            formData.append("content", contentValue); // 내용
+            formData.append("countryId", countryValue); // 나라 아이디
+            formData.append("cost", cost);
+            formData.append("productName", name);
+            formData.append("description", description);
+            formData.append("userId", ${user.id});
+            formData.append("stringPlus", descriptionsData);
+            formData.append("stringTags", tagsData);
             $.ajax({
                 type: 'POST',
-                url: 'post',
                 data: formData,
-                processData: false,
                 contentType: false,
+                processData: false,
                 success: function (data) {
                     alert('게시글이 작성되었습니다.');
-                    window.location.href = '../curious'
                 },
                 error: function (error) {
                     alert('게시글 작성에 실패했습니다.');

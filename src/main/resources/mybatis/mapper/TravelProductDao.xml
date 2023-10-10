@@ -24,8 +24,20 @@
         FROM travel_product tp
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%')
-            AND tp.country_id = #{countryId}
+          AND tp.country_id = #{countryId}
         ORDER BY tp.like DESC
+    </select>
+
+    <!--    여행 상품 리스트 검색하기 (name과 description 고려)-->
+    <select id="findAllProductsByKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT tp.*, c.*
+        FROM travel_product tp
+        LEFT JOIN country c
+        ON tp.country_id = c.id
+        WHERE (tp.name LIKE '%' || #{keyword} || '%'
+            OR tp.description LIKE '%' || #{keyword} || '%'
+            OR c.country LIKE '%' || #{keyword} || '%'
+            OR c.city LIKE '%' || #{keyword} || '%')
     </select>
 
     <!--    아이디로 상품 가져오기-->
@@ -37,4 +49,20 @@
         where tp.id = #{productId}
     </select>
 
+    <!--    관리자 - 사용자 아이디로 상품 리스트 가져오기-->
+    <select id="findAllProductsByUserId" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT tp.*,
+               c.*,
+               COUNT(*) OVER (PARTITION BY c.id) AS cityCount
+        FROM travel_product tp
+                 LEFT JOIN country c ON tp.country_id = c.id
+        WHERE tp.tb_user_id = #{userId}
+        ORDER BY c.country, c.city;
+    </select>
+
+    <!--    여행 상품 등록하기-->
+    <insert id="saveProduct">
+        insert into travel_product (name, description, cost, tb_user_id, country_id)
+        values (#{productName}, #{description}, #{cost}, #{userId}, #{countryId})
+    </insert>
 </mapper>

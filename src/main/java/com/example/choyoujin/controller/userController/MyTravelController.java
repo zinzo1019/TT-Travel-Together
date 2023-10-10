@@ -1,4 +1,4 @@
-package com.example.choyoujin.controller;
+package com.example.choyoujin.controller.userController;
 
 import com.example.choyoujin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

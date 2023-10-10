@@ -16,4 +16,7 @@ public interface TravelTogetherDao {
     void updateRecruitedNumber(int postId);
     PostDto findOneByPostId(int postId);
     List<PostDto> findAllByCountryIdAndEnabled(SearchDto searchDto, boolean enabled);
+    List<PostDto> findAllTogetherPostsByEnabledAndUserId(boolean enabled, int userId);
+    void updateTogetherPostByPostDto(PostDto postDto);
+    void deletetogetherPost(PostDto postDto);
 }

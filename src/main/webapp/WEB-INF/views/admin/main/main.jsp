@@ -10,7 +10,6 @@
         <%@ include file="../base_view/navigation.jsp" %>
     </c:otherwise>
 </c:choose>
-
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
@@ -148,7 +147,7 @@
             <h1>최근 뜨는 여행지</h1>
             <div class="img-container">
                 <c:forEach var="country" items="${countries4}">
-                    <a href="/ROLE_GUEST/country?country_id=${country.countryId}"
+                    <a href="/ROLE_ADMIN/country?country_id=${country.countryId}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block; margin-right: 20px;">
                             <img src="${country.image}">
@@ -164,7 +163,7 @@
                 <h1>이 여행지는 어떠세요?</h1>
                 <div class="img-container">
                     <c:forEach var="country" items="${countries.content}">
-                        <a href="/ROLE_GUEST/country?country_id=${country.countryId}"
+                        <a href="/ROLE_ADMIN/country?country_id=${country.countryId}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img" style="display: inline-block; margin-right: 20px;">
                                 <img src="${country.image}">

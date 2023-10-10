@@ -95,4 +95,10 @@ public class UserService {
         return imageId;
     }
 
+    /** 게시글 작성자와 로그인자 비교 */
+    public boolean compareWriterAndUser(int writerId) {
+        if (writerId == getUserData().getId()) return true;
+        else return false;
+    }
+
 }

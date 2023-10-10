@@ -1,9 +1,7 @@
 package com.example.choyoujin.service;
 
-import com.example.choyoujin.dao.CountryDao;
-import com.example.choyoujin.dao.DetailDao;
-import com.example.choyoujin.dao.TagDao;
-import com.example.choyoujin.dao.TravelProductDao;
+import com.example.choyoujin.dao.*;
+import com.example.choyoujin.dto.CommentDto;
 import com.example.choyoujin.dto.ProductDto;
 import com.example.choyoujin.dto.DetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,8 @@ public class TravelProductService {
     private DetailDao detailDao;
     @Autowired
     private TagDao tagDao;
+    @Autowired
+    private UserService userService;
 
     /** 최근 뜨는 여행지 4개 (좋아요 순으로 정렬) */
     public List<ProductDto> find4CountriesByCountryLike() {
@@ -57,6 +57,7 @@ public class TravelProductService {
         return tags;
     }
 
+    /** 여행지 검색하기 */
     public List<ProductDto> findAllProductsByCountryIdAndKeyword(int countryId, String keyword) {
         List<ProductDto> productDtos = travelProductDao.findAllProductsByCountryIdAndKeyword(countryId, keyword);
         for (ProductDto dto : productDtos) {
@@ -64,5 +65,23 @@ public class TravelProductService {
             dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
         }
         return productDtos;
+    }
+
+    /** 내가 등록한 여행지 - 여행 상품 리스트 가져오기 */
+    public List<ProductDto> findAllProductsByUserId() {
+        return travelProductDao.findAllProductsByUserId(userService.getUserData().getId());
+    }
+
+    /** 내가 등록한 여행지 - 검색 */
+    public List<ProductDto> findAllProductsByKeywordAndUserId(String keyword) {
+        if (keyword == "")
+            return travelProductDao.findAllProductsByUserId(userService.getUserData().getId());
+        return travelProductDao.findAllProductsByKeywordAndUserId(keyword);
+    }
+
+    /** 여행 상품 등록하기 */
+    public void saveProduct(ProductDto productDto) {
+        System.out.println("save product function");
+        travelProductDao.saveProduct(productDto);
     }
 }

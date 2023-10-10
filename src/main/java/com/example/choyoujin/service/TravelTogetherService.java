@@ -3,6 +3,7 @@ package com.example.choyoujin.service;
 import com.example.choyoujin.dao.TravelTogetherDao;
 import com.example.choyoujin.dto.PostDto;
 import com.example.choyoujin.dto.SearchDto;
+import com.example.choyoujin.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,36 +18,50 @@ public class TravelTogetherService {
     private TravelTogetherDao togetherDao;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CommentServiceImpl commentService;
 
-    /** 모집 게시글 저장하기 */
+    /**
+     * 모집 게시글 저장하기
+     */
     public void saveTogetherPost(PostDto postDto) {
         postDto.setUserId(userService.getUserData().getId()); // 작성자 아이디 Set
         postDto.setCreateDate(LocalDate.now()); // 생성 날짜 set
         togetherDao.saveTogetherPost(postDto);
     }
 
-    /** 모집 마감 여부에 따른 모집글 리스트 가져오기 */
+    /**
+     * 모집 마감 여부에 따른 모집글 리스트 가져오기
+     */
     public List<PostDto> findAllTogetherPostsByEnabled(boolean enabled) {
         List<PostDto> posts = togetherDao.findAllTogetherPostsByEnabled(enabled); // 모집글 리스트 가져오기
         return calculateRemainingDays(posts); // 모집 마감까지 남은 날짜 계산
     }
 
-    /** 모집 마감 기한이 지난 게시글 -> enabled = false */
+    /**
+     * 모집 마감 기한이 지난 게시글 -> enabled = false
+     */
     public void disableExpiredPosts(LocalDate now) {
         togetherDao.disableExpiredPosts(now);
     }
 
-    /** 모집 마감 처리 */
+    /**
+     * 모집 마감 처리
+     */
     public void updateEnabledByPostId(int postId, boolean enabled) {
         togetherDao.updateEnabledByPostId(postId, enabled);
     }
 
-    /** 지원자 수 1 증가 */
+    /**
+     * 지원자 수 1 증가
+     */
     public void updateRecruitedNumber(int postId) {
         togetherDao.updateRecruitedNumber(postId);
     }
 
-    /** 모집 마감 날짜까지 남은 기한 계산 */
+    /**
+     * 모집 마감 날짜까지 남은 기한 계산
+     */
     public List<PostDto> calculateRemainingDays(List<PostDto> postDtos) {
         for (PostDto dto : postDtos) { // 모집 마감까지 남은 날짜 Set
             LocalDate deadline = dto.getDeadline(); // 모집 마감 날짜
@@ -60,8 +75,35 @@ public class TravelTogetherService {
         return togetherDao.findOneByPostId(postId);
     }
 
-    /** 모집글 검색하기 (나라와 날짜) */
+    /**
+     * 모집글 검색하기 (나라와 날짜)
+     */
     public List<PostDto> findAllByCountryIdAndEnabled(SearchDto searchDto, boolean enabled) {
         return togetherDao.findAllByCountryIdAndEnabled(searchDto, enabled); // 검색된 모집글만 가져오기
+    }
+
+    public List<PostDto> findAllTogetherPostsByEnabledAndUserId(boolean enabled) {
+        UserDto userDto = userService.getUserData();
+        return togetherDao.findAllTogetherPostsByEnabledAndUserId(enabled, userDto.getId());
+    }
+
+    /**
+     * 함께 여행 가요 - 수정하기
+     */
+    public void updateTogetherPostByPostDto(PostDto postDto) throws Exception {
+        if (userService.compareWriterAndUser(postDto.getUserId())) // 수정 권한 확인
+            togetherDao.updateTogetherPostByPostDto(postDto);
+        else throw new Exception("수정 권한이 없습니다.");
+    }
+
+    /**
+     * 함께 여행 가요 - 삭제하기
+     */
+    public void deletetogetherPost(PostDto postDto) throws Exception {
+        if (userService.compareWriterAndUser(postDto.getUserId())) { // 삭제 권한 확인
+            commentService.deleteTogetherCommentsByPostId(postDto.getId()); // 댓글 리스트 삭제
+            togetherDao.deletetogetherPost(postDto); // 게시글 삭제
+        }
+        else throw new Exception("수정 권한이 없습니다.");
     }
 }

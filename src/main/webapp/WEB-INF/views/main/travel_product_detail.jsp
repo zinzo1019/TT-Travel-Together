@@ -5,7 +5,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
-<%@ include file="../base_view/navigation.jsp" %>
+<c:choose>
+    <c:when test="${user.role eq 'ROLE_ADMIN'}">
+        <%@ include file="/WEB-INF/views/admin/base_view/navigation.jsp" %>
+    </c:when>
+    <c:otherwise>
+        <%@ include file="../base_view/navigation.jsp" %>
+    </c:otherwise>
+</c:choose>
 
 <!DOCTYPE html>
 <html>
@@ -152,11 +159,29 @@
         margin-bottom: 1%;
     }
 
-    /* 답글 달기 버튼 스타일 */
-    .reply-button {
+    /* 게시글 스타일 */
+    .post {
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px; /* 모서리 둥글게 만들기 */
+    }
+
+    /** 답글 달기 & 삭제 버튼 */
+    .post button {
         background: none; /* 배경 없애기 */
         border: none;
         padding: 0;
+        color: #3f3f3f;
+    }
+
+    .post h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .post p {
+        font-size: 16px;
     }
 </style>
 <body>
@@ -171,7 +196,6 @@
                     [${product.city}] ${product.name}${product.descriptions}
                     <br><br>
                     <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-
                     <!-- 쿠폰 창 -->
                     <div class="coupon-form">
                         <input type="text" id="coupon-code" placeholder="쿠폰 코드를 입력하세요">
@@ -180,9 +204,10 @@
                     <div class="result">
                         <p id="coupon-message"></p>
                     </div>
-
                     <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-
+                    <div>
+                        <p style="font-size: medium">${product.description}</p>
+                    </div>
                     <div class="tag-div">
                         <c:forEach var="tag" items="${product.tags}" varStatus="status">
                             # ${tag.tag}&nbsp;&nbsp;
@@ -199,22 +224,23 @@
                 <button class="submit-comment-button" id="submitButton">댓글 작성</button>
             </div>
             <ul class="comment-list">
-                <%--            <c:forEach var="comment" items="${comments}">--%>
-                <li class="comment" style="padding-left: ${(comment.level -1) * 30}px">
-                    <div class="post">
-                        <p style="font-size: small; font-weight: bold;">${comment.userName}</p>
-                        <p>${comment.content}</p>
-                        <button class="reply-button" style="margin-top: 0%">답글 달기</button>
-                    </div>
-                    <!-- 대댓글 입력 칸 (초기에는 숨김) -->
-                    <div class="reply-form" style="display: none;">
-                        <textarea class="reply-textarea" placeholder="대댓글을 입력하세요"></textarea>
-                        <button class="submit-reply-button submit-comment-button" data-comment-id="${comment.id}">
-                            대댓글 작성
-                        </button>
-                    </div>
-                </li>
-                <%--            </c:forEach>--%>
+                <c:forEach var="comment" items="${comments}">
+                    <li class="comment" style="padding-left: ${(comment.level -1) * 30}px">
+                        <div class="post">
+                            <p style="font-size: small; font-weight: bold;">${comment.userName}</p>
+                            <p>${comment.content}</p>
+                            <button class="reply-button" style="margin-top: 0%">답글 달기</button>
+                            <button class="delete-button" style="margin-top: 0%; color: red;" data-comment-id="${comment.id}">삭제</button>
+                        </div>
+                        <!-- 대댓글 입력 칸 (초기에는 숨김) -->
+                        <div class="reply-form" style="display: none;">
+                            <textarea class="reply-textarea" placeholder="대댓글을 입력하세요"></textarea>
+                            <button class="submit-reply-button submit-comment-button" data-comment-id="${comment.id}">
+                                대댓글 작성
+                            </button>
+                        </div>
+                    </li>
+                </c:forEach>
             </ul>
         </div>
     </div>
@@ -270,6 +296,22 @@
                 }
             });
         });
+    });
+
+    // 삭제 버튼 클릭
+    $(".delete-button").on("click", function() {
+        var commentId = $(this).data("comment-id");
+        if (confirm("댓글을 삭제하시겠습니까?")) {
+            $.ajax({
+                type: "POST",
+                url: "comment/delete?commentId=" + commentId,
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                }
+            });
+        }
     });
 </script>
 </body>

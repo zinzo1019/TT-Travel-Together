@@ -10,4 +10,7 @@ public interface TravelProductDao {
     List<ProductDto> findAllProductsByCountryId(int countryId);
     ProductDto findProductByProductId(int productId);
     List<ProductDto> findAllProductsByCountryIdAndKeyword(int countryId, String keyword);
+    List<ProductDto> findAllProductsByUserId(int userId);
+    List<ProductDto> findAllProductsByKeywordAndUserId(String keyword);
+    void saveProduct(ProductDto productDto);
 }

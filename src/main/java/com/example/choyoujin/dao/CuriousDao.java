@@ -12,4 +12,7 @@ public interface CuriousDao {
     List<PostDto> findAllPosts();
     PostDto findOneByPostId(int postId);
     List<PostDto> findAllByCountryId(SearchDto searchDto);
+    List<PostDto> findAllByUserId(int userId);
+    void updateCuriousPostByPostDto(PostDto postDto);
+    void deleteCuriousPost(PostDto postDto);
 }
