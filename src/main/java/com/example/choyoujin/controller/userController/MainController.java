@@ -43,6 +43,10 @@ public class MainController {
         model.addAttribute("countries4", travelProductService.find4CountriesByCountryLike()); // 최근 뜨는 여행지 담기
         model.addAttribute("countries", countryService.findAllCountriesOrderByLike(page, 4)); // 전체 여행지 가져오기
 
+
+        System.out.println(travelProductService.find4CountriesByCountryLike());
+        System.out.println(countryService.countAllCountries());
+
         Pagination pagination = getPagination();
         pagination.setTotalCount(countryService.countAllCountries()); // 총 개수
         model.addAttribute("pagination", pagination); // 페이징 담기

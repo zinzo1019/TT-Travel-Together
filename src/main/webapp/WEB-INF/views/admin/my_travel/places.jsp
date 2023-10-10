@@ -114,7 +114,7 @@
             <button class="search-button" onclick="search(event)">검색</button>
         </div>
         <div class="travel-container" id="products_search_result">
-            <h1 style="margin-top: 5%">관리자님이 등록한 ${fn:length(products)} 건의 여행 상품이예요.</h1>
+            <h1 style="margin-top: 5%">관리자님이 등록한 ${fn:length(products)}건의 여행 상품이예요.</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
                     <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"

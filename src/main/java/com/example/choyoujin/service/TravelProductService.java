@@ -81,7 +81,14 @@ public class TravelProductService {
 
     /** 여행 상품 등록하기 */
     public void saveProduct(ProductDto productDto) {
-        System.out.println("save product function");
+
+        // TODO stringPlus 저장하기
+        //  테이블명 table_product_detail
+
+        // TODO stringTags 저장하기
+        //  테이블명 travel_product_tag
+
+
         travelProductDao.saveProduct(productDto);
     }
 }
