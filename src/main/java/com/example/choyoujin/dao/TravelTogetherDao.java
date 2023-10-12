@@ -14,9 +14,11 @@ public interface TravelTogetherDao {
     void disableExpiredPosts(LocalDate now);
     void updateEnabledByPostId(int postId, boolean enabled);
     void updateRecruitedNumber(int postId);
+    void cancelRecruitedNumber(int postId);
     PostDto findOneByPostId(int postId);
     List<PostDto> findAllByCountryIdAndEnabled(SearchDto searchDto, boolean enabled);
     List<PostDto> findAllTogetherPostsByEnabledAndUserId(boolean enabled, int userId);
     void updateTogetherPostByPostDto(PostDto postDto);
     void deletetogetherPost(PostDto postDto);
+    boolean findIsSupportedByPostIdAndUserId(int userId, int postId);
 }

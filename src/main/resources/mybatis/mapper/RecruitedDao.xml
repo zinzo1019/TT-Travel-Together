@@ -11,6 +11,13 @@
         values (#{userId}, #{postId})
     </insert>
 
+    <!--    모집 지원자 삭제하기-->
+    <delete id="deleteRecruitedMember">
+        delete from recruited_member
+        where travel_together_post_id = #{postId}
+        and tb_user_id = #{userId}
+    </delete>
+
     <!--    사용자 아이디와 게시글 아이디로 지원 여부 확인하기-->
     <select id="findOneByPostIdAndUserId" resultType="com.example.choyoujin.dto.RecruitedDto">
         select tb_user_id as userId, travel_together_post_id as postId

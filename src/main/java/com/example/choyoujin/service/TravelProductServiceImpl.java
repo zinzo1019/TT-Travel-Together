@@ -6,6 +6,7 @@ import com.example.choyoujin.dto.DetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,12 +33,7 @@ public class TravelProductServiceImpl implements TravelProductService {
     /** 나라별 여행 상품 리스트 가져오기 */
     public List<ProductDto> findAllProductsByCountryId(int countryId) {
         List<ProductDto> productDtos = travelProductDao.findAllProductsByCountryId(countryId);
-        if (userService.getUserData() != null) { // 로그인 상태라면
-            // todo 상품별 좋아요 여부 확인
-            for (ProductDto dto : productDtos) {
-                dto.setUserLiked(likeService.findLikeByUserIdAndProductId(userService.getUserData().getId(), dto.getId()));
-            }
-        }
+        setUserLiked(productDtos); // 좋아요 Set
         for (ProductDto dto : productDtos) {
             dto.setDescriptions(findAllByProductId(dto.getId())); // 설명 Set
             dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
@@ -50,7 +46,6 @@ public class TravelProductServiceImpl implements TravelProductService {
         boolean isLiked = false;
         ProductDto dto = travelProductDao.findProductByProductId(productId);
         if (userService.getUserData() != null) { // 로그인 후
-            // todo 좋아요 여부 확인
             isLiked = likeService.findLikeByUserIdAndProductId(userService.getUserData().getId(), productId);
             dto.setUserLiked(isLiked);
         }
@@ -72,11 +67,8 @@ public class TravelProductServiceImpl implements TravelProductService {
 
     /** 여행지 검색하기 */
     public List<ProductDto> findAllProductsByCountryIdAndKeyword(int countryId, String keyword) {
-        List<ProductDto> productDtos = null;
-        if (userService.getUserData() != null) { // 로그인 상태라면
-            productDtos = travelProductDao.findAllProductsByCountryIdAndKeywordAndUserId(countryId, keyword, userService.getUserData().getId());
-        } else
-            productDtos = travelProductDao.findAllProductsByCountryIdAndKeyword(countryId, keyword);
+        List<ProductDto> productDtos = travelProductDao.findAllProductsByCountryIdAndKeyword(countryId, keyword);
+        setUserLiked(productDtos); // 좋아요 Set
         for (ProductDto dto : productDtos) {
             dto.setDescriptions(findAllByProductId(dto.getId())); // 설명 Set
             dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
@@ -86,14 +78,19 @@ public class TravelProductServiceImpl implements TravelProductService {
 
     /** 내가 등록한 여행지 - 여행 상품 리스트 가져오기 */
     public List<ProductDto> findAllProductsByUserId() {
-        return travelProductDao.findAllProductsByUserId(userService.getUserData().getId());
+        List<ProductDto> productDtos =  travelProductDao.findAllProductsByUserId(userService.getUserData().getId());
+        setUserLiked(productDtos); // 좋아요 Set
+        return productDtos;
     }
 
     /** 내가 등록한 여행지 - 검색 */
     public List<ProductDto> findAllProductsByKeywordAndUserId(String keyword) {
+        List<ProductDto> productDtos = new ArrayList<>();
         if (keyword == "")
-            return travelProductDao.findAllProductsByUserId(userService.getUserData().getId());
-        return travelProductDao.findAllProductsByKeywordAndUserId(keyword, userService.getUserData().getId());
+            productDtos= travelProductDao.findAllProductsByUserId(userService.getUserData().getId()); // 빈칸 검색
+        productDtos = travelProductDao.findAllProductsByKeywordAndUserId(keyword, userService.getUserData().getId()); // 키워드 검색
+        setUserLiked(productDtos); // 좋아요 Set
+        return productDtos;
     }
 
     /** 여행 상품 등록하기 */
@@ -127,5 +124,26 @@ public class TravelProductServiceImpl implements TravelProductService {
     @Override
     public List<Integer> findAllProductIdsByCountryId(int countryId) {
         return travelProductDao.findAllProductIdsByCountryId(countryId);
+    }
+
+    /** 사용자가 좋아요한 여행 상품 리스트 가져오기 */
+    @Override
+    public List<ProductDto> findAllByUserLike() {
+        List<ProductDto> productDtos = travelProductDao.findAllByUserLike(userService.getUserData().getId());
+        setUserLiked(productDtos); // 좋아요 Set
+        for (ProductDto dto : productDtos) {
+            dto.setDescriptions(findAllByProductId(dto.getId())); // 설명 Set
+            dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
+        }
+        return productDtos;
+    }
+
+    /** 사용자가 좋아요 한 상품 여부에 따라 userLiked Set */
+    private void setUserLiked(List<ProductDto> productDtos) {
+        if (userService.getUserData() != null) { // 로그인 상태라면
+            for (ProductDto dto : productDtos) {
+                dto.setUserLiked(likeService.findLikeByUserIdAndProductId(userService.getUserData().getId(), dto.getId()));
+            }
+        }
     }
 }

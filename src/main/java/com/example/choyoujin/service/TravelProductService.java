@@ -17,4 +17,5 @@ public interface TravelProductService {
     void plusUnLike(int productId);
     List<ProductDto> findAllByCountryId(int countryId);
     List<Integer> findAllProductIdsByCountryId(int countryId);
+    List<ProductDto> findAllByUserLike();
 }

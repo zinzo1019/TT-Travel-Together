@@ -21,6 +21,11 @@ public class RecruitedService {
         recruitedDao.saveRecruitedMember(userId, postId);
     }
 
+    /** 지원자 삭제하기 */
+    public void deleteRecruitedMember(int userId, int postId) {
+        recruitedDao.deleteRecruitedMember(userId, postId);
+    }
+
     /** 모집글 아이디와 사용자 아이디로 지원 여부 확인하기 */
     public RecruitedDto findOneByPostIdAndUserId(int userId, int postId) {
         return recruitedDao.findOneByPostIdAndUserId(userId, postId);
@@ -40,5 +45,11 @@ public class RecruitedService {
             togetherService.updateEnabledByPostId(postId, false);
             throw new Exception("지원을 완료했습니다. 인원수가 모두 차 마감 처리합니다.");
         }
+    }
+
+    /** 모집글에 지원 취소하기 */
+    public void caneclToRecruitment(int postId) {
+        togetherService.cancelRecruitedNumber(postId); // 지원자 수 -1 감소
+        deleteRecruitedMember(userService.getUserData().getId(), postId); // 지원자 삭제
     }
 }

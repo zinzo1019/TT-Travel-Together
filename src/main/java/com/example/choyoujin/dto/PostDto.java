@@ -18,6 +18,7 @@ public class PostDto {
     private int countryId; // 나라 기본키
     private LocalDate createDate; // 생성 날짜
     private LocalDate updateDate; // 생성 날짜
+    private boolean supported; // 모집글 지원 여부
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate; // 시작 날짜

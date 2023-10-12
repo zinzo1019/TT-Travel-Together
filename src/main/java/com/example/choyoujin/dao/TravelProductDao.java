@@ -22,4 +22,5 @@ public interface TravelProductDao {
     List<ProductDto> findAllProductsByCountryIdAndKeywordAndUserId(int countryId, String keyword, int userId);
     List<ProductDto> findAllByCountryId(int countryId);
     List<Integer> findAllProductIdsByCountryId(int countryId);
+    List<ProductDto> findAllByUserLike(int userId);
 }

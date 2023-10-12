@@ -26,33 +26,7 @@
     .main-container {
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
-    }
-
-    /* 검색창 컨테이너 스타일 */
-    .search-container {
-        display: flex;
-        justify-content: center; /* 가로 중앙 정렬 */
-    }
-
-    /* 검색창 스타일 */
-    .search-box {
-        margin-top: 5%;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 90%;
-    }
-
-    /* 검색 버튼 스타일 */
-    .search-button {
-        margin-top: 5%;
-        padding: 10px 20px;
-        background-color: #333;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        margin-left: 10px;
-        cursor: pointer;
+        margin-top: 4%;
     }
 
     /* 검색창 컨테이너 스타일 */

@@ -18,6 +18,17 @@
         where country_id = #{countryId}
     </select>
 
+    <!--    사용자 좋아요별 여행 상품 리스트 가져오기-->
+    <select id="findAllByUserLike" resultType="com.example.choyoujin.dto.ProductDto">
+        select *
+        from travel_product tp
+                 left join product_like pl
+                           on tp.id = pl.travel_product_id
+                 left join country c
+                           on tp.country_id = c.id
+        where pl.tb_user_id = #{userId}
+    </select>
+
     <!--    나라별 상품 가져오기 - 로그인 후 (좋아요 O)-->
     <select id="findAllProductsByCountryIdAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
         select distinct tp.id,
@@ -55,16 +66,8 @@
 
     <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 후-->
     <select id="findAllProductsByCountryIdAndKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.tb_user_id AS userId,
-               tp.*,
-               case
-                   when pl.tb_user_id = #{userId}
-                       then true
-                   else false
-                   end       as userLiked
+        SELECT tp.tb_user_id AS userId, tp.*
         FROM travel_product tp
-                 left join product_like pl
-                           on tp.id = pl.travel_product_id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%')
           AND tp.country_id = #{countryId}
@@ -73,18 +76,10 @@
 
     <!--    여행 상품 리스트 검색하기 (name과 description 고려)-->
     <select id="findAllProductsByKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.*,
-               c.*,
-               case
-                   when pl.tb_user_id = #{userId}
-                       then true
-                   else false
-                   end as userLiked
+        SELECT tp.*, c.*
         FROM travel_product tp
                  LEFT JOIN country c
                            ON tp.country_id = c.id
-                 left join product_like pl
-                           on tp.id = pl.travel_product_id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%'
             OR c.country LIKE '%' || #{keyword} || '%'
@@ -110,7 +105,7 @@
                    when pl.tb_user_id = #{userId}
                        then true
                    else false
-                   end as userLiked
+                   end       as userLiked
         from travel_product tp
                  left join country c
                            on tp.country_id = c.id

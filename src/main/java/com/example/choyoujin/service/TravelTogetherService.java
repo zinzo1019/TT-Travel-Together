@@ -35,6 +35,11 @@ public class TravelTogetherService {
      */
     public List<PostDto> findAllTogetherPostsByEnabled(boolean enabled) {
         List<PostDto> posts = togetherDao.findAllTogetherPostsByEnabled(enabled); // 모집글 리스트 가져오기
+        for (PostDto dto : posts) {
+            // todo 모집 지원 여부 확인
+            boolean supported = togetherDao.findIsSupportedByPostIdAndUserId(userService.getUserData().getId(), dto.getId());
+            dto.setSupported(supported);
+        }
         return calculateRemainingDays(posts); // 모집 마감까지 남은 날짜 계산
     }
 
@@ -57,6 +62,11 @@ public class TravelTogetherService {
      */
     public void updateRecruitedNumber(int postId) {
         togetherDao.updateRecruitedNumber(postId);
+    }
+
+    /** 지원자 수 1 감소 */
+    public void cancelRecruitedNumber(int postId) {
+        togetherDao.cancelRecruitedNumber(postId);
     }
 
     /**

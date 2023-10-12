@@ -195,15 +195,18 @@
                                 <c:choose>
                                     <c:when test="${post.email eq user.email}">
                                         <!-- 만약 현재 사용자가 글의 작성자라면 '모집 마감하기' 버튼을 표시 -->
-                                        <button class="support-button closeRecruitmentButton" data-post-id="${post.id}"
-                                                style="background-color: #1633b9">모집 마감하기
-                                        </button>
+                                        <button class="support-button closeRecruitmentButton" data-post-id="${post.id}" style="background-color: #1633b9">모집 마감하기</button>
                                     </c:when>
                                     <c:otherwise>
-                                        <!-- 그렇지 않으면 '지원하기' 버튼을 표시 -->
-                                        <button class="support-button pushRecruitmentButton" data-post-id="${post.id}"
-                                                style="background-color: #c40000">지원하기
-                                        </button>
+                                        <!-- post.isSupported 변수를 사용하여 버튼을 설정 -->
+                                        <c:choose>
+                                            <c:when test="${post.supported}"> <!-- post.isSupported 변수가 true일 경우 -->
+                                                <button class="support-button cancelSupportButton" data-post-id="${post.id}" style="background-color: blue">지원 취소</button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="support-button pushRecruitmentButton" data-post-id="${post.id}" style="background-color: #c40000">지원하기</button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:otherwise>
                                 </c:choose>
                                 <c:choose>
@@ -349,6 +352,23 @@
                 method: "POST",
                 success: function (data) {
                     alert("지원을 완료했습니다.");
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
+                    location.reload();
+                }
+            });
+        });
+
+        /** 지원 취소하기 */
+        $(document).on("click", ".cancelSupportButton", function () {
+            var postId = $(this).data("post-id");
+            $.ajax({
+                type: "POST",
+                url: "together/cancel?postId=" + postId,
+                success: function (data) {
+                    alert("지원을 취소했습니다..");
                     location.reload();
                 },
                 error: function (xhr, status, error) {

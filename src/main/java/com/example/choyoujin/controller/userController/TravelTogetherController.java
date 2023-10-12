@@ -181,4 +181,17 @@ public class TravelTogetherController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    /**
+     * 모집글에 지원 취소하기
+     */
+    @PostMapping("/cancel")
+    public ResponseEntity<String> cancelRecruitment(@RequestParam("postId") int postId) {
+        try {
+            recruitedService.caneclToRecruitment(postId); // 모집글 지원 취소하기
+            return ResponseEntity.ok("지원을 취소했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

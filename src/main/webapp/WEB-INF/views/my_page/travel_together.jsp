@@ -194,7 +194,7 @@
         $(".closeRecruitmentButton").click(function () {
             var postId = $(this).data("post-id");
             $.ajax({
-                url: "together/close?postId=" + postId,
+                url: "/ROLE_USER/community/together/close?postId=" + postId,
                 method: "POST",
                 success: function (data) {
                     alert("모집이 마감되었습니다.");
