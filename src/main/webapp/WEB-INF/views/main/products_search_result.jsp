@@ -27,11 +27,23 @@
                 [${country.city}] ${product.name}${product.descriptions}
                 <br><br>
                 <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-            </a><br><br>
+            </a>
             <div class="tag-div">
                 <c:forEach var="tag" items="${product.tags}" varStatus="status">
                     # ${tag.tag}&nbsp;&nbsp;
                 </c:forEach>
+            </div>
+            <div class="like-container">
+                    <%--    로그인 상태--%>
+                <c:if test="${not empty pageContext.request.userPrincipal }">
+                    <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}" class="like-img">
+                    <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                </c:if>
+                    <%--    로그아웃 상태--%>
+                <c:if test="${empty pageContext.request.userPrincipal }">
+                    <img src='/images/empty-like.png' class="like-img">
+                    <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                </c:if>
             </div>
         </div>
     </div>

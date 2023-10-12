@@ -20,11 +20,13 @@ public class MainController {
     @Autowired
     private UserService userService;
     @Autowired
-    private TravelProductService travelProductService;
+    private TravelProductServiceImpl travelProductService;
     @Autowired
     private CountryService countryService;
     @Autowired
     private CommentServiceImpl commentService;
+    @Autowired
+    private ProductLikeServiceImpl likeService;
 
     /**
      * 리다이렉션
@@ -42,11 +44,6 @@ public class MainController {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("countries4", travelProductService.find4CountriesByCountryLike()); // 최근 뜨는 여행지 담기
         model.addAttribute("countries", countryService.findAllCountriesOrderByLike(page, 4)); // 전체 여행지 가져오기
-
-
-        System.out.println(travelProductService.find4CountriesByCountryLike());
-        System.out.println(countryService.countAllCountries());
-
         Pagination pagination = getPagination();
         pagination.setTotalCount(countryService.countAllCountries()); // 총 개수
         model.addAttribute("pagination", pagination); // 페이징 담기
@@ -60,7 +57,6 @@ public class MainController {
     public String searchMainPage(String keyword, Model model, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("searchResults", countryService.findAllCountriesByKeyword(keyword, page, 4)); // 검색 결과 담기
-
         Pagination pagination = getPagination();
         pagination.setTotalCount(countryService.countAllCountriesByKeyword(keyword)); // 나라 이름으로 검색된 개수
         model.addAttribute("pagination", pagination); // 페이징 담기
@@ -74,10 +70,7 @@ public class MainController {
     public String countryProductsListPage(@RequestParam("country_id") int countryId, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
-
-        List<ProductDto> productDtos = travelProductService.findAllProductsByCountryId(countryId);
         model.addAttribute("products", travelProductService.findAllProductsByCountryId(countryId)); // 여행 상품 리스트 담기
-        model.addAttribute("count", productDtos.size()); // 여행 상품 개수 담기
         return "main/country_products_list";
     }
 
@@ -88,7 +81,6 @@ public class MainController {
     public String SearchCountryProductsListPage(@RequestParam("country_id") int countryId, String keyword, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
-
         List<ProductDto> productDtos = travelProductService.findAllProductsByCountryIdAndKeyword(countryId, keyword);
         model.addAttribute("products", productDtos); // 여행 상품 리스트 담기
         model.addAttribute("count", productDtos.size()); // 여행 상품 개수 담기
@@ -105,6 +97,35 @@ public class MainController {
         model.addAttribute("product", travelProductService.findProductByProductId(productId)); // 여행지 상세 데이터 담기
         return "main/travel_product_detail";
     }
+
+    /**
+     * 여행지 상세 페이지 - 좋아요 동작
+     */
+    @PostMapping("/ROLE_GUEST/product/like")
+    public ResponseEntity<String> productLikeAction(@RequestParam("product_id") int productId) {
+        try {
+            likeService.saveProductLike(productId); // 좋아요 저장
+            return ResponseEntity.ok("좋아요를 눌렀습니다.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("좋아요 저장에 실패했습니다.");
+        }
+    }
+
+    /**
+     * 여행지 상세 페이지 - 좋아요 취소 동작
+     */
+    @PostMapping("/ROLE_GUEST/product/unlike")
+    public ResponseEntity<String> productUnLikeAction(@RequestParam("product_id") int productId) {
+        try {
+            likeService.deleteProductLike(productId); // 좋아요 취소
+            return ResponseEntity.ok("좋아요를 눌렀습니다.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("좋아요 저장에 실패했습니다.");
+        }
+    }
+
 
     /**
      * 여행지 상세 페이지 - 댓글 작성하기 동작

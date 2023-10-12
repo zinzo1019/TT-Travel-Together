@@ -9,7 +9,7 @@ public class Pagination {
     private int endPage;
     private boolean prev;
     private boolean next;
-    private int displayPageNum = 5;
+    private int displayPageNum = 4;
     private PageRequest pageRequest;
 
     public void setPageRequest(PageRequest pageRequest) {

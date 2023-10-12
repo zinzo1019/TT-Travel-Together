@@ -124,7 +124,6 @@ public class CommunityController {
         }
     }
 
-
     /**
      * 여행에 대해 궁금해요 - 댓글 삭제하기 동작
      */

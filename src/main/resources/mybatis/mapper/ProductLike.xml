@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.ProductLikeDao">
+
+    <!--    좋아요 저장하기-->
+    <insert id="saveProductLike">
+        insert into product_like (tb_user_id, travel_product_id)
+        values (#{userId}, #{productId})
+    </insert>
+
+    <!--    좋아요 취소하기-->
+    <delete id="deleteProductLike">
+        delete from product_like
+        where tb_user_id = #{userId}
+          and travel_product_id = #{productId}
+    </delete>
+
+    <select id="findLikeByUserIdAndProductId" resultType="boolean">
+        SELECT
+            CASE
+                WHEN EXISTS(
+                    SELECT 1
+                    FROM product_like
+                    WHERE travel_product_id = #{productId} AND tb_user_id = #{userId}
+                ) THEN true
+                ELSE false
+                END AS userLiked
+    </select>
+</mapper>

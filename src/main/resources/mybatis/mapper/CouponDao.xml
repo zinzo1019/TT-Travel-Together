@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.CouponDao">
+
+    <!--    쿠폰 저장하기-->
+    <insert id="saveCoupon">
+        insert into coupon
+        (name, description, code, discount_amount, discount_percentage, travel_product_id, tb_user_id)
+        values
+        <foreach item="productId" collection="productIds" separator=",">
+            (#{name}, #{description}, gen_random_uuid(), #{amount}, #{percentage}, #{productId}, #{userId})
+        </foreach>
+    </insert>
+
+    <!--    쿠폰 수정하기-->
+    <update id="updateCoupon">
+        update coupon
+        set name                = #{name},
+            description         = #{description},
+            discount_amount     = #{amount},
+            discount_percentage = #{percentage}
+        where id = #{id}
+    </update>
+
+    <!--    쿠폰 삭제하기-->
+    <delete id="deleteCoupon">
+        delete
+        from coupon
+        where id = #{couponId}
+    </delete>
+
+    <!--    전체 쿠폰 중 검색하기-->
+    <select id="findAllByKeyword" resultType="com.example.choyoujin.dto.CouponDto">
+        SELECT c.id,
+               c.name                as name,
+               c.code,
+               c.description         as description,
+               ct.country            as country,
+               ct.city               as city,
+               c.discount_amount     as amount,
+               c.discount_percentage as percentage,
+               tp.name               as productName,
+               ct.id                 as countryId
+        FROM coupon c
+                 LEFT JOIN travel_product tp ON c.travel_product_id = tp.id
+                 LEFT JOIN country ct ON tp.country_id = ct.id
+        WHERE (c.name LIKE '%' || #{keyword} || '%' -- 쿠폰 이름
+            OR c.description LIKE '%' || #{keyword} || '%' -- 쿠폰 설명
+            OR tp.name LIKE '%' || #{keyword} || '%' -- 상품 이름
+            OR ct.country LIKE '%' || #{keyword} || '%' -- 나라
+            OR ct.city LIKE '%' || #{keyword} || '%') -- 도시
+        ORDER BY c.id DESC
+    </select>
+
+    <!--    내 쿠폰 중 검색하기-->
+    <select id="findAllByKeywordAndUserId" resultType="com.example.choyoujin.dto.CouponDto">
+        SELECT c.id,
+               c.name                as name,
+               c.code,
+               c.description         as description,
+               ct.country            as country,
+               ct.city               as city,
+               c.discount_amount     as amount,
+               c.discount_percentage as percentage,
+               tp.name               as productName,
+               ct.id                 as countryId
+        FROM coupon c
+                 LEFT JOIN travel_product tp ON c.travel_product_id = tp.id
+                 LEFT JOIN country ct ON tp.country_id = ct.id
+        WHERE (c.name LIKE '%' || #{keyword} || '%' -- 쿠폰 이름
+            OR c.description LIKE '%' || #{keyword} || '%' -- 쿠폰 설명
+            OR tp.name LIKE '%' || #{keyword} || '%' -- 상품 이름
+            OR ct.country LIKE '%' || #{keyword} || '%' -- 나라
+            OR ct.city LIKE '%' || #{keyword} || '%') -- 도시
+            and c.tb_user_id = #{userId}
+        ORDER BY c.id DESC
+    </select>
+
+    <!--    관리자 - 모든 쿠폰 가져오기-->
+    <select id="findAll" resultType="com.example.choyoujin.dto.CouponDto">
+        select c.id,
+               c.name              as name,
+               c.code,
+               c.description       as description,
+               ct.country          as country,
+               ct.city             as city,
+               discount_amount     as amount,
+               discount_percentage as percentage,
+               tp.name             as productName
+        from coupon c
+                 left join travel_product tp
+                           on c.travel_product_id = tp.id
+                 left join country ct
+                           on tp.country_id = ct.id
+    </select>
+
+    <!--    관리자 - 나의 쿠폰 가져오기-->
+    <select id="findAllByUserId" resultType="com.example.choyoujin.dto.CouponDto">
+        select c.id,
+               c.name              as name,
+               c.code,
+               c.description       as description,
+               ct.country          as country,
+               ct.city             as city,
+               discount_amount     as amount,
+               discount_percentage as percentage,
+               tp.name             as productName
+        from coupon c
+                 left join travel_product tp
+                           on c.travel_product_id = tp.id
+                 left join country ct
+                           on tp.country_id = ct.id
+        where c.tb_user_id = #{userId}
+    </select>
+
+    <!--    쿠폰 아이디로 쿠폰 가져오기-->
+    <select id="findOneByCouponId" resultType="com.example.choyoujin.dto.CouponDto">
+        select c.id,
+               c.name              as name,
+               c.code,
+               c.description       as description,
+               ct.country          as country,
+               ct.city             as city,
+               discount_amount     as amount,
+               discount_percentage as percentage,
+               tp.name             as productName,
+               ct.id               as countryId
+        from coupon c
+                 left join travel_product tp
+                           on c.travel_product_id = tp.id
+                 left join country ct
+                           on tp.country_id = ct.id
+        where c.id = #{couponId}
+    </select>
+</mapper>

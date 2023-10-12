@@ -194,6 +194,11 @@
             cpassword.focus();
             return false;
         }
+        // 중복된 아이디
+        if (isDuplicated) {
+            alert("중복된 아이디입니다.")
+            return false;
+        }
 
         var formData = new FormData();
         formData.append("email", $("#email").val());

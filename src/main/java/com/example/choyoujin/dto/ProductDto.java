@@ -17,11 +17,12 @@ public class ProductDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private int like;
+    private boolean userLiked; // 좋아요 여부
     private List<TagDto> tags; // 태그들
-    private List<TagDto> plus; // 설명들
+    private List<TagDto> detailDescriptions; // 설명들
 
     private List<String> stringTags; // 태그들 저장
-    private List<String> stringPlus; // 설명들 저장
+    private List<String> stringDetailDescriptions; // 설명들 저장
 
     private int countryId; // 나라 기본키
     private String country; // 나라 이름

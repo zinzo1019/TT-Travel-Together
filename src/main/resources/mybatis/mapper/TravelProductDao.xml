@@ -11,14 +11,39 @@
         from travel_product
     </select>
 
-    <!--    나라별 상품 가져오기-->
-    <select id="findAllProductsByCountryId" resultType="com.example.choyoujin.dto.ProductDto">
-        select tb_user_id as userId, *
+    <!--    나라별 여행 상품 아이디 리스트 가져오기-->
+    <select id="findAllProductIdsByCountryId" resultType="int">
+        select *
         from travel_product
         where country_id = #{countryId}
     </select>
 
-    <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려)-->
+    <!--    나라별 상품 가져오기 - 로그인 후 (좋아요 O)-->
+    <select id="findAllProductsByCountryIdAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
+        select distinct tp.id,
+                        tp.tb_user_id as userId,
+                        tp.*,
+                        case
+                            when pl.tb_user_id = #{userId}
+                                then true
+                            else false
+                            end       as userLiked
+        from travel_product tp
+                 left join product_like pl
+                           on tp.id = pl.travel_product_id
+        where country_id = #{countryId}
+        order by tp.like desc
+    </select>
+
+    <!--    나라별 상품 가져오기 - 로그인 전 (좋아요 X)-->
+    <select id="findAllProductsByCountryId" resultType="com.example.choyoujin.dto.ProductDto">
+        select tb_user_id as userId, tp.*
+        from travel_product tp
+        where tp.country_id = #{countryId}
+        order by tp.like desc
+    </select>
+
+    <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 전-->
     <select id="findAllProductsByCountryIdAndKeyword" resultType="com.example.choyoujin.dto.ProductDto">
         SELECT tb_user_id AS userId, tp.*
         FROM travel_product tp
@@ -28,19 +53,46 @@
         ORDER BY tp.like DESC
     </select>
 
+    <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 후-->
+    <select id="findAllProductsByCountryIdAndKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT tp.tb_user_id AS userId,
+               tp.*,
+               case
+                   when pl.tb_user_id = #{userId}
+                       then true
+                   else false
+                   end       as userLiked
+        FROM travel_product tp
+                 left join product_like pl
+                           on tp.id = pl.travel_product_id
+        WHERE (tp.name LIKE '%' || #{keyword} || '%'
+            OR tp.description LIKE '%' || #{keyword} || '%')
+          AND tp.country_id = #{countryId}
+        ORDER BY tp.like DESC
+    </select>
+
     <!--    여행 상품 리스트 검색하기 (name과 description 고려)-->
     <select id="findAllProductsByKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.*, c.*
+        SELECT tp.*,
+               c.*,
+               case
+                   when pl.tb_user_id = #{userId}
+                       then true
+                   else false
+                   end as userLiked
         FROM travel_product tp
-        LEFT JOIN country c
-        ON tp.country_id = c.id
+                 LEFT JOIN country c
+                           ON tp.country_id = c.id
+                 left join product_like pl
+                           on tp.id = pl.travel_product_id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%'
             OR c.country LIKE '%' || #{keyword} || '%'
             OR c.city LIKE '%' || #{keyword} || '%')
+        order by tp.like desc
     </select>
 
-    <!--    아이디로 상품 가져오기-->
+    <!--    아이디로 상품 가져오기 - 로그인 전 (좋아요 X)-->
     <select id="findProductByProductId" resultType="com.example.choyoujin.dto.ProductDto">
         select tp.tb_user_id as userId, tp.*, c.*
         from travel_product tp
@@ -49,20 +101,77 @@
         where tp.id = #{productId}
     </select>
 
+    <!--    아이디로 상품 가져오기 - 로그인 후 (좋아요 O)-->
+    <select id="findProductByProductIdAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
+        select tp.tb_user_id as userId,
+               tp.*,
+               c.*,
+               case
+                   when pl.tb_user_id = #{userId}
+                       then true
+                   else false
+                   end as userLiked
+        from travel_product tp
+                 left join country c
+                           on tp.country_id = c.id
+                 left join product_like pl
+                           on tp.id = pl.travel_product_id
+        where tp.id = #{productId}
+    </select>
+
     <!--    관리자 - 사용자 아이디로 상품 리스트 가져오기-->
     <select id="findAllProductsByUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.*,
-               c.*,
-               COUNT(*) OVER (PARTITION BY c.id) AS cityCount
+        SELECT tp.*, tp.tb_user_id as userId, c.*
         FROM travel_product tp
                  LEFT JOIN country c ON tp.country_id = c.id
         WHERE tp.tb_user_id = #{userId}
-        ORDER BY c.country, c.city;
+        ORDER BY c.country, c.city, tp.like DESC
     </select>
 
     <!--    여행 상품 등록하기-->
-    <insert id="saveProduct">
+    <insert id="saveProduct" useGeneratedKeys="true" parameterType="com.example.choyoujin.dto.ProductDto"
+            keyProperty="id">
         insert into travel_product (name, description, cost, tb_user_id, country_id)
         values (#{productName}, #{description}, #{cost}, #{userId}, #{countryId})
     </insert>
+
+    <!--    여행 상품 - 설명 저장하기-->
+    <insert id="saveProductDetails">
+        insert into travel_product_detail (description, travel_product_id)
+        values
+        <foreach item="detail" collection="details" separator=",">
+            (#{detail}, #{productId})
+        </foreach>
+    </insert>
+
+    <!--    여행 상품 - 태그 저장하기-->
+    <insert id="saveProductTags">
+        insert into travel_product_tag (tag, travel_product_id)
+        values
+        <foreach item="tag" collection="tags" separator=",">
+            (#{tag}, #{productId})
+        </foreach>
+    </insert>
+
+    <!--    여행 상품 - 좋아요 1 증가-->
+    <update id="plusLike">
+        update travel_product
+        set "like" = "like" + 1
+        where id = #{productId}
+    </update>
+
+    <!--    여행 상품 - 좋아요 1 감소-->
+    <update id="plusUnLike">
+        update travel_product
+        set "like" = "like" - 1
+        where id = #{productId}
+    </update>
+
+    <!--    나라 아이디로 여행 상품 리스트 가져오기-->
+    <select id="findAllByCountryId" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT id, name, country_id
+        FROM travel_product
+        WHERE country_id = #{countryId}
+        ORDER BY id
+    </select>
 </mapper>

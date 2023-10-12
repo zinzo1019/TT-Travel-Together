@@ -56,15 +56,29 @@
     .text {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 3%;
+        padding-top: 1%;
         font-size: x-large;
         font-weight: bold;
+    }
+
+    .like-img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .no-style {
+        text-decoration: none;
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        color: inherit;
     }
 
     .tag-div {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 7%;
+        padding-top: 4%;
         font-size: medium;
     }
 
@@ -75,8 +89,8 @@
 
     .coupon-form {
         display: flex;
-        margin-top: 7%;
-        margin-bottom: 7%;
+        margin-top: 3%;
+        margin-bottom: 3%;
     }
 
     button {
@@ -193,8 +207,24 @@
                     <img src="${product.image}">
                 </div>
                 <div class="text">
-                    [${product.city}] ${product.name}${product.descriptions}
-                    <br><br>
+                    <div>
+                        <%--    로그인 상태--%>
+                        <c:if test="${not empty pageContext.request.userPrincipal }">
+                            <a href="#" class="no-style" id="like-link">
+                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}"
+                                     class="like-img">
+                            </a>
+                            ${product.like}
+                        </c:if>
+                        <%--    로그아웃 상태--%>
+                        <c:if test="${empty pageContext.request.userPrincipal }">
+                            <a href="#" class="no-style" id="like-link">
+                                <img src='/images/empty-like.png' class="like-img">
+                            </a>
+                            ${product.like}
+                        </c:if>
+                    </div>
+                    <p style="margin: 3% 0">[${product.city}] ${product.name}${product.descriptions}</p>
                     <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
                     <!-- 쿠폰 창 -->
                     <div class="coupon-form">
@@ -205,7 +235,7 @@
                         <p id="coupon-message"></p>
                     </div>
                     <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-                    <div>
+                    <div style="margin-top: 3%">
                         <p style="font-size: medium">${product.description}</p>
                     </div>
                     <div class="tag-div">
@@ -230,7 +260,9 @@
                             <p style="font-size: small; font-weight: bold;">${comment.userName}</p>
                             <p>${comment.content}</p>
                             <button class="reply-button" style="margin-top: 0%">답글 달기</button>
-                            <button class="delete-button" style="margin-top: 0%; color: red;" data-comment-id="${comment.id}">삭제</button>
+                            <button class="delete-button" style="margin-top: 0%; color: red;"
+                                    data-comment-id="${comment.id}">삭제
+                            </button>
                         </div>
                         <!-- 대댓글 입력 칸 (초기에는 숨김) -->
                         <div class="reply-form" style="display: none;">
@@ -246,6 +278,39 @@
     </div>
 </div>
 <script>
+    /** 좋아요 버튼 클릭 - 화면 변화 */
+    $(document).ready(function () {
+        var liked = ${product.userLiked}; // 좋아요 초기화
+        $("#like-link").click(function (event) {
+            event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 막음
+            if (liked) {
+                // 이미 좋아요를 누른 경우, 좋아요 취소 처리
+                likeAction("unlike");
+                $("#like-link img").attr("src", "/images/empty-like.png");
+            } else {
+                // 좋아요를 누르지 않은 경우, 좋아요 처리
+                likeAction("like");
+                $("#like-link img").attr("src", "/images/like.png");
+            }
+            liked = !liked; // 상태를 토글
+        });
+    });
+
+    /** 좋아요 클릭 시 postAction */
+    function likeAction(url) {
+        $.ajax({
+            type: "POST",
+            url: url + "?product_id=" + ${product.id},
+            success: function (data) {
+                window.location.reload();
+            },
+            error: function () {
+                alert("로그인 먼저 진행해주세요.");
+                window.location.href = "/login";
+            }
+        });
+    }
+
     /** 댓글 작성 */
     $(document).ready(function () {
         $("#submitButton").click(function () {
@@ -299,16 +364,16 @@
     });
 
     // 삭제 버튼 클릭
-    $(".delete-button").on("click", function() {
+    $(".delete-button").on("click", function () {
         var commentId = $(this).data("comment-id");
         if (confirm("댓글을 삭제하시겠습니까?")) {
             $.ajax({
                 type: "POST",
                 url: "comment/delete?commentId=" + commentId,
-                success: function(response) {
+                success: function (response) {
                     location.reload();
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                 }
             });
         }

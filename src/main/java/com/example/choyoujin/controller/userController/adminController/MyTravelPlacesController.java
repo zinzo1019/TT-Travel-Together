@@ -2,7 +2,7 @@ package com.example.choyoujin.controller.userController.adminController;
 
 import com.example.choyoujin.dto.ProductDto;
 import com.example.choyoujin.service.CountryService;
-import com.example.choyoujin.service.TravelProductService;
+import com.example.choyoujin.service.TravelProductServiceImpl;
 import com.example.choyoujin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class MyTravelPlacesController {
     @Autowired
     private UserService userService;
     @Autowired
-    private TravelProductService travelProductService;
+    private TravelProductServiceImpl travelProductService;
     @Autowired
     private CountryService countryService;
 
@@ -53,9 +53,6 @@ public class MyTravelPlacesController {
     /** 여행지 등록 페이지 */
     @PostMapping("/save")
     public ResponseEntity<String> myTravelPlacesPostAction(ProductDto productDto) {
-
-        System.out.println(productDto);
-
         try {
             travelProductService.saveProduct(productDto);
             return ResponseEntity.ok("여행지를 등록했습니다.");

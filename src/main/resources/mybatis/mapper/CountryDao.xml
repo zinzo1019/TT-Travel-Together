@@ -26,7 +26,7 @@
 
     <!--    나라별 좋아요가 많은 순으로 상위 4개 나라 가져오기-->
     <select id="find4CountriesByCountryLike" resultType="com.example.choyoujin.dto.CountryDto">
-        SELECT MAX(tp.id) AS id, c.id AS countryId, c.*, SUM(tp.like) AS totalLikes
+        SELECT COALESCE(SUM(tp.like), 0) AS totalLikes, c.id as countryId, c.country, c.city, c.image
         FROM country c
                  LEFT JOIN travel_product tp ON c.id = tp.country_id
         GROUP BY c.id
@@ -35,7 +35,7 @@
 
     <!--    나라별 좋아요가 많은 순으로 모든 나라 가져오기-->
     <select id="findAllCountriesOrderByLike" resultType="com.example.choyoujin.dto.CountryDto">
-        SELECT MAX(tp.id) AS id, c.id AS countryId, c.*, SUM(tp.like) AS totalLikes
+        SELECT COALESCE(SUM(tp.like), 0) AS totalLikes, c.id as countryId, c.country, c.city, c.image
         FROM country c
                  LEFT JOIN travel_product tp ON c.id = tp.country_id
         GROUP BY c.id

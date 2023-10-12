@@ -50,19 +50,14 @@
     <ul>
         <li><a href="/ROLE_ADMIN">어디로 여행을 떠날까요?</a></li>
 
-        <li class="parent-board">커뮤니티</li>
-        <li><a href="/ROLE_USER/community/together" class="child-title">같이 여행 가요!</a></li>
-        <li><a href="/ROLE_USER/community/curious" class="child-title">여행에 대해 궁금해요.</a></li>
-
         <li class="parent-board">나의 여행지</li>
         <li><a href="/ROLE_ADMIN/my-travel-places" class="child-title">내가 등록한 여행지</a></li>
         <li><a href="/ROLE_ADMIN/my-travel-places/save" class="child-title">여행지 등록하기</a></li>
-        <%--        <li><a href="/ROLE_USER/mytravel/upcoming" class="child-title">곧 여기로 떠나요!</a></li>--%>
-        <%--        <li><a href="/ROLE_USER/mytravel/interesting" class="child-title">이 여행지에 관심있어요.</a></li>--%>
 
-        <li class="parent-board">마이 페이지</li>
-        <%--        <li><a href="/ROLE_USER/mypage/together" class="child-title">나의 '같이 여행 가요!'</a></li>--%>
-        <%--        <li><a href="/ROLE_USER/mypage/curious" class="child-title">나의 '여행에 대해 궁금해요.'</a></li>--%>
+        <li class="parent-board">쿠폰</li>
+        <li><a href="/ROLE_ADMIN/coupon/all" class="child-title">모든 쿠폰</a></li>
+        <li><a href="/ROLE_ADMIN/coupon/my" class="child-title">나의 쿠폰</a></li>
+        <li><a href="/ROLE_ADMIN/coupon/save" class="child-title">쿠폰 등록하기</a></li>
 
         <%--    로그인 상태--%>
         <c:if test="${not empty pageContext.request.userPrincipal }">

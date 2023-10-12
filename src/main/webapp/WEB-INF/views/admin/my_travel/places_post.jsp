@@ -18,7 +18,6 @@
 <!-- datepicker 라이브러리 추가 -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -257,7 +256,7 @@
             formData.append("productName", name);
             formData.append("description", description);
             formData.append("userId", ${user.id});
-            formData.append("stringPlus", descriptionsData);
+            formData.append("stringDetailDescriptions", descriptionsData);
             formData.append("stringTags", tagsData);
             $.ajax({
                 type: 'POST',
@@ -266,6 +265,7 @@
                 processData: false,
                 success: function (data) {
                     alert('게시글이 작성되었습니다.');
+                    window.location.href = '/ROLE_ADMIN/my-travel-places';
                 },
                 error: function (error) {
                     alert('게시글 작성에 실패했습니다.');

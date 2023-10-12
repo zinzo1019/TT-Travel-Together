@@ -1,10 +1,7 @@
 package com.example.choyoujin.controller.userController.adminController;
 
 import com.example.choyoujin.dto.*;
-import com.example.choyoujin.service.CommentServiceImpl;
-import com.example.choyoujin.service.CountryService;
-import com.example.choyoujin.service.TravelProductService;
-import com.example.choyoujin.service.UserService;
+import com.example.choyoujin.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,7 @@ public class AdminMainController {
     @Autowired
     private UserService userService;
     @Autowired
-    private TravelProductService travelProductService;
+    private TravelProductServiceImpl travelProductService;
     @Autowired
     private CountryService countryService;
     @Autowired
@@ -80,7 +77,6 @@ public class AdminMainController {
     public String SearchCountryProductsListPage(@RequestParam("country_id") int countryId, String keyword, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
-
         List<ProductDto> productDtos = travelProductService.findAllProductsByCountryIdAndKeyword(countryId, keyword);
         model.addAttribute("products", productDtos); // 여행 상품 리스트 담기
         model.addAttribute("count", productDtos.size()); // 여행 상품 개수 담기
@@ -135,11 +131,15 @@ public class AdminMainController {
     /**
      * ROLE_ADMIN 회원가입 동작
      */
-    @RequestMapping("/ROLE_ADMIN/admin/signup-process")
-    public String signUpProcess(UserDto userDto) {
-        int imageId = userService.saveImageAndGetImageId(userDto); // 이미지 저장
-        userService.saveUser(userDto, "ROLE_ADMIN", 1, imageId); // 사용자 저장
-        return "admin/base_view/login";
+    @PostMapping("/ROLE_GUEST/admin/signup-process")
+    public ResponseEntity<String> signUpProcess(UserDto userDto) {
+        try {
+            int imageId = userService.saveImageAndGetImageId(userDto); // 이미지 저장
+            userService.saveUser(userDto, "ROLE_ADMIN", 1, imageId); // 사용자 저장
+            return ResponseEntity.ok("회원가입을 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입을 실패했습니다.");
+        }
     }
 
     /**

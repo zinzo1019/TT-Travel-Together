@@ -183,9 +183,9 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <c:forEach begin="1" end="${pagination.endPage}" varStatus="status">
+                    <c:forEach begin="2" end="${countries.size-1}" varStatus="status">
                         <li class="page-item">
-                            <a class="page-link" href="?page=${status.index}">${status.index}</a>
+                            <a class="page-link" href="?page=${status.index}">${status.index-1}</a>
                         </li>
                     </c:forEach>
                     <li class="page-item">

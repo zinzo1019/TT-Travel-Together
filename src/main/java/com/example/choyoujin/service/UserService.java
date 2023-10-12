@@ -44,21 +44,13 @@ public class UserService {
     /**
      * 사용자 저장
      */
-    public boolean saveUser(UserDto userDto, String role, int enabled, int imageId) {
-        // 회원가입 날짜
-        LocalDate createDate = LocalDate.now();
-        userDto.setCreateDate(createDate);
-        if (isUser(userDto.getEmail()) == false) {
-            // 암호화
-            String pwd = pwdEncoder.encode(userDto.getPassword());
-            userDto.setPassword(pwd);
-            // 사용자 저장
-            userDao.saveUser(userDto, role, enabled, imageId);
-            System.out.println("사용자를 저장했습니다.");
-            return true; // 첫 회원가입
-        } else {
-            System.out.println("이미 회원가입된 사용자입니다.");
-            return true; // 이미 가입된 회원
+    public void saveUser(UserDto userDto, String role, int enabled, int imageId) {
+        try {
+            userDto.setCreateDate(LocalDate.now()); // 생성 날짜
+            userDto.setPassword(pwdEncoder.encode(userDto.getPassword())); // 암호화
+            userDao.saveUser(userDto, role, enabled, imageId); // 사용자 저장
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -95,7 +87,9 @@ public class UserService {
         return imageId;
     }
 
-    /** 게시글 작성자와 로그인자 비교 */
+    /**
+     * 게시글 작성자와 로그인자 비교
+     */
     public boolean compareWriterAndUser(int writerId) {
         if (writerId == getUserData().getId()) return true;
         else return false;

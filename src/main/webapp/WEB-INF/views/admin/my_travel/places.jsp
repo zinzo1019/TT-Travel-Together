@@ -114,7 +114,7 @@
             <button class="search-button" onclick="search(event)">검색</button>
         </div>
         <div class="travel-container" id="products_search_result">
-            <h1 style="margin-top: 5%">관리자님이 등록한 ${fn:length(products)}건의 여행 상품이예요.</h1>
+            <h1 style="margin-top: 5%">${user.name}이 등록한 ${fn:length(products)}건의 여행 상품이예요.</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
                     <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
@@ -139,8 +139,16 @@
                             </c:forEach>
                         </div>
                         <div class="like-container">
-                            <img src="/images/like.png" class="like-img">
-                            <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                                <%--    로그인 상태--%>
+                            <c:if test="${not empty pageContext.request.userPrincipal }">
+                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}" class="like-img">
+                                <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                            </c:if>
+                                <%--    로그아웃 상태--%>
+                            <c:if test="${empty pageContext.request.userPrincipal }">
+                                <img src='/images/empty-like.png' class="like-img">
+                                <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                            </c:if>
                         </div>
                     </div>
                 </div>
