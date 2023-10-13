@@ -70,4 +70,19 @@ public class CouponService {
     public List<CouponDto> findAllByKeywordAndUserId(String keyword) {
         return couponDao.findAllByKeywordAndUserId(keyword, userService.getUserData().getId());
     }
+
+    /** 여행 상품 아이디로 쿠폰 리스트 가져오기 */
+    public List<CouponDto> findAllByProductId(int productId) {
+        return couponDao.findAllByProductId(productId);
+    }
+
+    public int getCostAfterCouponApply(int couponId, int cost) {
+        CouponDto couponDto = findOneByCouponId(couponId); // 쿠폰 정보 가져오기
+        if (couponDto.getPercentage() != 0) { // 퍼센트 할인
+            cost *= couponDto.getPercentage();
+        } else { // 금액 할인
+            cost -= couponDto.getAmount();
+        }
+        return cost;
+    }
 }

@@ -88,9 +88,50 @@
     }
 
     .coupon-form {
-        display: flex;
-        margin-top: 3%;
-        margin-bottom: 3%;
+        margin: 3% 0;
+        width: 81%;
+    }
+
+    /* 스타일을 travel_product tp할 드롭다운 쿠폰 선택 요소 */
+    .coupon-form select {
+        width: 80%;
+        background-color: #f2f2f2;
+        color: #333;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* 드롭다운에서 항목을 선택할 때 색상 변경 */
+    .coupon-form select:focus {
+        background-color: #fff;
+        color: #555;
+    }
+
+    /* 드롭다운 화살표 아이콘을 가운데 정렬 */
+    .coupon-form select::-ms-expand {
+        display: none; /* IE에서 화살표 아이콘 숨김 */
+    }
+
+    /* 드롭다운 화살표 아이콘 스타일링 */
+    .coupon-form select::after {
+        content: '▼';
+        font-size: 16px;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .coupon-list li {
+        padding: 5px;
+        cursor: pointer;
+    }
+
+    .coupon-list li:hover {
+        background-color: #f0f0f0;
     }
 
     button {
@@ -144,6 +185,19 @@
         cursor: pointer;
         float: right;
         margin: 1% 0;
+    }
+
+    .checkoutButton {
+        padding: 10px 20px;
+        background-color: #333;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: top;
+        float: right;
+        margin-right: 14%;
     }
 
     .background-container {
@@ -224,17 +278,39 @@
                             ${product.like}
                         </c:if>
                     </div>
-                    <p style="margin: 3% 0">[${product.city}] ${product.name}${product.descriptions}</p>
+                    <p style="margin: 3% 0">[${product.country}
+                        - ${product.city}] ${product.name}${product.descriptions}</p>
                     <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
                     <!-- 쿠폰 창 -->
                     <div class="coupon-form">
-                        <input type="text" id="coupon-code" placeholder="쿠폰 코드를 입력하세요">
-                        <button id="apply-coupon">적용</button>
+                        <div class="form-group">
+                            <select class="form-control" id="coupons" name="coupons">
+                                <option value="0">선택 없음</option>
+                                <c:forEach items="${product.coupons}" var="coupon">
+                                    <option value="${coupon.id}">
+                                            ${coupon.name} -
+                                        <c:choose>
+                                            <c:when test="${coupon.percentage > 0}">
+                                                ${coupon.percentage}% 할인
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${coupon.amount} 원 할인
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </option>
+                                </c:forEach>
+                            </select>
+                            <button class="submit-comment-button" id="couponButton" style="margin: 0">적용</button>
+                        </div>
                     </div>
                     <div class="result">
                         <p id="coupon-message"></p>
                     </div>
-                    <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
+                    <div>
+                        <p id="updatedCost" style="display: inline-block; vertical-align: top;"><fmt:formatNumber
+                                value="${updatedCost}" pattern="#,###"/> 원</p>
+                        <button class="checkoutButton" id="CheckoutButton">결제하기</button>
+                    </div>
                     <div style="margin-top: 3%">
                         <p style="font-size: medium">${product.description}</p>
                     </div>
@@ -282,6 +358,16 @@
     </div>
 </div>
 <script>
+
+    $(document).ready(function () {
+        var updatedCost = ${product.cost}; // 할인가
+        var formattedCost = new Intl.NumberFormat('ko-KR', {
+            style: 'currency',
+            currency: 'KRW'
+        }).format(updatedCost);
+        $('#updatedCost').html(formattedCost.replace('₩', '') + '원');
+    });
+
     /** 좋아요 버튼 클릭 - 화면 변화 */
     $(document).ready(function () {
         var liked = ${product.userLiked}; // 좋아요 초기화
@@ -377,6 +463,42 @@
                     location.reload();
                 },
                 error: function (xhr, status, error) {
+                }
+            });
+        }
+    });
+
+    // 삭제 버튼 클릭
+    $("#couponButton").on("click", function () {
+        var couponId = $('#coupons').val(); // 쿠폰 아이디
+        if (couponId == 0) { // 선택 없음
+            var updatedCost = ${product.cost}; // 할인가
+            var formattedCost = new Intl.NumberFormat('ko-KR', {
+                style: 'currency',
+                currency: 'KRW'
+            }).format(updatedCost);
+            $('#updatedCost').html(formattedCost.replace('₩', '') + '원');
+        } else { // 쿠폰 적용
+            $.ajax({
+                type: "POST",
+                url: "coupon/apply?coupon_id=" + couponId,
+                data: {
+                    cost: ${product.cost}
+                },
+                success: function (response) {
+                    updatedCost = parseInt(response);
+
+                    // `updatedCost`의 값을 가져와서 원으로 표시
+                    var formattedCost = new Intl.NumberFormat('ko-KR', {
+                        style: 'currency',
+                        currency: 'KRW'
+                    }).format(updatedCost);
+
+                    // `#updatedCost` 엘리먼트의 HTML을 변경하여 업데이트
+                    $('#updatedCost').html(formattedCost.replace('₩', '') + '원');
+                },
+                error: function (xhr, status, error) {
+                    alert("쿠폰 적용에 실패했습니다.");
                 }
             });
         }

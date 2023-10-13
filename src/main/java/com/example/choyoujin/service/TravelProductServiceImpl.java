@@ -30,6 +30,8 @@ public class TravelProductServiceImpl implements TravelProductService {
     private ProductLikeServiceImpl likeService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private CouponService couponService;
 
     /**
      * 최근 뜨는 여행지 4개 (좋아요 순으로 정렬)
@@ -62,9 +64,10 @@ public class TravelProductServiceImpl implements TravelProductService {
             isLiked = likeService.findLikeByUserIdAndProductId(userService.getUserData().getId(), productId);
             dto.setUserLiked(isLiked);
         }
-        dto.setEncoding(decompressBytes(dto.getPicByte()));
+        dto.setEncoding(decompressBytes(dto.getPicByte())); // 이미지 Set
         dto.setDescriptions(findAllByProductId(dto.getId())); // 설명 Set
         dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
+        dto.setCoupons(couponService.findAllByProductId(productId)); // 쿠폰 리스트 Set
         return dto;
     }
 

@@ -93,8 +93,8 @@ public class TravelTogetherService {
     }
 
     public List<PostDto> findAllTogetherPostsByEnabledAndUserId(boolean enabled) {
-        UserDto userDto = userService.getUserData();
-        return togetherDao.findAllTogetherPostsByEnabledAndUserId(enabled, userDto.getId());
+        List<PostDto> postDtos = togetherDao.findAllTogetherPostsByEnabledAndUserId(enabled, userService.getUserData().getId());
+        return calculateRemainingDays(postDtos); // 모집 마감까지 남은 날짜 계산
     }
 
     /**

@@ -15,4 +15,5 @@ public interface CouponDao {
     List<CouponDto> findAllByKeyword(String keyword);
     List<CouponDto> findAllByKeywordAndUserId(String keyword, int userId);
     List<CouponDto> findAll();
+    List<CouponDto> findAllByProductId(int productId);
 }

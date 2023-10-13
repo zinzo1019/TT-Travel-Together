@@ -27,6 +27,8 @@ public class MainController {
     private CommentServiceImpl commentService;
     @Autowired
     private ProductLikeServiceImpl likeService;
+    @Autowired
+    private CouponService couponService;
 
     /**
      * 리다이렉션
@@ -123,6 +125,18 @@ public class MainController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("좋아요 저장에 실패했습니다.");
+        }
+    }
+
+    /** 쿠폰 적용하기 */
+    @PostMapping("/ROLE_GUEST/product/coupon/apply")
+    public ResponseEntity<String> productCouponApplyAction(@RequestParam("coupon_id") int couponId, int cost) {
+        try {
+            cost = couponService.getCostAfterCouponApply(couponId, cost); // 할인가 적용
+            return ResponseEntity.ok(String.valueOf(cost));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("쿠폰 적용에 실패했습니다.");
         }
     }
 

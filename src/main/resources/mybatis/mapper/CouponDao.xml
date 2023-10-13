@@ -75,7 +75,7 @@
             OR tp.name LIKE '%' || #{keyword} || '%' -- 상품 이름
             OR ct.country LIKE '%' || #{keyword} || '%' -- 나라
             OR ct.city LIKE '%' || #{keyword} || '%') -- 도시
-            and c.tb_user_id = #{userId}
+          and c.tb_user_id = #{userId}
         ORDER BY c.id DESC
     </select>
 
@@ -134,5 +134,18 @@
                  left join country ct
                            on tp.country_id = ct.id
         where c.id = #{couponId}
+    </select>
+
+    <!--    여행 상품 아이디로 쿠폰 리스트 가져오기-->
+    <select id="findAllByProductId" resultType="com.example.choyoujin.dto.CouponDto">
+        select c.id,
+               c.name              as name,
+               c.code,
+               discount_amount     as amount,
+               discount_percentage as percentage
+        from coupon c
+                 left join travel_product tp
+                           on c.travel_product_id = tp.id
+        where c.travel_product_id = #{productId}
     </select>
 </mapper>

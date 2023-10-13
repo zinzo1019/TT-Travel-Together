@@ -121,7 +121,7 @@
             <button class="search-button" onclick="search(event)">검색</button>
         </div>
         <div class="travel-container" id="products_search_result">
-            <h1>${country.country} - ${country.city} (${fn:length(products)}건)</h1>
+            <h1>[${country.country} - ${country.city}] ${fn:length(products)}건의 여행지가 있어요!</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
                     <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
