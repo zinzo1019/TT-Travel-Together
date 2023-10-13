@@ -10,7 +10,7 @@
         WITH RECURSIVE CODE_LIST(id, content, tb_user_id, curious_post_id, parent_comment_id, level, PATH, CYCLE)
                            as (SELECT cc.id,
                                       cc.content,
-                                      cc.tb_user_id,
+                                      cc.tb_user_id as userId,
                                       cc.curious_post_id,
                                       cc.parent_comment_id,
                                       1,
@@ -22,7 +22,7 @@
                                UNION ALL
                                SELECT cc.id,
                                       cc.content,
-                                      cc.tb_user_id,
+                                      cc.tb_user_id as userId,
                                       cc.curious_post_id,
                                       cc.parent_comment_id,
                                       B.level + 1,
@@ -34,7 +34,7 @@
                                  AND NOT CYCLE)
         SELECT cc.id,
                content,
-               tb_user_id,
+               tb_user_id as userId,
                curious_post_id,
                parent_comment_id,
                path,
@@ -52,7 +52,7 @@
         WITH RECURSIVE CODE_LIST(id, content, tb_user_id, travel_together_post_id, parent_comment_id, level, PATH,
                                  CYCLE) as (SELECT ttc.id,
                                                    ttc.content,
-                                                   ttc.tb_user_id,
+                                                   ttc.tb_user_id as userId,
                                                    ttc.travel_together_post_id,
                                                    ttc.parent_comment_id,
                                                    1,
@@ -64,7 +64,7 @@
                                             UNION ALL
                                             SELECT ttc.id,
                                                    ttc.content,
-                                                   ttc.tb_user_id,
+                                                   ttc.tb_user_id as userId,
                                                    ttc.travel_together_post_id,
                                                    ttc.parent_comment_id,
                                                    B.level + 1,
@@ -76,7 +76,7 @@
                                               AND NOT CYCLE)
         SELECT ttc.id,
                content,
-               tb_user_id,
+               tb_user_id as userId,
                travel_together_post_id,
                parent_comment_id,
                path,
@@ -94,7 +94,7 @@
         WITH RECURSIVE CODE_LIST(id, content, tb_user_id, travel_product_id, parent_comment_id, level, PATH, CYCLE)
                            as (SELECT tpc.id,
                                       tpc.content,
-                                      tpc.tb_user_id,
+                                      tpc.tb_user_id as userId,
                                       tpc.travel_product_id,
                                       tpc.parent_comment_id,
                                       1,
@@ -106,7 +106,7 @@
                                UNION ALL
                                SELECT tpc.id,
                                       tpc.content,
-                                      tpc.tb_user_id,
+                                      tpc.tb_user_id as userId,
                                       tpc.travel_product_id,
                                       tpc.parent_comment_id,
                                       B.level + 1,
@@ -118,7 +118,7 @@
                                  AND NOT CYCLE)
         SELECT tpc.id,
                content,
-               tb_user_id,
+               tb_user_id as userId,
                travel_product_id,
                parent_comment_id,
                path,

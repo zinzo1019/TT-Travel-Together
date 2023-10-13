@@ -72,17 +72,11 @@ public class UserService {
      */
     public int saveImageAndGetImageId(UserDto userDto) {
         int imageId = 0;
-        if (userDto.getImage() != null && !userDto.getImage().isEmpty()) {
-            try {
-                /** 사진 업로드 */
-                if (!userDto.getImage().isEmpty()) {
-                    imageId = fileService.saveImage(userDto.getImage());// 이미지 저장
-                }
-            } catch (IOException e) {
-                System.out.println("이미지 업로드를 실패했습니다.");
-            }
-        } else {
-            System.out.println("이미지를 선택하지 않았습니다.");
+        try {
+            if (!userDto.getImage().isEmpty())
+                imageId = fileService.saveImage(userDto.getImage());// 이미지 저장
+        } catch (IOException e) {
+            System.out.println("이미지 업로드를 실패했습니다.");
         }
         return imageId;
     }

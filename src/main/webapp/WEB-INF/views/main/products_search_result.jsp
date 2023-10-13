@@ -18,7 +18,7 @@
         <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
            style="text-decoration: none; color: inherit;">
             <div class="img" style="display: inline-block;">
-                <img src="${product.image}">
+                <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
             </div>
         </a>
         <div class="text">

@@ -8,13 +8,17 @@
     <!--    모든 상품 가져오기-->
     <select id="findAllProducts" resultType="com.example.choyoujin.dto.ProductDto">
         select *
-        from travel_product
+        from travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
     </select>
 
     <!--    나라별 여행 상품 아이디 리스트 가져오기-->
     <select id="findAllProductIdsByCountryId" resultType="int">
         select *
-        from travel_product
+        from travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         where country_id = #{countryId}
     </select>
 
@@ -26,6 +30,8 @@
                            on tp.id = pl.travel_product_id
                  left join country c
                            on tp.country_id = c.id
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         where pl.tb_user_id = #{userId}
     </select>
 
@@ -34,6 +40,7 @@
         select distinct tp.id,
                         tp.tb_user_id as userId,
                         tp.*,
+                        tpi.*,
                         case
                             when pl.tb_user_id = #{userId}
                                 then true
@@ -42,22 +49,28 @@
         from travel_product tp
                  left join product_like pl
                            on tp.id = pl.travel_product_id
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         where country_id = #{countryId}
         order by tp.like desc
     </select>
 
     <!--    나라별 상품 가져오기 - 로그인 전 (좋아요 X)-->
     <select id="findAllProductsByCountryId" resultType="com.example.choyoujin.dto.ProductDto">
-        select tb_user_id as userId, tp.*
+        select tb_user_id as userId, tp.*, tpi.*
         from travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         where tp.country_id = #{countryId}
         order by tp.like desc
     </select>
 
     <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 전-->
     <select id="findAllProductsByCountryIdAndKeyword" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tb_user_id AS userId, tp.*
+        SELECT tb_user_id AS userId, tp.*, tpi.*
         FROM travel_product tp
+        LEFT JOIN travel_product_image tpi
+        on tp.travel_product_image_id = tpi.id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%')
           AND tp.country_id = #{countryId}
@@ -66,8 +79,10 @@
 
     <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 후-->
     <select id="findAllProductsByCountryIdAndKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.tb_user_id AS userId, tp.*
+        SELECT tp.tb_user_id AS userId, tp.*, tpi.*
         FROM travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%')
           AND tp.country_id = #{countryId}
@@ -76,10 +91,12 @@
 
     <!--    여행 상품 리스트 검색하기 (name과 description 고려)-->
     <select id="findAllProductsByKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.*, c.*
+        SELECT tp.*, c.*, tpi.*
         FROM travel_product tp
                  LEFT JOIN country c
                            ON tp.country_id = c.id
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
             OR tp.description LIKE '%' || #{keyword} || '%'
             OR c.country LIKE '%' || #{keyword} || '%'
@@ -89,10 +106,12 @@
 
     <!--    아이디로 상품 가져오기 - 로그인 전 (좋아요 X)-->
     <select id="findProductByProductId" resultType="com.example.choyoujin.dto.ProductDto">
-        select tp.tb_user_id as userId, tp.*, c.*
+        select tp.tb_user_id as userId, tp.*, c.*, tpi.*
         from travel_product tp
                  left join country c
                            on tp.country_id = c.id
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         where tp.id = #{productId}
     </select>
 
@@ -101,6 +120,7 @@
         select tp.tb_user_id as userId,
                tp.*,
                c.*,
+               tpi.*,
                case
                    when pl.tb_user_id = #{userId}
                        then true
@@ -111,14 +131,18 @@
                            on tp.country_id = c.id
                  left join product_like pl
                            on tp.id = pl.travel_product_id
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         where tp.id = #{productId}
     </select>
 
     <!--    관리자 - 사용자 아이디로 상품 리스트 가져오기-->
     <select id="findAllProductsByUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.*, tp.tb_user_id as userId, c.*
+        SELECT tp.*, tp.tb_user_id as userId, c.*, tpi.*
         FROM travel_product tp
                  LEFT JOIN country c ON tp.country_id = c.id
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
         WHERE tp.tb_user_id = #{userId}
         ORDER BY c.country, c.city, tp.like DESC
     </select>
@@ -126,8 +150,8 @@
     <!--    여행 상품 등록하기-->
     <insert id="saveProduct" useGeneratedKeys="true" parameterType="com.example.choyoujin.dto.ProductDto"
             keyProperty="id">
-        insert into travel_product (name, description, cost, tb_user_id, country_id)
-        values (#{productName}, #{description}, #{cost}, #{userId}, #{countryId})
+        insert into travel_product (name, description, cost, tb_user_id, country_id, travel_product_image_id)
+        values (#{productName}, #{description}, #{cost}, #{userId}, #{countryId}, #{imageId})
     </insert>
 
     <!--    여행 상품 - 설명 저장하기-->
@@ -162,7 +186,7 @@
         where id = #{productId}
     </update>
 
-    <!--    나라 아이디로 여행 상품 리스트 가져오기-->
+    <!--    쿠폰 등록 - 나라 아이디로 여행 상품 리스트 가져오기-->
     <select id="findAllByCountryId" resultType="com.example.choyoujin.dto.ProductDto">
         SELECT id, name, country_id
         FROM travel_product

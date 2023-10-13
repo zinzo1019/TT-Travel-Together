@@ -179,18 +179,18 @@
                 <!-- 페이징 처리 -->
                 <ul class="pagination">
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+                        <a class="page-link" href="?page=2" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
                         </a>
                     </li>
-                    <c:forEach begin="2" end="${countries.size-1}" varStatus="status">
+                    <c:forEach begin="1" end="${countries.totalPages-1}" varStatus="status">
                         <li class="page-item">
-                            <a class="page-link" href="?page=${status.index}">${status.index-1}</a>
+                            <a class="page-link" href="?page=${status.index + 1}">${status.index}</a>
                         </li>
                     </c:forEach>
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
+                        <a class="page-link" href="?page=${countries.size}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
                         </a>
                     </li>
                 </ul>

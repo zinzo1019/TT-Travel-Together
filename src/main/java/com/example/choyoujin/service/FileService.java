@@ -34,6 +34,23 @@ public class FileService {
     }
 
     /**
+     * 여행 상품 이미지 저장
+     */
+    public int saveProductImage(MultipartFile file) throws IOException {
+        try {
+            String name = file.getOriginalFilename(); // 파일 이름
+            String type = file.getContentType(); // 파일 타입
+            byte[] picByte = compressBytes(file.getBytes()); // 문자열 압축
+            ImageDto imageDto = new ImageDto(name, type, picByte); // ImageDto 생성
+            fileDao.saveProductImage(imageDto); // 이미지 저장
+            return fileDao.findLastTravelProductImageId(); // 이미지 아이디 반환
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1; // 실패 시 -1 리턴
+        }
+    }
+
+    /**
      * 문자열 압축
      */
     public static byte[] compressBytes(byte[] data) {
@@ -58,6 +75,9 @@ public class FileService {
      * 문자열 압축 풀기 & 인코딩
      */
     public static String decompressBytes(byte[] data) {
+        if (data == null) {
+            return null;
+        }
         Inflater inflater = new Inflater();
         inflater.setInput(data);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);

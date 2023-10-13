@@ -50,7 +50,7 @@ public class MyTravelPlacesController {
         return "admin/my_travel/places_post";
     }
 
-    /** 여행지 등록 페이지 */
+    /** 여행지 등록 - post action */
     @PostMapping("/save")
     public ResponseEntity<String> myTravelPlacesPostAction(ProductDto productDto) {
         try {

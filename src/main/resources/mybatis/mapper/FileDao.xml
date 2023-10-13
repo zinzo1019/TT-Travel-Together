@@ -18,6 +18,12 @@
         values (#{name}, #{type}, #{picByte})
     </insert>
 
+    <!--    여행 상품 사진 저장하기-->
+    <insert id="saveProductImage" parameterType="com.example.choyoujin.dto.ImageDto">
+        insert into travel_product_image (name, type, pic_byte)
+        values (#{name}, #{type}, #{picByte})
+    </insert>
+
     <!--    이메일로 이미지 찾기-->
     <select id="findIdByEmail" resultType="com.example.choyoujin.dto.ImageDto">
         select id
@@ -25,10 +31,15 @@
         where tb_user_email = #{email}
     </select>
 
-    <!--    가장 최근 이미지 아이디 가져오기-->
+    <!--    사용자 - 가장 최근 이미지 아이디 가져오기-->
     <select id="findLastImageId" resultType="_int">
         SELECT max(id)
         FROM tb_user_image
     </select>
 
+    <!--    여행 상품 - 가장 최근 이미지 아이디 가져오기-->
+    <select id="findLastTravelProductImageId" resultType="_int">
+        SELECT max(id)
+        FROM travel_product_image
+    </select>
 </mapper>

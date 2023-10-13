@@ -1,6 +1,7 @@
 package com.example.choyoujin.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,7 @@ public class ProductDto {
     private String productName; // 여행 상품 이름
     private String description;
     private String descriptions; // 이어붙이 설명
-    private String image;
+    private MultipartFile image;
     private String uesrId;
     private int cost;
     private LocalDate startDate;
@@ -32,4 +33,9 @@ public class ProductDto {
     private int userId; // 사용자 기본키
     private String email;
     private String name;
+
+    private int imageId; // 이미지 아이디
+    private byte[] picByte; // 압축 이미지
+    private String type; // 이미지 타입
+    private String encoding; // 압축 해제한 이미지
 }

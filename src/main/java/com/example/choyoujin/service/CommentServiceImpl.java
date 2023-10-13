@@ -19,7 +19,11 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.findAllCuriousCommentsByPostId(postId);
     }
 
-    public void saveCuriousComment(CommentDto comment) {
+    /** 여행에 대해 궁금해요. - 댓글 작성 */
+    public void saveCuriousComment(CommentDto comment) throws Exception {
+        if (userService.getUserData() == null) { // 로그인 전
+            throw new Exception("로그인 먼저 진행해주세요.");
+        }
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
         comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
         commentDao.saveCuriousComment(comment);
@@ -29,14 +33,22 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.findAllTogetherCommentsByPostId(postId);
     }
 
-    public void saveTogetherComment(CommentDto comment) {
+    /** 같이 여행 가요! - 댓글 작성 */
+    public void saveTogetherComment(CommentDto comment) throws Exception {
+        if (userService.getUserData() == null) { // 로그인 전
+            throw new Exception("로그인 먼저 진행해주세요.");
+        }
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
         comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
         commentDao.saveTogetherComment(comment);
     }
 
+    /** 여행 상품 댓글 작성 */
     @Override
-    public void saveProductComment(CommentDto comment) {
+    public void saveProductComment(CommentDto comment) throws Exception {
+        if (userService.getUserData() == null) { // 로그인 전
+            throw new Exception("로그인 먼저 진행해주세요.");
+        }
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
         comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
         commentDao.saveProductComment(comment);

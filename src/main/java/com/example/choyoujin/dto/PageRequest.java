@@ -12,7 +12,7 @@ public class PageRequest {
 
     public PageRequest() {
         this.page = 1;
-        this.sizePerPage = 5;
+        this.sizePerPage = 4;
     }
 
     public void setPage(int page) {

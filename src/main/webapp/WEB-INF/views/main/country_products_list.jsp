@@ -82,7 +82,7 @@
     .text {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 3%;
+        padding-top: 1%;
         font-size: large;
         font-weight: bold;
     }
@@ -110,6 +110,7 @@
         display: flex;
         align-items: center; /* 세로 중앙 정렬 */
         height: 0;
+        margin-top: 1%;
     }
 </style>
 <body>
@@ -126,17 +127,16 @@
                     <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block;">
-                            <img src="${product.image}">
+                            <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
                         </div>
                     </a>
                     <div class="text">
                         <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
-                            [${country.city}] ${product.name}${product.descriptions}
-                            <br><br>
+                            <p style="margin-bottom: 2%">[${country.city}] ${product.name}${product.descriptions}</p>
                             <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
                         </a>
-                        <div class="tag-div">
+                        <div class="tag-div" style="margin-top: 2%">
                             <c:forEach var="tag" items="${product.tags}" varStatus="status">
                                 # ${tag.tag}&nbsp;&nbsp;
                             </c:forEach>

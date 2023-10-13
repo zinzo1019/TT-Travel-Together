@@ -11,7 +11,7 @@
         (name, description, code, discount_amount, discount_percentage, travel_product_id, tb_user_id)
         values
         <foreach item="productId" collection="productIds" separator=",">
-            (#{name}, #{description}, gen_random_uuid(), #{amount}, #{percentage}, #{productId}, #{userId})
+            (#{name}, #{description}, #{code}, #{amount}, #{percentage}, #{productId}, #{userId})
         </foreach>
     </insert>
 

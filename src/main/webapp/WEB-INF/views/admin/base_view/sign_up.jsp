@@ -3,7 +3,6 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!DOCTYPE html>
 <html>
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -65,14 +64,12 @@
     }
 
     .email-input {
-        width: 53%;
+        width: 70%;
         margin-right: 5%;
         padding: 10px;
         margin-bottom: 0px;
     }
-
 </style>
-
 <head>
     <meta charset="UTF-8">
     <title>관리자 회원가입</title>
@@ -81,10 +78,9 @@
 <div class="container">
     <h1>관리자 회원가입</h1>
     <form>
+        <label for="email" style="padding-right: 5%">이메일</label>
         <div class="email-container">
-            <label for="email" style="padding-right: 5%">이메일</label>
             <input type="email" id="email" name="email" class="email-input" required>
-
             <button id="idCheck" name="idDuplication" type="submit">중복 확인</button>
             <d id="idAvailable" class="valid-feedback" style="display: none;"></d>
             <d id="idNotAvailable" class="invalid-feedback" style="display: none;"></d>
@@ -160,6 +156,16 @@
         var name = document.getElementById("name")
         var image = document.getElementById("imageInput")
 
+        // 아이디 확인
+        if (email.value == "") {
+            alert("이메일을 입력하세요.")
+            email.focus();
+            return false;
+        } else if (!regId.test(email.value)) {
+            alert("이메일 양식에 맞게 입력해주세요.")
+            email.focus();
+            return false;
+        }
         // 비밀번호 확인
         if (password.value == "") {
             alert("비밀번호를 입력하세요.")
@@ -213,7 +219,7 @@
             processData: false,
             contentType: false,
             success: function () {
-                alert("회원가입 성공!");
+                alert("회원가입을 성공했습니다.");
                 window.location.href = "/login";
             },
             error: function () {

@@ -120,7 +120,7 @@ public class CommunityController {
             commentService.saveCuriousComment(comment); // 댓글 저장
             return ResponseEntity.ok("댓글 저장에 성공했습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 저장에 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -133,7 +133,7 @@ public class CommunityController {
             commentService.deleteCuriousComment(commentId); // 댓글 삭제
             return ResponseEntity.ok("댓글을 삭제했습니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 삭제에 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 

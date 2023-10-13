@@ -204,7 +204,7 @@
         <div class="travel-container">
             <div class="img-container">
                 <div class="img" style="display: inline-block;">
-                    <img src="${product.image}">
+                    <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
                 </div>
                 <div class="text">
                     <div>
@@ -260,9 +260,13 @@
                             <p style="font-size: small; font-weight: bold;">${comment.userName}</p>
                             <p>${comment.content}</p>
                             <button class="reply-button" style="margin-top: 0%">답글 달기</button>
-                            <button class="delete-button" style="margin-top: 0%; color: red;"
-                                    data-comment-id="${comment.id}">삭제
-                            </button>
+                            <c:choose>
+                                <c:when test="${comment.userId eq user.id}">
+                                    <button class="reply-button delete-button" style="margin-top: 0%; color: red;"
+                                            data-comment-id="${comment.id}">삭제
+                                    </button>
+                                </c:when>
+                            </c:choose>
                         </div>
                         <!-- 대댓글 입력 칸 (초기에는 숨김) -->
                         <div class="reply-form" style="display: none;">
@@ -326,9 +330,8 @@
                 success: function (response) {
                     location.reload();
                 },
-                error: function (error) {
-                    alert("댓글 작성에 실패했습니다.");
-                    console.error(error);
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
                 }
             });
         });
@@ -356,8 +359,8 @@
                 success: function (data) {
                     location.reload();
                 },
-                error: function (error) {
-                    alert("대댓글 작성에 실패했습니다.");
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
                 }
             });
         });

@@ -75,32 +75,6 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
         position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
     }
-
-    .edit-button {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-    }
-
-    .delete-button {
-        padding: 7px 15px;
-        background-color: #333;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 13px;
-    }
-
-    .modify-button {
-        padding: 7px 15px;
-        background-color: #333;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 13px;
-    }
 </style>
 <body>
 <div class="content">

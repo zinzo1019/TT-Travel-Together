@@ -178,6 +178,10 @@
                 <label>얼마인가요?</label>
                 <input type="number" id="cost">
             </div>
+            <div class="country-container" style="margin-top: 3%">
+                <label>이미지를 등록하세요.</label>
+                <input type="file" name="image" id="imageInput" required>
+            </div>
         </div>
         <div class="background-container" style="margin-top: 4%; padding-bottom: 4%">
             <label for="name" class="label">상품 이름</label>
@@ -224,6 +228,15 @@
         });
     });
 
+    document.getElementById("imageInput").addEventListener("change", function () {
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.jfif)$/i;
+        if (!allowedExtensions.exec(this.value)) {
+            alert("올바른 이미지 확장자를 사용해주세요 (jpg, jpeg, png, gif만 허용).");
+            this.value = "";
+            return false;
+        }
+    });
+
     /** 제출 버튼 클릭 - 유효성 검사 */
     var submitButton = document.getElementById('submitButton');
     submitButton.addEventListener('click', function () {
@@ -232,6 +245,7 @@
         var cost = document.getElementById('cost').value; // 가격
         var name = document.getElementById('name').value; // 상품 이름
         var description = document.getElementById('description').value; // 상품 설명
+        var image = document.getElementById("imageInput").value; // 이미지
 
         if (countryValue == 0) {
             alert('어느 나라로 갈지 선택하세요.');
@@ -239,6 +253,10 @@
         }
         if (!cost) {
             alert('상품 가격을 입력하세요.');
+            return false;
+        }
+        if (!image) {
+            alert("이미지를 선택해주세요")
             return false;
         }
         if (!name) {
@@ -258,6 +276,8 @@
             formData.append("userId", ${user.id});
             formData.append("stringDetailDescriptions", descriptionsData);
             formData.append("stringTags", tagsData);
+            formData.append("image", $("#imageInput")[0].files[0]);
+
             $.ajax({
                 type: 'POST',
                 data: formData,

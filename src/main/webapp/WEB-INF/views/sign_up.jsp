@@ -3,7 +3,6 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!DOCTYPE html>
 <html>
-
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -70,9 +69,7 @@
         padding: 10px;
         margin-bottom: 0px;
     }
-
 </style>
-
 <head>
     <meta charset="UTF-8">
     <title>일반 회원가입</title>
@@ -81,11 +78,9 @@
 <div class="container">
     <h1>일반 회원가입</h1>
     <form>
-            <label for="email" style="padding-right: 5%">이메일</label>
+        <label for="email" style="padding-right: 5%">이메일</label>
         <div class="email-container">
-
             <input type="email" id="email" name="email" class="email-input" required>
-
             <button id="idCheck" name="idDuplication" type="submit">중복 확인</button>
             <d id="idAvailable" class="valid-feedback" style="display: none;"></d>
             <d id="idNotAvailable" class="invalid-feedback" style="display: none;"></d>
@@ -107,8 +102,8 @@
         <p id="imageErrorMessage" class="text-danger"></p>
 
         <div style="display: flex; justify-content: center;">
-        <button type="button" onclick="validation()" style="margin-right: 3%">가입하기</button>
-        <button type="button" id="admin-button">관리자입니까?</button>
+            <button type="button" onclick="validation()" style="margin-right: 3%">가입하기</button>
+            <button type="button" id="admin-button">관리자입니까?</button>
         </div>
     </form>
 </div>
@@ -161,6 +156,16 @@
         var name = document.getElementById("name")
         var image = document.getElementById("imageInput")
 
+        // 아이디 확인
+        if (email.value == "") {
+            alert("이메일을 입력하세요.")
+            email.focus();
+            return false;
+        } else if (!regId.test(email.value)) {
+            alert("이메일 양식에 맞게 입력해주세요.")
+            email.focus();
+            return false;
+        }
         // 비밀번호 확인
         if (password.value == "") {
             alert("비밀번호를 입력하세요.")
@@ -209,7 +214,7 @@
             processData: false,
             contentType: false,
             success: function () {
-                alert("회원가입 성공!");
+                alert("회원가입을 성공했습니다.");
                 window.location.href = "login";
             },
             error: function () {
@@ -219,7 +224,7 @@
     }
 
     // 관리자입니까 - 버튼 클릭
-    document.getElementById("admin-button").addEventListener("click", function() {
+    document.getElementById("admin-button").addEventListener("click", function () {
         window.location.href = "/signup/admin";
     });
 </script>

@@ -196,7 +196,13 @@
                             <p style="font-size: small; font-weight: bold;">${comment.userName}</p>
                             <p>${comment.content}</p>
                             <button class="reply-button" style="margin-top: 0%">답글 달기</button>
-                            <button class="reply-button delete-button" style="margin-top: 0%; color: red;" data-comment-id="${comment.id}">삭제</button>
+                            <c:choose>
+                                <c:when test="${comment.userId eq user.id}">
+                                    <button class="reply-button delete-button" style="margin-top: 0%; color: red;"
+                                            data-comment-id="${comment.id}">삭제
+                                    </button>
+                                </c:when>
+                            </c:choose>
                         </div>
                         <!-- 대댓글 입력 칸 (초기에는 숨김) -->
                         <div class="reply-form" style="display: none;">
@@ -239,9 +245,8 @@
                 success: function (response) {
                     location.reload();
                 },
-                error: function (error) {
-                    alert("댓글 작성에 실패했습니다.");
-                    console.error(error);
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
                 }
             });
         });
@@ -269,20 +274,21 @@
                 success: function (data) {
                     location.reload();
                 },
-                error: function (error) {
-                    alert("대댓글 작성에 실패했습니다.");
+                error: function (xhr, status, error) {
+                    alert(xhr.responseText);
                 }
             });
         });
     });
 
     // 수정하기 버튼 클릭 이벤트
-    $("#edit-button").click(function() {
-        window.location.href = 'modify/view?postId=' + ${post.id}
+    $("#edit-button").click(function () {
+        window.location.href = 'modify/view?postId=' +
+        ${post.id}
     });
 
     // 삭제하기 버튼 클릭 이벤트
-    $("#delete-button").click(function() {
+    $("#delete-button").click(function () {
         var confirmDelete = confirm("게시글을 삭제하시겠습니까?");
         if (confirmDelete) {
             $.ajax({
@@ -292,12 +298,28 @@
                     userId: ${post.userId},
                     id: ${post.id},
                 },
-                success: function(data) {
+                success: function (data) {
                     alert("게시글을 삭제했습니다.");
                     window.location.href = '../../mypage/curious'
                 },
-                error: function(error) {
+                error: function (error) {
                     alert("게시글 삭제에 실패했습니다.");
+                }
+            });
+        }
+    });
+
+    // 삭제 버튼 클릭
+    $(".delete-button").on("click", function () {
+        var commentId = $(this).data("comment-id");
+        if (confirm("댓글을 삭제하시겠습니까?")) {
+            $.ajax({
+                type: "POST",
+                url: "comment/delete?commentId=" + commentId,
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
                 }
             });
         }
