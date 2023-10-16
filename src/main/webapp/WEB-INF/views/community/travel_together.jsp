@@ -201,7 +201,7 @@
                                         <!-- post.isSupported 변수를 사용하여 버튼을 설정 -->
                                         <c:choose>
                                             <c:when test="${post.supported}"> <!-- post.isSupported 변수가 true일 경우 -->
-                                                <button class="support-button cancelSupportButton" data-post-id="${post.id}" style="background-color: blue">지원 취소</button>
+                                                <button class="support-button cancelSupportButton" data-post-id="${post.id}" style="background-color: #c40000">지원 취소하기</button>
                                             </c:when>
                                             <c:otherwise>
                                                 <button class="support-button pushRecruitmentButton" data-post-id="${post.id}" style="background-color: #c40000">지원하기</button>

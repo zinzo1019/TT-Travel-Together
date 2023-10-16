@@ -7,11 +7,11 @@
 
     <!--    여행 상품 결제건 저장하기-->
     <insert id="savePayment">
-        insert into travel_product_payment (imp_uid, pay_method, travel_product_id,
+        insert into travel_product_payment (imp_uid, travel_product_id,
                                             tb_user_id, merchant_uid, paid_amount, paid_at,
-                                            pg_provider, pg_tid, receipt_url, available)
-        values (#{impUid}, #{paymentMethod}, #{productId}, #{userId}, #{merchantUid},
-                #{paidAmount}, #{paidAt}, #{pgProvider}, #{pgTid}, #{receiptUrl}, true)
+                                            pg_provider, pg_tid, receipt_url, available, create_date)
+        values (#{impUid}, #{productId}, #{userId}, #{merchantUid},
+                #{paidAmount}, #{paidAt}, #{pgProvider}, #{pgTid}, #{receiptUrl}, true, now())
     </insert>
 
     <!--    여행 상품 결제 취소하기-->
@@ -20,4 +20,13 @@
         set available = false
         where id = #{id}
     </update>
+
+    <select id="findAllByUserId" resultType="com.example.choyoujin.dto.PaymentDto">
+        select tpp.id as paymentId, tpp.paid_amount, pg_provider, tpp.travel_product_id as productId,
+               tpp.create_date, tpp.pg_provider, tpp.available
+        from travel_product_payment tpp
+                 left join tb_user tu
+                           on tpp.tb_user_id = tu.id
+        where tu.id = #{userId}
+    </select>
 </mapper>

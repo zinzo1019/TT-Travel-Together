@@ -294,10 +294,8 @@ public class TravelProductServiceImpl implements TravelProductService {
 
     /**
      * 여행 상품 이미지 압축 해제하기
-     *
-     * @return
      */
-    private List<ProductDto> setImage(List<ProductDto> productDtos) {
+    public static List<ProductDto> setImage(List<ProductDto> productDtos) {
         for (ProductDto dto : productDtos) {
             dto.setEncoding(decompressBytes(dto.getPicByte()));
         }
