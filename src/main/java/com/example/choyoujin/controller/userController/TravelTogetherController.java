@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/ROLE_USER/community/together")
+@RequestMapping("/user/community/together")
 public class TravelTogetherController {
 
     @Autowired

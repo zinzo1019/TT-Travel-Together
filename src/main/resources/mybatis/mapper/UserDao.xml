@@ -21,10 +21,11 @@
 
     <!--    회원가입-->
     <insert id="saveUser">
-        insert into tb_user (email, name, password, role, enabled, image_id, create_date)
+        insert into tb_user (email, name, password, travel_tag, role, enabled, image_id, create_date)
         values (#{userDto.email},
                 #{userDto.name},
                 #{userDto.password},
+                #{userDto.travelTag},
                 #{role},
                 #{enabled},
                 #{imageId},

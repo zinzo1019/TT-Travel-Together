@@ -147,7 +147,7 @@
             <h1>최근 뜨는 여행지</h1>
             <div class="img-container">
                 <c:forEach var="country" items="${countries4}">
-                    <a href="/ROLE_ADMIN/country?country_id=${country.countryId}"
+                    <a href="/admin/country?country_id=${country.countryId}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block; margin-right: 20px;">
                             <img src="${country.image}">
@@ -160,10 +160,20 @@
                 </c:forEach>
             </div>
             <div class="travel-container">
-                <h1>이 여행지는 어떠세요?</h1>
+                <h1>
+                    ${user.name}님이 좋아할 만한 상품이예요!
+                    <c:choose>
+                        <c:when test="${empty user.travelTag}">
+                            #힐링
+                        </c:when>
+                        <c:otherwise>
+                            #${user.travelTag}
+                        </c:otherwise>
+                    </c:choose>
+                </h1>
                 <div class="img-container">
                     <c:forEach var="country" items="${countries.content}">
-                        <a href="/ROLE_ADMIN/country?country_id=${country.countryId}"
+                        <a href="/admin/country?country_id=${country.countryId}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img" style="display: inline-block; margin-right: 20px;">
                                 <img src="${country.image}">
@@ -205,7 +215,7 @@
         var keyword = document.getElementById('searchInput').value;
         $.ajax({
             type: 'POST',
-            url: '/ROLE_GUEST/search',
+            url: '/guest/search',
             data: {"keyword": keyword}, // 서버에 전달할 데이터
             success: function (response) {
                 $("#main_search_result").html(response);

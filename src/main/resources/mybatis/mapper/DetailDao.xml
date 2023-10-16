@@ -5,11 +5,10 @@
 
 <mapper namespace="com.example.choyoujin.dao.DetailDao">
 
-    <!--    여행 상품별 태그 리스트 가져오기-->
+    <!--    여행 상품별 설명 리스트 가져오기-->
     <select id="findallByProductId" resultType="com.example.choyoujin.dto.DetailDto">
         select *
         from travel_product_detail
         where travel_product_id = #{productId}
     </select>
-
 </mapper>

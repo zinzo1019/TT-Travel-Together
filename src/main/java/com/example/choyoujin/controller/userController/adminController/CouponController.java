@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/ROLE_ADMIN/coupon")
+@RequestMapping("/admin/coupon")
 public class CouponController {
 
     @Autowired

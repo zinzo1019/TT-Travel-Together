@@ -18,6 +18,12 @@
         and tb_user_id = #{userId}
     </delete>
 
+    <!--    같이 여행 가요 - 게시글 삭제 시 모집된 인원도 삭제-->
+    <delete id="deleteAllByPostId">
+        delete from recruited_member
+        where travel_together_post_id = #{postId}
+    </delete>
+
     <!--    사용자 아이디와 게시글 아이디로 지원 여부 확인하기-->
     <select id="findOneByPostIdAndUserId" resultType="com.example.choyoujin.dto.RecruitedDto">
         select tb_user_id as userId, travel_together_post_id as postId

@@ -67,7 +67,7 @@
         width: 70%;
         margin-right: 5%;
         padding: 10px;
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 </style>
 <head>
@@ -99,9 +99,11 @@
 
         <label for="imageInput">이미지</label>
         <input type="file" name="image" id="imageInput" required>
-        <p id="imageErrorMessage" class="text-danger"></p>
 
-        <div style="display: flex; justify-content: center;">
+        <label for="travel-tag">원하는 여행 태그를 입력해주세요.</label>
+        <input type="text" id="travel-tag" name="travel-tag" placeholder="힐링" required>
+
+        <div style="display: flex; justify-content: center; margin-top: 3%;">
             <button type="button" onclick="validation()" style="margin-right: 3%">가입하기</button>
             <button type="button" id="admin-button">관리자입니까?</button>
         </div>
@@ -134,7 +136,7 @@
         }
 
         $.ajax({
-            url: "/ROLE_GUEST/email/check",
+            url: "/guest/email/check",
             type: "GET",
             data: {
                 email: $('#email').val()
@@ -155,6 +157,7 @@
         var cpassword = document.getElementById("cpassword")
         var name = document.getElementById("name")
         var image = document.getElementById("imageInput")
+        var travelTag = document.getElementById("travel-tag")
 
         // 아이디 확인
         if (email.value == "") {
@@ -200,16 +203,23 @@
             cpassword.focus();
             return false;
         }
+        // 여행 태그 확인
+        if (travelTag.value == "") {
+            alert("여행 태그를 입력해주세요.")
+            travelTag.focus();
+            return false;
+        }
 
         var formData = new FormData();
         formData.append("email", $("#email").val());
         formData.append("password", $("#password").val());
         formData.append("name", $("#name").val());
         formData.append("image", $("#imageInput")[0].files[0]);
+        formData.append("travelTag", $("#travel-tag").val());
 
         $.ajax({
             type: "POST",
-            url: "/ROLE_GUEST/signup-process",
+            url: "/guest/signup-process",
             data: formData,
             processData: false,
             contentType: false,

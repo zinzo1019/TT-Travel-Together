@@ -15,8 +15,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String role = authentication.getAuthorities().toString(); // 사용자 권한
         // 로그인 권한에 따른 리다이렉션
         if (role.equals("[ROLE_USER]"))
-            response.sendRedirect("/ROLE_USER");
+            response.sendRedirect("/user");
         else if (role.equals("[ROLE_ADMIN]"))
-            response.sendRedirect("/ROLE_ADMIN");
+            response.sendRedirect("/admin");
     }
 }

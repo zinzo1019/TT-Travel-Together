@@ -59,8 +59,12 @@
         cursor: pointer;
     }
 
+    .popular-container {
+        margin-bottom: 5%;
+    }
+
+    /* 이미지 컨테이너 스타일 */
     .img-container {
-        flex-wrap: wrap; /* 이미지들이 넘치면 줄 바꿈합니다. */
         display: flex;
     }
 
@@ -92,10 +96,10 @@
     }
 
     .pagination {
-        margin-bottom: 5%;
+        margin-bottom: 8%;
         text-align: center;
         padding-right: 5%;
-        margin-top: 5%;
+        margin-top: 3%;
     }
 
     .pagination .page-item {
@@ -147,43 +151,16 @@
         </div>
         <div class="travel-container" id="main_search_result">
             <div class="popular-container">
-                <h1>최근 뜨는 여행지</h1>
+                <h1>최근 뜨는 여행 상품</h1>
                 <div class="img-container">
-                    <c:forEach var="country" items="${countries4}">
-                        <a href="/guest/country?country_id=${country.countryId}"
-                           style="text-decoration: none; color: inherit;">
-                            <div class="img" style="display: inline-block;">
-                                <img src="${country.image}">
-                                <div class="img-text">
-                                    <p>${country.country} - ${country.city}</p>
-                                    <p style="font-weight: normal; font-size: medium;">좋아요 ${country.totalLikes}</p>
-                                </div>
-                            </div>
-                        </a>
-                    </c:forEach>
-                </div>
-            </div>
-            <div class="popular-container">
-                <h1>
-                    <c:choose>
-                        <c:when test="${empty user.travelTag}">
-                            이런 여행지는 어떠세요?
-                            #힐링
-                        </c:when>
-                        <c:otherwise>
-                            ${user.name}님이 좋아할 만한 상품이예요!
-                            #${user.travelTag}
-                        </c:otherwise>
-                    </c:choose>
-                </h1>
-                <div class="img-container">
-                    <c:forEach var="product" items="${products}">
-                        <a href="guest/product/detail?product_id=${product.id}"
+                    <c:forEach var="product" items="${productsTop4}">
+                        <a href="../product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img" style="display: inline-block;">
                                 <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
-                                <div style=" text-align: left;">
-                                    <p style="font-size: small; color: red;">${product.country} - ${product.city}</p>
+                                <div class="img-text">
+                                    <p style="font-size: small; color: red;">${product.country}
+                                        - ${product.city}</p>
                                     <p>${product.name}</p>
                                     <p style="font-weight: normal; font-size: medium;">좋아요 ${product.like}</p>
                                 </div>
@@ -192,18 +169,44 @@
                     </c:forEach>
                 </div>
             </div>
-            <!-- 페이징 처리 -->
-            <div>
-                <ul class="pagination">
-                    <c:forEach begin="${pagination.startPage+1}" end="${pagination.endPage}" varStatus="status">
-                        <li class="page-item">
-                            <a class="page-link" href="?page=${status.index}">${status.index}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
+            <div class="popular-container">
+                <c:forEach var="productsByTag" items="${productsByTags}">
+                    <h1>이런 여행지는 어떠세요? #${productsByTag.tag}</h1>
+                    <div class="change-container">
+                        <div class="img-container">
+                            <c:forEach var="product" items="${productsByTag.productDtos}">
+                                <a href="/guest/product/detail?product_id=${product.id}"
+                                   style="text-decoration: none; color: inherit;">
+                                    <div class="img">
+                                        <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+                                        <div style="text-align: left;">
+                                            <p style="font-size: small; color: red;">${product.country}
+                                                - ${product.city}</p>
+                                            <p>${product.name}</p>
+                                            <p style="font-weight: normal; font-size: medium;">좋아요 ${product.like}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </c:forEach>
+                        </div>
+                        <!-- 페이징 처리 -->
+                        <div>
+                            <ul class="pagination">
+                                <c:forEach begin="${productsByTag.pagination.startPage + 1}"
+                                           end="${productsByTag.pagination.endPage}" varStatus="status">
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           data-tag-id=${productsByTag.tagId} data-page="${status.index}">${status.index}</a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </c:forEach>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script>
     /** 최근 게시글 중 검색 */
@@ -212,8 +215,8 @@
         var keyword = document.getElementById('searchInput').value;
         $.ajax({
             type: 'POST',
-            url: '/guest/search',
-            data: {"keyword": keyword}, // 서버에 전달할 데이터
+            url: 'products/search',
+            data: {"keyword": keyword},
             success: function (response) {
                 $("#main_search_result").html(response);
             },
@@ -222,6 +225,31 @@
             }
         });
     }
+
+    /** 개별 페이징 처리 */
+    $(document).ready(function () {
+        $(".pagination").on("click", ".page-link", function (event) { // 페이지 클릭 시
+            event.preventDefault();
+            var page = $(this).data("page"); // 페이지
+            var tagId = $(this).data("tag-id"); // 태그 아이디
+
+            // pagination 클래스의 부모 중 change-container 클래스 선택
+            var container = $(this).parents(".change-container");
+            $.ajax({
+                type: "post",
+                url: "/guest/loadPagedData",
+                data: {
+                    tagId: tagId,
+                    page: page
+                },
+                success: function (response) {
+                    container.html(response); // 검색 결과
+                },
+                error: function (error) {
+                }
+            });
+        });
+    });
 </script>
 </body>
 </html>

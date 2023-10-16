@@ -1,12 +1,11 @@
 package com.example.choyoujin.service;
 
 import com.example.choyoujin.dao.*;
-import com.example.choyoujin.dto.ProductDto;
-import com.example.choyoujin.dto.DetailDto;
+import com.example.choyoujin.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +31,8 @@ public class TravelProductServiceImpl implements TravelProductService {
     private FileService fileService;
     @Autowired
     private CouponService couponService;
+    @Autowired
+    private TravelTagsDao tagsDao;
 
     /**
      * 최근 뜨는 여행지 4개 (좋아요 순으로 정렬)
@@ -126,42 +127,11 @@ public class TravelProductServiceImpl implements TravelProductService {
      */
     public void saveProduct(ProductDto productDto) {
         int imageId = saveImageAndGetImageId(productDto); // 이미지 저장
-        productDto.setImageId(imageId);
+        productDto.setImageId(imageId); // 이미지 아이디 Set
         travelProductDao.saveProduct(productDto); // 여행 상품 저장
         if (!productDto.getStringDetailDescriptions().isEmpty())
             travelProductDao.saveProductDetails(productDto.getStringDetailDescriptions(), productDto.getId()); // 설명 저장
-        if (!productDto.getStringTags().isEmpty())
-            travelProductDao.saveProductTags(productDto.getStringTags(), productDto.getId()); // 태그 저장
-    }
-
-    /**
-     * 여행 상품 이미지 저장하기
-     */
-    private int saveImageAndGetImageId(ProductDto productDto) {
-        int imageId = 0;
-        try {
-            if (!productDto.getImage().isEmpty())
-                imageId = fileService.saveProductImage(productDto.getImage());// 이미지 저장
-        } catch (IOException e) {
-            System.out.println("이미지 업로드를 실패했습니다.");
-        }
-        return imageId;
-    }
-
-    /**
-     * 좋아요 1 증가
-     */
-    @Override
-    public void plusLike(int productId) {
-        travelProductDao.plusLike(productId);
-    }
-
-    /**
-     * 좋아요 1 감소
-     */
-    @Override
-    public void plusUnLike(int productId) {
-        travelProductDao.plusUnLike(productId);
+        saveTags(productDto); // 태그 저장
     }
 
     /**
@@ -195,6 +165,122 @@ public class TravelProductServiceImpl implements TravelProductService {
         return productDtos;
     }
 
+    /** 여행 태그별 여행 상품 리스트 가져오기 */
+    public List<ProductDto> findAllByTravelTag(int page, int size, Model model) {
+        List<ProductDto> productDtos = new ArrayList<>();
+        try { // 로그인 후
+            String travelTag = userService.getUserData().getTravelTag(); // 사용자 여행 태그 가져오기
+            productDtos = travelProductDao.findAllByTravelTag(travelTag, page, size);
+            Pagination pagination = getPagination(); // 페이징 처리
+            pagination.setTotalCount(travelProductDao.countAllByTravelTag(travelTag)); // 여행 상품 개수
+            model.addAttribute("pagination", pagination); // 페이징 담기
+        } catch (Exception e) { // 로그인 전
+            productDtos = travelProductDao.findAllByTravelTag("힐링", page, size);
+        }
+        setImage(productDtos); // 이미지 Set
+        return productDtos;
+    }
+
+    /** 상위 4개 여행 상품 리스트 가져오기 */
+    @Override
+    public List<ProductDto> findProductsTop4ByLike() {
+        List<ProductDto> productDtos = travelProductDao.findProductsTop4ByLike();
+        return setImage(productDtos); // 이미지 Set
+    }
+
+    /** 여행 태그별 여행 상품 리스트 가져오기 */
+    @Override
+    public List<ProductsByTagDto> findAllByTravelTags(int page, int size, Model model) {
+        List<ProductsByTagDto> productDtos = new ArrayList<>();
+        List<TagDto> tagDtos = tagsDao.findAllTags(); // 모든 태그 가져오기
+        for (TagDto dto : tagDtos) {
+            List<ProductDto> productDtoList = travelProductDao.findAllByTravelTag(dto.getTag(), page, size);
+            setImage(productDtoList); // 이미지 Set
+            Pagination pagination = getPagination(); // 페이징 처리
+            pagination.setTotalCount(travelProductDao.countAllByTravelTag(dto.getTag())); // 여행 상품 개수
+            productDtos.add(new ProductsByTagDto(dto.getId(), dto.getTag(), productDtoList, pagination)); // 여행 상품 리스트
+        }
+        return productDtos;
+    }
+
+    /** 모든 여행 - 검색하기 */
+    @Override
+    public List<ProductDto> findAllByKeyword(String keyword) {
+        List<ProductDto> productDtos = setImage(travelProductDao.findAllByKeyword(keyword));// 이미지 Set
+        for (ProductDto dto : productDtos) {
+            dto.setDescriptions(findAllByProductId(dto.getId())); // 설명 Set
+            dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
+        }
+        return productDtos;
+    }
+
+    /** 태그 아이디로 여행 상품 리스트 찾기 - 태그별 여행 상품 페이징 처리 */
+    @Override
+    public List<ProductDto> findAllByTravelTagsWithPaging(int tagId, int page, int size, Model model) {
+        List<ProductDto> productDtos = travelProductDao.findAllByTravelTagId(tagId, page, size);
+        setImage(productDtos); // 이미지 Set
+        Pagination pagination = getPagination(); // 페이징 처리
+        pagination.setTotalCount(travelProductDao.countAllByTravelTagId(tagId)); // 여행 상품 개수
+        model.addAttribute("pagination", pagination); // 페이징 담기
+        model.addAttribute("tagId", tagId); // 페이징 담기
+        return productDtos;
+    }
+
+    /**
+     * 여행 상품 이미지 저장하기
+     */
+    private int saveImageAndGetImageId(ProductDto productDto) {
+        int imageId = 0;
+        try {
+            if (!productDto.getImage().isEmpty())
+                imageId = fileService.saveProductImage(productDto.getImage());// 이미지 저장
+        } catch (IOException e) {
+            System.out.println("이미지 업로드를 실패했습니다.");
+        }
+        return imageId;
+    }
+
+    /** 태그들 저장하기 */
+    private void saveTags(ProductDto productDto) {
+        List<Integer> tags = new ArrayList<>();
+        if (!productDto.getStringTags().isEmpty()) {
+            saveNewTag(productDto.getStringTags()); // travel_tags 저장
+            for (String tag : productDto.getStringTags())
+                tags.add(tagsDao.findOneByTag(tag).getId()); // 태그 아이디 리스트 가져오기
+            travelProductDao.saveProductTags(tags, productDto.getId()); // travel_product_tag 저장
+        }
+    }
+
+    /** 새 태그를 travel_tags에 저장 */
+    private void saveNewTag(List<String> tags) {
+        List<String> dbTags = new ArrayList<>();
+        List<String> newTags = new ArrayList<>();
+        for (TagDto dto : tagsDao.findAllTags())
+            dbTags.add(dto.getTag()); // db 내 태그들
+        for (String tag : tags) { // db에 이미 저장된 태그인지 검사
+            if (!dbTags.contains(tag))
+                newTags.add(tag);
+        }
+        if (newTags != null && !newTags.isEmpty()) // 새 태그라면
+            tagsDao.saveTags(newTags); // db에 저장
+    }
+
+    /**
+     * 좋아요 1 증가
+     */
+    @Override
+    public void plusLike(int productId) {
+        travelProductDao.plusLike(productId);
+    }
+
+    /**
+     * 좋아요 1 감소
+     */
+    @Override
+    public void plusUnLike(int productId) {
+        travelProductDao.plusUnLike(productId);
+    }
+
     /**
      * 사용자가 좋아요 한 상품 여부에 따라 userLiked Set
      */
@@ -206,11 +292,24 @@ public class TravelProductServiceImpl implements TravelProductService {
         }
     }
 
-    /** 여행 상품 이미지 압축 해제하기 */
-    private void setImage(List<ProductDto> productDtos) {
+    /**
+     * 여행 상품 이미지 압축 해제하기
+     *
+     * @return
+     */
+    private List<ProductDto> setImage(List<ProductDto> productDtos) {
         for (ProductDto dto : productDtos) {
             dto.setEncoding(decompressBytes(dto.getPicByte()));
-
         }
+        return productDtos;
+    }
+
+    /**
+     * Pagination 생성
+     */
+    public Pagination getPagination() {
+        Pagination pagination = new Pagination();
+        pagination.setPageRequest(new PageRequest());
+        return pagination;
     }
 }

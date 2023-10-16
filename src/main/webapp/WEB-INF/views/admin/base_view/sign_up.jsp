@@ -134,7 +134,7 @@
         }
 
         $.ajax({
-            url: "/ROLE_GUEST/email/check",
+            url: "/guest/email/check",
             type: "GET",
             data: {
                 email: $('#email').val()
@@ -214,7 +214,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/ROLE_GUEST/admin/signup-process",
+            url: "/guest/admin/signup-process",
             data: formData,
             processData: false,
             contentType: false,

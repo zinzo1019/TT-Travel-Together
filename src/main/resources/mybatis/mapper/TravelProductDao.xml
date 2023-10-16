@@ -13,13 +13,24 @@
                            on tp.travel_product_image_id = tpi.id
     </select>
 
-    <!--    나라별 여행 상품 아이디 리스트 가져오기-->
+    <!--    나라별 여행 상품 리스트 가져오기-->
     <select id="findAllProductIdsByCountryId" resultType="int">
         select *
         from travel_product tp
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
         where country_id = #{countryId}
+    </select>
+
+    <!--    상위 4개 여행 상품 리스트 가져오기-->
+    <select id="findProductsTop4ByLike" resultType="com.example.choyoujin.dto.ProductDto">
+        select *
+        from travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join country c
+                           on tp.country_id = c.id
+        order by tp.like desc limit 4
     </select>
 
     <!--    사용자 좋아요별 여행 상품 리스트 가져오기-->
@@ -33,6 +44,78 @@
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
         where pl.tb_user_id = #{userId}
+    </select>
+
+    <!--    여행 태그로 여행 상품 리스트 가져오기-->
+    <select id="findAllByTravelTag" resultType="com.example.choyoujin.dto.ProductDto">
+        select tp.id,
+               tp.name,
+               tp.country_id,
+               tp."like",
+               tpi.pic_byte,
+               tpi.type,
+               c.country,
+               c.city
+        from travel_product tp
+                 left join travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+                 left join second_project.country c
+                           on tp.country_id = c.id
+        where tt.tag = #{travelTag}
+        order by tp.like desc
+            LIMIT #{size}
+        OFFSET ((#{page}-1)*#{size})
+    </select>
+
+    <!--    여행 태그로 여행 상품 리스트 가져오기-->
+    <select id="findAllByTravelTagId" resultType="com.example.choyoujin.dto.ProductDto">
+        select tp.id,
+               tp.name,
+               tp.country_id,
+               tp."like",
+               tpi.pic_byte,
+               tpi.type,
+               c.country,
+               c.city
+        from travel_product tp
+                 left join travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+                 left join second_project.country c
+                           on tp.country_id = c.id
+        where tt.id = #{tagId}
+        order by tp.like desc
+            LIMIT #{size}
+        OFFSET ((#{page}-1)*#{size})
+    </select>
+
+    <!--    여행 태그로 여행 상품 리스트 개수 세기 (페이징 처리)-->
+    <select id="countAllByTravelTag" resultType="int">
+        select count(tp.id)
+        from travel_product tp
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+        where tt.tag = #{travelTag}
+    </select>
+
+    <!--    여행 태그 아이디로 여행 상품 리스트 개수 세기 (페이징 처리)-->
+    <select id="countAllByTravelTagId" resultType="int">
+        select count(tp.id)
+        from travel_product tp
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+        where tt.id = #{tagId}
     </select>
 
     <!--    나라별 상품 가져오기 - 로그인 후 (좋아요 O)-->
@@ -69,18 +152,6 @@
     <select id="findAllProductsByCountryIdAndKeyword" resultType="com.example.choyoujin.dto.ProductDto">
         SELECT tb_user_id AS userId, tp.*, tpi.*
         FROM travel_product tp
-        LEFT JOIN travel_product_image tpi
-        on tp.travel_product_image_id = tpi.id
-        WHERE (tp.name LIKE '%' || #{keyword} || '%'
-            OR tp.description LIKE '%' || #{keyword} || '%')
-          AND tp.country_id = #{countryId}
-        ORDER BY tp.like DESC
-    </select>
-
-    <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 후-->
-    <select id="findAllProductsByCountryIdAndKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.tb_user_id AS userId, tp.*, tpi.*
-        FROM travel_product tp
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
         WHERE (tp.name LIKE '%' || #{keyword} || '%'
@@ -89,7 +160,40 @@
         ORDER BY tp.like DESC
     </select>
 
-    <!--    여행 상품 리스트 검색하기 (name과 description 고려)-->
+
+    <!-- 전체 여행 상품 중 검색 -->
+    <select id="findAllByKeyword" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT tp.*, tpi.*, c.country, c.city
+        FROM travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+                 left join country c
+                           on tp.country_id = c.id
+        WHERE (tp.name LIKE '%' || #{keyword} || '%'
+            OR tp.description LIKE '%' || #{keyword} || '%'
+            OR c.country LIKE '%' || #{keyword} || '%'
+            OR c.city LIKE '%' || #{keyword} || '%'
+            OR tt.tag LIKE '%' || #{keyword} || '%')
+        ORDER BY tp.like DESC
+    </select>
+
+    <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 후-->
+    <!--    <select id="findAllProductsByCountryIdAndKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">-->
+    <!--        SELECT tp.tb_user_id AS userId, tp.*, tpi.*-->
+    <!--        FROM travel_product tp-->
+    <!--                 LEFT JOIN travel_product_image tpi-->
+    <!--                           on tp.travel_product_image_id = tpi.id-->
+    <!--        WHERE (tp.name LIKE '%' || #{keyword} || '%'-->
+    <!--            OR tp.description LIKE '%' || #{keyword} || '%')-->
+    <!--          AND tp.country_id = #{countryId}-->
+    <!--        ORDER BY tp.like DESC-->
+    <!--    </select>-->
+
+    <!--    관리자 - 내가 등록한 여행 상품 중 검색하기 (name과 description 고려)-->
     <select id="findAllProductsByKeywordAndUserId" resultType="com.example.choyoujin.dto.ProductDto">
         SELECT tp.*, c.*, tpi.*
         FROM travel_product tp
@@ -165,7 +269,7 @@
 
     <!--    여행 상품 - 태그 저장하기-->
     <insert id="saveProductTags">
-        insert into travel_product_tag (tag, travel_product_id)
+        insert into travel_product_tag (travel_tags_id, travel_product_id)
         values
         <foreach item="tag" collection="tags" separator=",">
             (#{tag}, #{productId})

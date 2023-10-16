@@ -31,9 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/signup/**").permitAll()
                 .antMatchers("/css/**", "/js/**", "/images/**").permitAll() // 이미지 경로에 대한 접근 허용
-                .antMatchers("/ROLE_GUEST/**").permitAll() // guest 게시판 -> 모두 접근 허용
-                .antMatchers("/ROLE_USER/**").hasAnyRole("USER", "ADMIN") // user 게시판 -> 사용자만 접근 허용
-                .antMatchers("/ROLE_ADMIN/**").hasRole("ADMIN") // admin 게시판 -> 관리자만 접근 허용
+                .antMatchers("/ROLE_GUEST/**", "/guest/**").permitAll() // guest 게시판 -> 모두 접근 허용
+                .antMatchers("/ROLE_USER/**", "/user/**").hasAnyRole("USER", "ADMIN") // user 게시판 -> 사용자만 접근 허용
+                .antMatchers("/ROLE_ADMIN/**", "/admin/**").hasRole("ADMIN") // admin 게시판 -> 관리자만 접근 허용
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

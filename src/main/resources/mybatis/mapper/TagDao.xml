@@ -7,9 +7,10 @@
 
     <!--    여행 상품별 태그 리스트 가져오기-->
     <select id="findAllByProductId" resultType="com.example.choyoujin.dto.TagDto">
-        select *
-        from travel_product_tag
+        select travel_tags_id as id, tt.tag as tag
+        from travel_product_tag tpt
+            left join travel_tags tt
+            on tpt.travel_tags_id = tt.id
         where travel_product_id = #{productId}
     </select>
-
 </mapper>

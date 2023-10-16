@@ -142,7 +142,8 @@
                 <%--                모집 마감 전--%>
                 <c:forEach var="post" items="${postsByTrue}">
                     <li class="post-list-item">
-                        <a href="../community/together/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+                        <a href="../community/together/view?postId=${post.id}"
+                           style="text-decoration: none; color: inherit;">
                             <div class="post">
                                 <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
                                 <h2>${post.title}</h2>
@@ -170,12 +171,15 @@
                 <%--                모집 마감 후--%>
                 <c:forEach var="post" items="${postsByFalse}">
                     <li class="post-list-item">
-                        <div class="post">
-                            <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
-                            <h2>${post.title}</h2>
-                            <p>${post.content}</p>
-                            <button class="support-button">모집 마감</button>
-                        </div>
+                        <a href="../community/together/view?postId=${post.id}"
+                           style="text-decoration: none; color: inherit;">
+                            <div class="post">
+                                <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
+                                <h2>${post.title}</h2>
+                                <p>${post.content}</p>
+                                <button class="support-button">모집 마감</button>
+                            </div>
+                        </a>
                     </li>
                 </c:forEach>
             </ul>
@@ -194,7 +198,7 @@
         $(".closeRecruitmentButton").click(function () {
             var postId = $(this).data("post-id");
             $.ajax({
-                url: "/ROLE_USER/community/together/close?postId=" + postId,
+                url: "/user/community/together/close?postId=" + postId,
                 method: "POST",
                 success: function (data) {
                     alert("모집이 마감되었습니다.");

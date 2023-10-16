@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <%@ include file="../base_view/header.jsp" %>
+<%--콤마 추가--%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:choose>
     <c:when test="${user.role eq 'ROLE_ADMIN'}">
         <%@ include file="/WEB-INF/views/admin/base_view/navigation.jsp" %>
@@ -9,20 +11,18 @@
         <%@ include file="../base_view/navigation.jsp" %>
     </c:otherwise>
 </c:choose>
-<%--콤마 추가--%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <h1>아래 여행지를 찾으시나요?</h1>
 <c:forEach var="product" items="${products}">
     <div class="img-container">
-        <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+        <a href="/guest/product/detail?product_id=${product.id}"
            style="text-decoration: none; color: inherit;">
             <div class="img" style="display: inline-block;">
                 <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
             </div>
         </a>
         <div class="text">
-            <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+            <a href="/guest/product/detail?product_id=${product.id}"
                style="text-decoration: none; color: inherit;">
                 [${country.city}] ${product.name}${product.descriptions}
                 <br><br>

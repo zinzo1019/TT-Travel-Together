@@ -8,4 +8,5 @@ public interface RecruitedDao {
     void saveRecruitedMember(int userId, int postId);
     RecruitedDto findOneByPostIdAndUserId(int userId, int postId);
     void deleteRecruitedMember(int userId, int postId);
+    void deleteAllByPostId(int postId);
 }

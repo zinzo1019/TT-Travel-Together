@@ -1,6 +1,8 @@
 package com.example.choyoujin.service;
 
 import com.example.choyoujin.dto.ProductDto;
+import com.example.choyoujin.dto.ProductsByTagDto;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -18,4 +20,9 @@ public interface TravelProductService {
     List<ProductDto> findAllByCountryId(int countryId);
     List<Integer> findAllProductIdsByCountryId(int countryId);
     List<ProductDto> findAllByUserLike();
+    List<ProductDto> findProductsTop4ByLike();
+    List<ProductDto> findAllByTravelTag(int page, int size, Model model);
+    List<ProductsByTagDto> findAllByTravelTags(int page, int size, Model model);
+    List<ProductDto> findAllByKeyword(String keyword);
+    List<ProductDto> findAllByTravelTagsWithPaging(int tagId, int page, int size, Model model);
 }

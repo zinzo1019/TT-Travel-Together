@@ -36,6 +36,7 @@
     .search-container {
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
+        margin: 3% 0 5% 0;
     }
 
     /* 검색창 스타일 */
@@ -124,14 +125,14 @@
             <h1>[${country.country} - ${country.city}] ${fn:length(products)}건의 여행지가 있어요!</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
-                    <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+                    <a href="/guest/product/detail?product_id=${product.id}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block;">
                             <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
                         </div>
                     </a>
                     <div class="text">
-                        <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+                        <a href="/guest/product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
                             <p style="margin-bottom: 2%">[${country.city}] ${product.name}${product.descriptions}</p>
                             <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원

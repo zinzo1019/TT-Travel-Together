@@ -14,6 +14,7 @@ public class UserDto {
     private String name;
     private String password;
     private MultipartFile image;
+    private String travelTag;
     private String role;
     private LocalDate createDate;
     private Date lastActivityDate; // 마지막으로 활동한 날짜

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/ROLE_USER/community/curious")
+@RequestMapping("/user/community/curious")
 public class CommunityController {
 
     @Autowired

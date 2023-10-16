@@ -200,7 +200,7 @@
                 contentType: false,
                 success: function (data) {
                     alert('게시글이 수정되었습니다.');
-                    window.location.href = '/ROLE_USER/community/curious/view?postId=' + ${post.id};
+                    window.location.href = '/user/community/curious/view?postId=' + ${post.id};
                 },
                 error: function (xhr, error) {
                     alert(xhr.responseText);

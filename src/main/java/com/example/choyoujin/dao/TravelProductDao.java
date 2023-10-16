@@ -14,13 +14,16 @@ public interface TravelProductDao {
     List<ProductDto> findAllProductsByKeywordAndUserId(String keyword, int userId);
     void saveProduct(ProductDto productDto);
     void saveProductDetails(List<String> details, int productId);
-    void saveProductTags(List<String> tags, int productId);
-    List<ProductDto> findAllProductsByCountryIdAndUserId(int countryId, int userId);
-    ProductDto findProductByProductIdAndUserId(int productId, int userId);
+    void saveProductTags(List<Integer> tags, int productId);
     void plusLike(int productId);
     void plusUnLike(int productId);
-    List<ProductDto> findAllProductsByCountryIdAndKeywordAndUserId(int countryId, String keyword, int userId);
     List<ProductDto> findAllByCountryId(int countryId);
     List<Integer> findAllProductIdsByCountryId(int countryId);
     List<ProductDto> findAllByUserLike(int userId);
+    List<ProductDto> findAllByTravelTag(String travelTag, int page, int size);
+    List<ProductDto> findProductsTop4ByLike();
+    List<ProductDto> findAllByKeyword(String keyword);
+    int countAllByTravelTag(String travelTag);
+    List<ProductDto> findAllByTravelTagId(int tagId, int page, int size);
+    int countAllByTravelTagId(int tagId);
 }

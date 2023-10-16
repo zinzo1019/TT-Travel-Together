@@ -309,7 +309,7 @@
                 processData: false,
                 success: function (data) {
                     alert('게시글이 작성되었습니다.');
-                    window.location.href = '/ROLE_USER/mypage/together'
+                    window.location.href = '/user/mypage/together'
                 },
                 error: function (error) {
                     alert('게시글 작성에 실패했습니다.');

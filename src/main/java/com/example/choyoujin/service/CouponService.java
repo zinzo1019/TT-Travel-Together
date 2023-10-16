@@ -79,7 +79,7 @@ public class CouponService {
     public int getCostAfterCouponApply(int couponId, int cost) {
         CouponDto couponDto = findOneByCouponId(couponId); // 쿠폰 정보 가져오기
         if (couponDto.getPercentage() != 0) { // 퍼센트 할인
-            cost *= couponDto.getPercentage();
+            cost *= (100 - couponDto.getPercentage()) * 0.01;
         } else { // 금액 할인
             cost -= couponDto.getAmount();
         }

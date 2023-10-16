@@ -4,6 +4,14 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- 포트원 결제 -->
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+<!-- jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<!-- iamport.payment.js -->
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+<!-- 포트원 결제 -->
+
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
     <c:when test="${user.role eq 'ROLE_ADMIN'}">
@@ -17,8 +25,13 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>어느 상품이 좋으세요?</title>
+<title>이 상품은 어떠세요?</title>
 <style>
+    .welcome-message button {
+        padding: 0;
+        margin: 0 11px;
+    }
+
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -287,16 +300,15 @@
                             <select class="form-control" id="coupons" name="coupons">
                                 <option value="0">선택 없음</option>
                                 <c:forEach items="${product.coupons}" var="coupon">
-                                    <option value="${coupon.id}">
-                                            ${coupon.name} -
-                                        <c:choose>
-                                            <c:when test="${coupon.percentage > 0}">
-                                                ${coupon.percentage}% 할인
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${coupon.amount} 원 할인
-                                            </c:otherwise>
-                                        </c:choose>
+                                    <c:choose>
+                                        <c:when test="${coupon.percentage > 0}">
+                                            <option value="${coupon.id}">
+                                            ${coupon.name} ---> ${coupon.percentage}% 할인
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${coupon.name} ---> ${coupon.amount} 원 할인
+                                        </c:otherwise>
+                                    </c:choose>
                                     </option>
                                 </c:forEach>
                             </select>
@@ -309,7 +321,7 @@
                     <div>
                         <p id="updatedCost" style="display: inline-block; vertical-align: top;"><fmt:formatNumber
                                 value="${updatedCost}" pattern="#,###"/> 원</p>
-                        <button class="checkoutButton" id="CheckoutButton">결제하기</button>
+                        <button class="checkoutButton" id="payment">결제하기</button>
                     </div>
                     <div style="margin-top: 3%">
                         <p style="font-size: medium">${product.description}</p>
@@ -358,9 +370,11 @@
     </div>
 </div>
 <script>
+    var userId; // 사용자 아이디
+    var updatedCost; // 전역 변수로 선언
 
     $(document).ready(function () {
-        var updatedCost = ${product.cost}; // 할인가
+        updatedCost = ${product.cost}; // 할인가
         var formattedCost = new Intl.NumberFormat('ko-KR', {
             style: 'currency',
             currency: 'KRW'
@@ -468,11 +482,11 @@
         }
     });
 
-    // 삭제 버튼 클릭
+    // 쿠폰 적용 버튼 클릭
     $("#couponButton").on("click", function () {
         var couponId = $('#coupons').val(); // 쿠폰 아이디
         if (couponId == 0) { // 선택 없음
-            var updatedCost = ${product.cost}; // 할인가
+            pdatedCost = ${product.cost}; // 할인가
             var formattedCost = new Intl.NumberFormat('ko-KR', {
                 style: 'currency',
                 currency: 'KRW'
@@ -487,7 +501,6 @@
                 },
                 success: function (response) {
                     updatedCost = parseInt(response);
-
                     // `updatedCost`의 값을 가져와서 원으로 표시
                     var formattedCost = new Intl.NumberFormat('ko-KR', {
                         style: 'currency',
@@ -503,6 +516,77 @@
             });
         }
     });
+
+    /** 결제 하기 버튼 글릭 시 */
+    const buyButton = document.getElementById('payment')
+    buyButton.setAttribute('onclick', `kakaoPay()`)
+
+    var IMP = window.IMP;
+    function generateUniqueMerchantUid() {
+        var today = new Date();
+        var hours = today.getHours();
+        var minutes = today.getMinutes();
+        var seconds = today.getSeconds();
+        var milliseconds = today.getMilliseconds();
+        return hours + "" + minutes + "" + seconds + "" + milliseconds; // 고유한 값
+    }
+
+    function kakaoPay() {
+        if (confirm("구매하시겠습니까?")) {
+            if ("${user.email}" != "") { // 로그인 후
+                var merchantUid = "IMP" + generateUniqueMerchantUid();
+                IMP.init("imp75526378");
+                IMP.request_pay({
+                    pg: 'kakaopay.TC0ONETIME',
+                    pay_method: 'card',
+                    merchant_uid: merchantUid,
+                    productId: ${product.id},
+                    name: "${product.name}",
+                    amount: updatedCost,
+                    buyer_email: `${user.email}`,
+                    buyer_name: `${user.name}`
+                }, async function (rsp) {
+                    if (rsp.success) {
+                        console.log(rsp);
+                        if ("${user.id}" === "")
+                            userId = 0;
+                        else
+                            userId = ${user.id}
+
+                        /** 결제 db에 저장 */
+                        $.ajax({
+                            type: "POST",
+                            url: "/user/product/payment",
+                            data: {
+                                impUid: rsp.imp_uid,
+                                productId: ${product.id},
+                                userId: userId,
+                                merchantUid: rsp.merchant_uid,
+                                paidAmount: rsp.paid_amount,
+                                paidAt: rsp.paid_at,
+                                pgProvider: rsp.pg_provider,
+                                pgTid: rsp.pg_tid,
+                                receiptUrl: rsp.receipt_url
+                            },
+                            success: function (response) {
+                                alert("결제가 완료됐습니다.");
+                            },
+                            error: function (xhr, status, error) {
+                                alert("결제에 실패했습니다.");
+                            }
+                        });
+                    } else if (rsp.success == false) {
+                        alert(rsp.error_msg);
+                    }
+                });
+            } else { // 로그인 전
+                alert('로그인이 필요한 서비스입니다.');
+                window.location.href = '/login';
+            }
+        } else {
+            return false;
+        }
+    }
 </script>
 </body>
 </html>

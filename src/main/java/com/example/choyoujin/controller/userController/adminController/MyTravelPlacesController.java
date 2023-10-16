@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/ROLE_ADMIN/my-travel-places")
+@RequestMapping("/admin/my-travel-places")
 public class MyTravelPlacesController {
 
     @Autowired

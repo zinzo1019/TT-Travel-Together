@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>어느 상품이 좋으세요?</title>
+<title>관리자가 등록한 여행지 리스트</title>
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -37,6 +37,7 @@
     .search-container {
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
+        /*margin: 3% 0 5% 0;*/
     }
 
     /* 검색창 스타일 */
@@ -117,14 +118,14 @@
             <h1 style="margin-top: 5%">${user.name}님이 등록한 ${fn:length(products)}건의 여행 상품이예요.</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
-                    <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+                    <a href="/guest/product/detail?product_id=${product.id}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block;">
                             <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
                         </div>
                     </a>
                     <div class="text">
-                        <a href="/ROLE_GUEST/product/detail?product_id=${product.id}"
+                        <a href="/guest/product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
                             [${product.city}] ${product.name}${product.descriptions}
                             <br><br>

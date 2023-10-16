@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.PaymentDao">
+
+    <!--    여행 상품 결제건 저장하기-->
+    <insert id="savePayment">
+        insert into travel_product_payment (imp_uid, pay_method, travel_product_id,
+                                            tb_user_id, merchant_uid, paid_amount, paid_at,
+                                            pg_provider, pg_tid, receipt_url, available)
+        values (#{impUid}, #{paymentMethod}, #{productId}, #{userId}, #{merchantUid},
+                #{paidAmount}, #{paidAt}, #{pgProvider}, #{pgTid}, #{receiptUrl}, true)
+    </insert>
+
+    <!--    여행 상품 결제 취소하기-->
+    <update id="cancelPaymentById">
+        update travel_product_payment
+        set available = false
+        where id = #{id}
+    </update>
+</mapper>

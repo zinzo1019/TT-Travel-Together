@@ -27,8 +27,6 @@ public class UserService {
      * 로그인한 사용자 정보 가져오기
      */
     public UserDto getUserData() {
-        // TODO: 회원 아이디(기본키)를 찾을 때 로직 변경 필요
-        //  탈퇴 회원까지 고려해서 이메일로만 찾는 게 아닌 이메일 + 탈퇴 여부를 고려해서 찾아야 함
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             String email = ((UserDetails) principal).getUsername();

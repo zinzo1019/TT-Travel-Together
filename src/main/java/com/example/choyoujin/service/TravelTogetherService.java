@@ -1,5 +1,6 @@
 package com.example.choyoujin.service;
 
+import com.example.choyoujin.dao.RecruitedDao;
 import com.example.choyoujin.dao.TravelTogetherDao;
 import com.example.choyoujin.dto.PostDto;
 import com.example.choyoujin.dto.SearchDto;
@@ -20,6 +21,8 @@ public class TravelTogetherService {
     private UserService userService;
     @Autowired
     private CommentServiceImpl commentService;
+    @Autowired
+    private RecruitedDao recruitedDao;
 
     /**
      * 모집 게시글 저장하기
@@ -36,8 +39,7 @@ public class TravelTogetherService {
     public List<PostDto> findAllTogetherPostsByEnabled(boolean enabled) {
         List<PostDto> posts = togetherDao.findAllTogetherPostsByEnabled(enabled); // 모집글 리스트 가져오기
         for (PostDto dto : posts) {
-            // todo 모집 지원 여부 확인
-            boolean supported = togetherDao.findIsSupportedByPostIdAndUserId(userService.getUserData().getId(), dto.getId());
+            boolean supported = togetherDao.findIsSupportedByPostIdAndUserId(userService.getUserData().getId(), dto.getId()); // 모집 지원 여부
             dto.setSupported(supported);
         }
         return calculateRemainingDays(posts); // 모집 마감까지 남은 날짜 계산
@@ -98,7 +100,7 @@ public class TravelTogetherService {
     }
 
     /**
-     * 함께 여행 가요 - 수정하기
+     * 같이 여행 가요 - 수정하기
      */
     public void updateTogetherPostByPostDto(PostDto postDto) throws Exception {
         if (userService.compareWriterAndUser(postDto.getUserId())) // 수정 권한 확인
@@ -107,11 +109,12 @@ public class TravelTogetherService {
     }
 
     /**
-     * 함께 여행 가요 - 삭제하기
+     * 같이 여행 가요 - 삭제하기
      */
     public void deletetogetherPost(PostDto postDto) throws Exception {
         if (userService.compareWriterAndUser(postDto.getUserId())) { // 삭제 권한 확인
             commentService.deleteTogetherCommentsByPostId(postDto.getId()); // 댓글 리스트 삭제
+            recruitedDao.deleteAllByPostId(postDto.getId()); // 모집된 인원 삭제
             togetherDao.deletetogetherPost(postDto); // 게시글 삭제
         }
         else throw new Exception("수정 권한이 없습니다.");

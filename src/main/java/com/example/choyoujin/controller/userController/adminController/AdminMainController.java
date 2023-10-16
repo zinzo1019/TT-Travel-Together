@@ -29,7 +29,7 @@ public class AdminMainController {
     /**
      * 메인 페이지
      */
-    @GetMapping("/ROLE_ADMIN")
+    @GetMapping("/admin")
     public String mainPage(Model model, @RequestParam(defaultValue = "2") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("countries4", travelProductService.find4CountriesByCountryLike()); // 최근 뜨는 여행지 담기
@@ -45,7 +45,7 @@ public class AdminMainController {
     /**
      * 메인 페이지 - 검색
      */
-    @PostMapping("/ROLE_ADMIN/search")
+    @PostMapping("/admin/search")
     public String searchMainPage(String keyword, Model model, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("searchResults", countryService.findAllCountriesByKeyword(keyword, page, 4)); // 검색 결과 담기
@@ -59,7 +59,7 @@ public class AdminMainController {
     /**
      * 나라별 상품 리스트 페이지
      */
-    @GetMapping("/ROLE_ADMIN/country")
+    @GetMapping("/admin/country")
     public String countryProductsListPage(@RequestParam("country_id") int countryId, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
@@ -73,7 +73,7 @@ public class AdminMainController {
     /**
      * 나라별 상품 리스트 페이지 - 검색
      */
-    @PostMapping("/ROLE_ADMIN/country/search")
+    @PostMapping("/admin/country/search")
     public String SearchCountryProductsListPage(@RequestParam("country_id") int countryId, String keyword, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
@@ -86,7 +86,7 @@ public class AdminMainController {
     /**
      * 여행지 상세 페이지
      */
-    @GetMapping("/ROLE_ADMIN/product/detail")
+    @GetMapping("/admin/product/detail")
     public String countryDetailPage(@RequestParam("product_id") int productId, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("comments", commentService.findAllProductCommentsByPostId(productId)); // 댓글 리스트 가져오기
@@ -97,7 +97,7 @@ public class AdminMainController {
     /**
      * 여행지 상세 페이지 - 댓글 작성하기 동작
      */
-    @PostMapping("/ROLE_ADMIN/product/comment")
+    @PostMapping("/admin/product/comment")
     public ResponseEntity<String> productCommentPostAction(CommentDto comment) {
         try {
             commentService.saveProductComment(comment); // 댓글 저장
@@ -110,7 +110,7 @@ public class AdminMainController {
     /**
      * 여행지 상세 페이지 - 댓글 삭제하기 동작
      */
-    @PostMapping("/ROLE_ADMIN/product/comment/delete")
+    @PostMapping("/admin/product/comment/delete")
     public ResponseEntity<String> productCommentDelete(@RequestParam("commentId") int commentId) {
         try {
             commentService.deleteProductComment(commentId); // 댓글 삭제
@@ -131,7 +131,7 @@ public class AdminMainController {
     /**
      * ROLE_ADMIN 회원가입 동작
      */
-    @PostMapping("/ROLE_GUEST/admin/signup-process")
+    @PostMapping("/guest/admin/signup-process")
     public ResponseEntity<String> signUpProcess(UserDto userDto) {
         try {
             int imageId = userService.saveImageAndGetImageId(userDto); // 이미지 저장
