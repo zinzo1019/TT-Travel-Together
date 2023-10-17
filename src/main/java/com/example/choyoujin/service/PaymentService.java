@@ -45,11 +45,18 @@ public class PaymentService {
     public List<PaymentDto> findAllByUserId() {
         List<PaymentDto> paymentDtos = paymentDao.findAllByUserId(userService.getUserData().getId()); // 결제한 정보 리스트
         paymentDtos.stream().forEach(dto -> {
-            ProductDto productDto = productDao.findProductByProductId(dto.getProductId()); // 결제한 여행 상품 리스트
-            productDto.setDescriptions(productService.findAllByProductId(productDto.getId())); // 설명 Set
+            ProductDto productDto = productDao.findProductByProductId(dto.getProductId()); // 여행 상품 Set
             productDto.setEncoding(decompressBytes(productDto.getPicByte())); // 이미지 Set
             dto.setProductDto(productDto);
         });
         return paymentDtos;
+    }
+
+    public void updateEnabledByProductId(int productId, boolean enabled) {
+        try {
+            paymentDao.updateEnabledByProductId(productId, enabled);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
@@ -15,7 +16,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>여행에 대해 궁금해요.</title>
+<title>여행에 대해 궁금해요. - 수정 페이지</title>
 <style>
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
@@ -35,7 +36,7 @@
     .background-container {
         background-color: #f0f0f0; /* 원하는 배경 색상으로 설정 */
         padding: 20px; /* 내부 여백 추가 */
-        padding-bottom: 6%;
+        padding-bottom: 8%;
         border-radius: 10px; /* 모서리 둥글게 만들기 */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
         position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
@@ -159,11 +160,8 @@
     </div>
 </div>
 <script>
-    const selectBox = document.getElementById("options");
-    selectBox.addEventListener("change", () => {
-        // 선택한 값을 가져옴
-        const selectedValue = selectBox.value;
-        console.log("선택한 값: " + selectedValue);
+    document.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace('content');
     });
 
     var submitButton = document.getElementById('submitButton');
@@ -171,20 +169,18 @@
         event.preventDefault(); // 기본 동작 중단
         var countryValue = document.getElementById('options').value;
         var titleValue = document.getElementById('title').value;
-        var contentValue = document.getElementById('content').value;
-        var errorMessage = '';
-
+        var contentValue = CKEDITOR.instances['content'].getData();
         if (countryValue == 0) {
-            errorMessage += '어느 나라로 갈지 선택하세요.\n';
+            alert("나라를 선택해주세요.");
+            return false;
         }
         if (!titleValue) {
-            errorMessage += '제목을 입력하세요.\n';
+            alert("제목을 입력하세요.");
+            return false;
         }
         if (!contentValue) {
-            errorMessage += '내용을 입력하세요.\n';
-        }
-        if (errorMessage) {
-            alert(errorMessage);
+            alert("내용을 입력하세요.");
+            return false;
         } else { // 게시글 수정
             var formData = new FormData();
             formData.append("id", ${post.id}) // 게시글 아이디

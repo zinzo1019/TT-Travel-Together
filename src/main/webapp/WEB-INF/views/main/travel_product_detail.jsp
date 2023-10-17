@@ -46,10 +46,13 @@
         margin: 0 auto;
     }
 
-    /* 검색창 컨테이너 스타일 */
+    /* 여행 상품 컨테이너 */
     .travel-container {
-        margin-top: 5%;
-        margin-left: 1%;
+        margin: 5% 0;
+        border: 1px solid #ddd;
+        border-radius: 10px; /* 모서리 둥글게 만들기 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+        padding: 3%;
     }
 
     .img-container {
@@ -210,7 +213,7 @@
         display: inline-block;
         vertical-align: top;
         float: right;
-        margin-right: 14%;
+        margin-right: 13%;
     }
 
     .background-container {
@@ -220,6 +223,10 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
         position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
         margin-bottom: 5%;
+    }
+
+    .description-container {
+        padding: 3% 3% 0 3%;
     }
 
     /* 대댓글 입력 칸 스타일 (기본적으로 숨김) */
@@ -290,8 +297,16 @@
                             </a>
                             ${product.like}
                         </c:if>
+                        <c:choose>
+                            <c:when test="${product.enabled}">
+                                <p style="font-size: small; color: blue; display: inline-block;">* 판매 중인 상품입니다.</p>
+                            </c:when>
+                            <c:otherwise>
+                                <p style="font-size: small; color: red; display: inline-block">* 판매 중지된 상품입니다.</p>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
-                    <p style="margin: 3% 0">[${product.country}
+                    <p>[${product.country}
                         - ${product.city}] ${product.name}${product.descriptions}</p>
                     <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
                     <!-- 쿠폰 창 -->
@@ -323,9 +338,6 @@
                                 value="${updatedCost}" pattern="#,###"/> 원</p>
                         <button class="checkoutButton" id="payment">결제하기</button>
                     </div>
-                    <div style="margin-top: 3%">
-                        <p style="font-size: medium">${product.description}</p>
-                    </div>
                     <div class="tag-div">
                         <c:forEach var="tag" items="${product.tags}" varStatus="status">
                             # ${tag.tag}&nbsp;&nbsp;
@@ -333,8 +345,11 @@
                     </div>
                 </div>
             </div>
-            <br><br>
+            <div class="description-container">
+                ${product.description}
+            </div>
         </div>
+
         <h3>${fn:length(comments)}개의 답변이 있어요.</h3>
         <div class="background-container">
             <div class="comment-form" style="padding-bottom: 7%">
@@ -522,6 +537,7 @@
     buyButton.setAttribute('onclick', `kakaoPay()`)
 
     var IMP = window.IMP;
+
     function generateUniqueMerchantUid() {
         var today = new Date();
         var hours = today.getHours();
@@ -532,6 +548,10 @@
     }
 
     function kakaoPay() {
+        if (!${product.enabled}) { // 판매 중지 여부 확인
+            alert("판매 중지된 상품입니다.\n다음에 다시 이용해주세요.");
+            return;
+        }
         if (confirm("구매하시겠습니까?")) {
             if ("${user.email}" != "") { // 로그인 후
                 var merchantUid = "IMP" + generateUniqueMerchantUid();
@@ -553,28 +573,28 @@
                         else
                             userId = ${user.id}
 
-                        /** 결제 db에 저장 */
-                        $.ajax({
-                            type: "POST",
-                            url: "/user/product/payment",
-                            data: {
-                                impUid: rsp.imp_uid,
-                                productId: ${product.id},
-                                userId: userId,
-                                merchantUid: rsp.merchant_uid,
-                                paidAmount: rsp.paid_amount,
-                                paidAt: rsp.paid_at,
-                                pgProvider: rsp.pg_provider,
-                                pgTid: rsp.pg_tid,
-                                receiptUrl: rsp.receipt_url
-                            },
-                            success: function (response) {
-                                alert("결제가 완료됐습니다.");
-                            },
-                            error: function (xhr, status, error) {
-                                alert("결제에 실패했습니다.");
-                            }
-                        });
+                                /** 결제 db에 저장 */
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/user/product/payment",
+                                    data: {
+                                        impUid: rsp.imp_uid,
+                                        productId: ${product.id},
+                                        userId: userId,
+                                        merchantUid: rsp.merchant_uid,
+                                        paidAmount: rsp.paid_amount,
+                                        paidAt: rsp.paid_at,
+                                        pgProvider: rsp.pg_provider,
+                                        pgTid: rsp.pg_tid,
+                                        receiptUrl: rsp.receipt_url
+                                    },
+                                    success: function (response) {
+                                        alert("결제가 완료됐습니다.");
+                                    },
+                                    error: function (xhr, status, error) {
+                                        alert("결제에 실패했습니다.");
+                                    }
+                                });
                     } else if (rsp.success == false) {
                         alert(rsp.error_msg);
                     }

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
     <c:when test="${user.role eq 'ROLE_ADMIN'}">
@@ -12,7 +13,7 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-<title>여행에 대해 궁금해요!</title>
+<title>여행지 등록하기</title>
 <!-- jQuery 라이브러리 추가 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- datepicker 라이브러리 추가 -->
@@ -237,6 +238,10 @@
         }
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace('description');
+    });
+
     /** 제출 버튼 클릭 - 유효성 검사 */
     var submitButton = document.getElementById('submitButton');
     submitButton.addEventListener('click', function () {
@@ -244,7 +249,7 @@
         var countryValue = document.getElementById('options').value; // 나라 아이디 (기본키)
         var cost = document.getElementById('cost').value; // 가격
         var name = document.getElementById('name').value; // 상품 이름
-        var description = document.getElementById('description').value; // 상품 설명
+        var description = CKEDITOR.instances['description'].getData(); // 상품 설명
         var image = document.getElementById("imageInput").value; // 이미지
 
         if (countryValue == 0) {

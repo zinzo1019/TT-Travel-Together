@@ -33,6 +33,8 @@ public class TravelProductServiceImpl implements TravelProductService {
     private CouponService couponService;
     @Autowired
     private TravelTagsDao tagsDao;
+    @Autowired
+    private PaymentService paymentService;
 
     /**
      * 최근 뜨는 여행지 4개 (좋아요 순으로 정렬)
@@ -66,7 +68,9 @@ public class TravelProductServiceImpl implements TravelProductService {
             dto.setUserLiked(isLiked);
         }
         dto.setEncoding(decompressBytes(dto.getPicByte())); // 이미지 Set
+        dto.setDetailDescriptions(detailDao.findAllByProductId(dto.getId())); // 설명 리스트 Set
         dto.setDescriptions(findAllByProductId(dto.getId())); // 설명 Set
+        dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 리스트 Set
         dto.setTags(tagDao.findAllByProductId(dto.getId())); // 태그 set
         dto.setCoupons(couponService.findAllByProductId(productId)); // 쿠폰 리스트 Set
         return dto;
@@ -76,7 +80,7 @@ public class TravelProductServiceImpl implements TravelProductService {
      * 여행 상품별 설명 리스트 가져오기 & 설명 이어 붙이기
      */
     public String findAllByProductId(int productId) {
-        List<DetailDto> detailDtos = detailDao.findallByProductId(productId);
+        List<DetailDto> detailDtos = detailDao.findAllByProductId(productId);
         String tags = "";
         for (int i = 0; i < detailDtos.size(); i++) { // 태그 이어붙이기
             tags += " + ";
@@ -123,7 +127,7 @@ public class TravelProductServiceImpl implements TravelProductService {
     }
 
     /**
-     * 여행 상품 등록하기
+     * 여행 상품 저장하기
      */
     public void saveProduct(ProductDto productDto) {
         int imageId = saveImageAndGetImageId(productDto); // 이미지 저장
@@ -132,6 +136,21 @@ public class TravelProductServiceImpl implements TravelProductService {
         if (!productDto.getStringDetailDescriptions().isEmpty())
             travelProductDao.saveProductDetails(productDto.getStringDetailDescriptions(), productDto.getId()); // 설명 저장
         saveTags(productDto); // 태그 저장
+    }
+
+    /** 여행 상품 수정하기 */
+    @Override
+    public void updateProduct(ProductDto productDto) {
+        try {
+            if (!productDto.getStringDetailDescriptions().isEmpty())
+                travelProductDao.saveProductDetails(productDto.getStringDetailDescriptions(), productDto.getId()); // 설명 저장
+            if (!productDto.getStringTags().isEmpty())
+                saveTags(productDto); // 태그 저장
+                fileService.updateProductImage(productDto.getImageId(), productDto.getImage()); // 이미지 수정
+            travelProductDao.updateProduct(productDto); // 여행 상품 수정
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -224,6 +243,13 @@ public class TravelProductServiceImpl implements TravelProductService {
         model.addAttribute("pagination", pagination); // 페이징 담기
         model.addAttribute("tagId", tagId); // 페이징 담기
         return productDtos;
+    }
+
+    /** 여행 상품 판매 중지하기 */
+    @Override
+    public void updateEnabledByProductId(int productId, boolean enabled) {
+        travelProductDao.updateEnabledByProductId(productId, enabled); // 판매 여부 수정
+        paymentService.updateEnabledByProductId(productId, enabled); // 결제건 사용 가능 여부 수정
     }
 
     /**

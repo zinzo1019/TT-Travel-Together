@@ -17,4 +17,11 @@ public class ImageDto {
         this.type = type;
         this.picByte = picByte;
     }
+
+    public ImageDto(int imageId, String name, String type, byte[] picByte) {
+        this.id = imageId;
+        this.name = name;
+        this.type = type;
+        this.picByte = picByte;
+    }
 }

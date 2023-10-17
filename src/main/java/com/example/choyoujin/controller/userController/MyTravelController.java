@@ -1,21 +1,13 @@
 package com.example.choyoujin.controller.userController;
 
-import com.example.choyoujin.dao.TravelProductDao;
-import com.example.choyoujin.dto.PaymentDto;
-import com.example.choyoujin.dto.ProductDto;
 import com.example.choyoujin.service.PaymentService;
 import com.example.choyoujin.service.TravelProductServiceImpl;
-import com.example.choyoujin.service.TravelTogetherService;
 import com.example.choyoujin.service.UserService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -32,15 +24,7 @@ public class MyTravelController {
     @GetMapping("/mytravel/upcoming")
     public String upcomingTravelPage(Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-
-
-        // todo 내가 결제한 상품 가져오기
-        List<PaymentDto> paymentDtos = paymentService.findAllByUserId();
-
-
-        model.addAttribute("products", paymentDtos);
-
-
+        model.addAttribute("products", paymentService.findAllByUserId());
         return "my_travel/upcoming_travel";
     }
 

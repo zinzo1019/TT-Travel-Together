@@ -15,8 +15,11 @@ public interface TravelProductService {
     List<ProductDto> findAllProductsByUserId();
     List<ProductDto> findAllProductsByKeywordAndUserId(String keyword);
     void saveProduct(ProductDto productDto);
+    void updateEnabledByProductId(int productId, boolean enabled);
+
     void plusLike(int productId);
     void plusUnLike(int productId);
+    void updateProduct(ProductDto productDto);
     List<ProductDto> findAllByCountryId(int countryId);
     List<Integer> findAllProductIdsByCountryId(int countryId);
     List<ProductDto> findAllByUserLike();

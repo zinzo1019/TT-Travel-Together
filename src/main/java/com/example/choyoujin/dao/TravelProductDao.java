@@ -26,4 +26,6 @@ public interface TravelProductDao {
     int countAllByTravelTag(String travelTag);
     List<ProductDto> findAllByTravelTagId(int tagId, int page, int size);
     int countAllByTravelTagId(int tagId);
+    void updateProduct(ProductDto productDto);
+    void updateEnabledByProductId(int productId, boolean enabled);
 }

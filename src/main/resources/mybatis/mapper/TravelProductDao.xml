@@ -163,7 +163,7 @@
 
     <!-- 전체 여행 상품 중 검색 -->
     <select id="findAllByKeyword" resultType="com.example.choyoujin.dto.ProductDto">
-        SELECT tp.*, tpi.*, c.country, c.city
+        SELECT DISTINCT(tp.id), tp.*, tpi.*, c.country, c.city
         FROM travel_product tp
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
@@ -210,12 +210,14 @@
 
     <!--    아이디로 상품 가져오기 - 로그인 전 (좋아요 X)-->
     <select id="findProductByProductId" resultType="com.example.choyoujin.dto.ProductDto">
-        select tp.tb_user_id as userId, tp.*, c.*, tpi.*
+        select tp.*, c.*, tpi.*, tp.name as productName, tpi.id as imageIdm, tu.email
         from travel_product tp
                  left join country c
                            on tp.country_id = c.id
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
+            left join tb_user tu
+            on tp.tb_user_id = tu.id
         where tp.id = #{productId}
     </select>
 
@@ -225,11 +227,14 @@
                tp.*,
                c.*,
                tpi.*,
-               case
-                   when pl.tb_user_id = #{userId}
-                       then true
-                   else false
-                   end       as userLiked
+               tp.name       as productName,
+               tpi.id        as imageId,
+               tu.id         as userId,
+               tu.name       as name,
+               tu.email      as email case
+                   when pl.tb_user_id = #{userId} then true else false
+        end
+        as userLiked
         from travel_product tp
                  left join country c
                            on tp.country_id = c.id
@@ -237,7 +242,10 @@
                            on tp.id = pl.travel_product_id
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
-        where tp.id = #{productId}
+                 LEFT JOIN tb_user tu
+                           on tp.tb_user_id = tu.id
+        where tp.id =
+        #{productId}
     </select>
 
     <!--    관리자 - 사용자 아이디로 상품 리스트 가져오기-->
@@ -245,10 +253,14 @@
         SELECT tp.*, tp.tb_user_id as userId, c.*, tpi.*
         FROM travel_product tp
                  LEFT JOIN country c ON tp.country_id = c.id
-                 LEFT JOIN travel_product_image tpi
-                           on tp.travel_product_image_id = tpi.id
+                 LEFT JOIN travel_product_image tpi on tp.travel_product_image_id = tpi.id
         WHERE tp.tb_user_id = #{userId}
-        ORDER BY c.country, c.city, tp.like DESC
+        ORDER BY CASE
+                     WHEN tp.enabled = false
+                         THEN 1
+                     ELSE 0
+                     END,
+                 c.country, c.city, tp.like DESC
     </select>
 
     <!--    여행 상품 등록하기-->
@@ -257,6 +269,23 @@
         insert into travel_product (name, description, cost, tb_user_id, country_id, travel_product_image_id)
         values (#{productName}, #{description}, #{cost}, #{userId}, #{countryId}, #{imageId})
     </insert>
+
+    <!--    여행 상품 수정하기-->
+    <update id="updateProduct">
+        update travel_product
+        set name        = #{productName},
+            description = #{description},
+            cost        = #{cost},
+            country_id  = #{countryId}
+        where id = #{id}
+    </update>
+
+    <!--    여행 상품 판매 여부 수정하기-->
+    <update id="updateEnabledByProductId">
+        update travel_product
+        set enabled = #{enabled}
+        where id = #{productId}
+    </update>
 
     <!--    여행 상품 - 설명 저장하기-->
     <insert id="saveProductDetails">

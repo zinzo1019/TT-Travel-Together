@@ -2,6 +2,7 @@ package com.example.choyoujin.service;
 
 import com.example.choyoujin.dao.FileDao;
 import com.example.choyoujin.dto.ImageDto;
+import com.example.choyoujin.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class FileService {
     }
 
     /**
-     * 여행 상품 이미지 저장
+     * 여행 상품 이미지 저장하기
      */
     public int saveProductImage(MultipartFile file) throws IOException {
         try {
@@ -47,6 +48,21 @@ public class FileService {
         } catch (Exception e) {
             e.printStackTrace();
             return -1; // 실패 시 -1 리턴
+        }
+    }
+
+    /**
+     * 여행 상품 이미지 수정하기
+     */
+    public void updateProductImage(int imageId, MultipartFile file) throws IOException {
+        try {
+            String name = file.getOriginalFilename(); // 파일 이름
+            String type = file.getContentType(); // 파일 타입
+            byte[] picByte = compressBytes(file.getBytes()); // 문자열 압축
+            ImageDto imageDto = new ImageDto(imageId, name, type, picByte); // ImageDto 생성
+            fileDao.updateImage(imageDto); // 이미지 저장
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -92,5 +108,4 @@ public class FileService {
         }
         return Base64.getEncoder().encodeToString(outputStream.toByteArray()); // img로 띄우기 위해 인코딩
     }
-
 }

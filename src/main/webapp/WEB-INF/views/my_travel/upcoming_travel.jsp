@@ -85,19 +85,15 @@
     }
 
     .payment-table td {
-        padding: 10px; /* 셀 내부 여백 추가 */
+        padding: 10px 15px; /* 셀 내부 여백 추가 */
         border: 1px solid #ccc; /* 각 셀에 테두리 추가 */
     }
 
     .label {
         width: 12%;
         font-weight: bold; /* 레이블 텍스트를 굵게 표시 */
+        text-align: center;
     }
-
-    .value {
-        padding-left: 10px; /* 값 텍스트와 레이블 사이 여백 추가 */
-    }
-
 </style>
 <body>
 <div class="content">
@@ -126,6 +122,10 @@
                 </div>
                 <table class="payment-table">
                     <tr>
+                        <td class="label">상품 이름</td>
+                        <td class="value">${product.productDto.productName}</td>
+                    </tr>
+                    <tr>
                         <td class="label">결제 방법</td>
                         <td class="value">${product.pgProvider == 'kakaopay' ? '카카오페이' : product.pgProvider}</td>
                     </tr>
@@ -142,12 +142,12 @@
                         <td class="value"><fmt:formatNumber value="${product.productDto.cost - product.paidAmount}" pattern="#,###"/> 원</td>
                     </tr>
                     <tr>
-                        <td class="label">상품 설명</td>
-                        <td class="value">${product.productDto.description}</td>
+                        <td class="label">사용 여부</td>
+                        <td class="value">${product.available ? '사용 가능' : '사용 불가능 : 관리자가 삭제한 상품입니다.'}</td>
                     </tr>
                     <tr>
-                        <td class="label">사용 여부</td>
-                        <td class="value">${product.available ? '사용 가능' : '사용 완료'}</td>
+                        <td class="label">담당자</td>
+                        <td class="value">${product.productDto.email}</td>
                     </tr>
                 </table>
             </div>

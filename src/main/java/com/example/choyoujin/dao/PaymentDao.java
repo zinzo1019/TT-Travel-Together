@@ -10,4 +10,5 @@ public interface PaymentDao {
     void savePayment(PaymentDto paymentDto);
     void cancelPaymentById(int id);
     List<PaymentDto> findAllByUserId(int userId);
+    void updateEnabledByProductId(int productId, boolean enabled);
 }

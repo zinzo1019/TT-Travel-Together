@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
     <c:when test="${user.role eq 'ROLE_ADMIN'}">
@@ -176,14 +177,6 @@
     </div>
 </div>
 <script>
-    /** 어느 나라로 갈까요? */
-    const selectBox = document.getElementById("options");
-    selectBox.addEventListener("change", () => {
-        // 선택한 값을 가져옴
-        const selectedValue = selectBox.value;
-        console.log("선택한 값: " + selectedValue);
-    });
-
     /** 날짜 */
     $(function () {
         // 시작 날짜 선택
@@ -225,6 +218,10 @@
         }
     });
 
+    document.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace('content');
+    });
+
     /** 제출 버튼 클릭 - 유효성 검사 */
     var submitButton = document.getElementById('submitButton');
     submitButton.addEventListener('click', function () {
@@ -235,7 +232,7 @@
         var totalNumValue = parseFloat(document.getElementById('totalNum').value);
         var deadlineValue = document.getElementById('deadline').value;
         var titleValue = document.getElementById('title').value;
-        var contentValue = document.getElementById('content').value;
+        var contentValue = CKEDITOR.instances['content'].getData();
 
         // 현재 날짜 가져오기
         var currentDate = new Date();

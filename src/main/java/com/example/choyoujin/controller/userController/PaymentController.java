@@ -20,7 +20,6 @@ public class PaymentController {
     @PostMapping("/payment")
     public ResponseEntity<String> productPayment(PaymentDto paymentDto) {
         try {
-            System.out.println(paymentDto);
             paymentService.savePayment(paymentDto);
             return ResponseEntity.ok("결제가 완료됐습니다.");
         } catch (Exception e) {

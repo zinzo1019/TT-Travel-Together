@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!-- jQuery 라이브러리 추가 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
@@ -166,12 +166,8 @@
     </div>
 </div>
 <script>
-    /** 어느 나라로 갈까요? */
-    const selectBox = document.getElementById("options");
-    selectBox.addEventListener("change", () => {
-        // 선택한 값을 가져옴
-        const selectedValue = selectBox.value;
-        console.log("선택한 값: " + selectedValue);
+    document.addEventListener("DOMContentLoaded", function () {
+        CKEDITOR.replace('content');
     });
 
     /** 제출 버튼 클릭 - 유효성 검사 */
@@ -180,25 +176,25 @@
         event.preventDefault(); // 기본 동작 중단
         var countryValue = document.getElementById('options').value;
         var titleValue = document.getElementById('title').value;
-        var contentValue = document.getElementById('content').value;
-        var errorMessage = '';
+        var contentValue = CKEDITOR.instances['content'].getData();
 
-        if (!countryValue) {
-            errorMessage += '어느 나라로 갈지 선택하세요.\n';
+        if (countryValue == 0) {
+            alert("나라를 선택해주세요.");
+            return false;
         }
         if (!titleValue) {
-            errorMessage += '제목을 입력하세요.\n';
+            alert("제목을 입력하세요.");
+            return false;
         }
         if (!contentValue) {
-            errorMessage += '내용을 입력하세요.\n';
-        }
-        if (errorMessage) {
-            alert(errorMessage);
+            alert("내용을 입력하세요.");
+            return false;
         } else { // 게시글 저장
             var formData = new FormData();
             formData.append("countryId", countryValue); // 나라
             formData.append("title", titleValue); // 제목
             formData.append("content", contentValue); // 내용
+
             $.ajax({
                 type: 'POST',
                 url: 'post',

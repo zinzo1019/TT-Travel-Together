@@ -24,6 +24,15 @@
         values (#{name}, #{type}, #{picByte})
     </insert>
 
+    <!--    여행 상품 사진 수정하기-->
+    <update id="updateImage" parameterType="com.example.choyoujin.dto.ImageDto">
+        update travel_product_image
+            set name = #{name},
+                type = #{type},
+                pic_byte = #{picByte}
+        where id = #{id}
+    </update>
+
     <!--    이메일로 이미지 찾기-->
     <select id="findIdByEmail" resultType="com.example.choyoujin.dto.ImageDto">
         select id

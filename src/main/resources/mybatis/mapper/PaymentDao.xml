@@ -21,12 +21,27 @@
         where id = #{id}
     </update>
 
+    <!--    사용자 아이디로 사용자가 결제한 여행 상품 리스트 가져오기-->
     <select id="findAllByUserId" resultType="com.example.choyoujin.dto.PaymentDto">
-        select tpp.id as paymentId, tpp.paid_amount, pg_provider, tpp.travel_product_id as productId,
-               tpp.create_date, tpp.pg_provider, tpp.available
+        select tpp.id                as paymentId,
+               tpp.paid_amount,
+               pg_provider,
+               tpp.travel_product_id as productId,
+               tpp.create_date,
+               tpp.pg_provider,
+               tpp.available,
+               tp.name               as productName
         from travel_product_payment tpp
                  left join tb_user tu
                            on tpp.tb_user_id = tu.id
+                 left join travel_product tp
+                           on tpp.travel_product_id = tp.id
         where tu.id = #{userId}
     </select>
+
+    <update id="updateEnabledByProductId">
+        update travel_product_payment
+        set available = #{enabled}
+        where travel_product_id = #{productId}
+    </update>
 </mapper>

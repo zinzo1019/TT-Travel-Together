@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -31,34 +31,7 @@
     .main-container {
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
-    }
-
-    /* 검색창 컨테이너 스타일 */
-    .search-container {
-        display: flex;
-        justify-content: center; /* 가로 중앙 정렬 */
-        /*margin: 3% 0 5% 0;*/
-    }
-
-    /* 검색창 스타일 */
-    .search-box {
-        margin-top: 5%;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 90%;
-    }
-
-    /* 검색 버튼 스타일 */
-    .search-button {
-        margin-top: 5%;
-        padding: 10px 20px;
-        background-color: #333;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        margin-left: 10px;
-        cursor: pointer;
+        margin-top: 3%;
     }
 
     /* 검색창 컨테이너 스타일 */
@@ -84,7 +57,7 @@
     .text {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 3%;
+        padding-top: 1%;
         font-size: large;
         font-weight: bold;
     }
@@ -97,23 +70,32 @@
     .like-img {
         width: 20px;
         height: 20px;
-        margin-top: 5%;
-        margin-right: 2%;
+        padding-right: 1%;
     }
 
     .like-container {
         display: flex;
         align-items: center; /* 세로 중앙 정렬 */
-        height: 0;
+        margin-top: 1%;
+        height: 35px;
+    }
+
+    .button-container {
+        margin-top: 2%;
+    }
+
+    .search-button {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
     }
 </style>
 <body>
 <div class="content">
     <div class="main-container">
-        <div class="search-container">
-            <input type="text" class="search-box" id="searchInput" placeholder="어디로 여행을 떠날까요?">
-            <button class="search-button" onclick="search(event)">검색</button>
-        </div>
         <div class="travel-container" id="products_search_result">
             <h1 style="margin-top: 5%">${user.name}님이 등록한 ${fn:length(products)}건의 여행 상품이예요.</h1>
             <c:forEach var="product" items="${products}">
@@ -127,29 +109,50 @@
                     <div class="text">
                         <a href="/guest/product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
-                            [${product.city}] ${product.name}${product.descriptions}
-                            <br><br>
-                            <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
+                            <c:choose>
+                                <c:when test="${!product.enabled}">
+                                    <p style="font-size: small; color: red;" data-product-id="${product.id}">* 현재 판매 중지된 상품입니다.</p>
+                                </c:when>
+                                <c:otherwise>
+                                    <p style="font-size: small; color: blue;" data-product-id="${product.id}">* 현재 판매 중인 상품입니다.</p>
+                                </c:otherwise>
+                            </c:choose>
+                            <p style="margin-bottom: 2%">
+                                [${product.city}] ${product.name}${product.descriptions}</p>
+                            <p><fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원</p>
                         </a>
-                        <div>
-                            <p style="font-size: medium">${product.description}</p>
-                        </div>
                         <div class="tag-div">
                             <c:forEach var="tag" items="${product.tags}" varStatus="status">
                                 # ${tag.tag}&nbsp;&nbsp;
                             </c:forEach>
                         </div>
                         <div class="like-container">
-                                <%--    로그인 상태--%>
-                            <c:if test="${not empty pageContext.request.userPrincipal }">
-                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}" class="like-img">
-                                <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                                <%-- 로그인 상태 --%>
+                            <c:if test="${not empty pageContext.request.userPrincipal}">
+                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}"
+                                     class="like-img">
+                                <p>${product.like}</p>
                             </c:if>
-                                <%--    로그아웃 상태--%>
-                            <c:if test="${empty pageContext.request.userPrincipal }">
+                                <%-- 로그아웃 상태 --%>
+                            <c:if test="${empty pageContext.request.userPrincipal}">
                                 <img src='/images/empty-like.png' class="like-img">
-                                <p style="font-size: medium; margin-top: 5%">${product.like}</p>
+                                <p>${product.like}</p>
                             </c:if>
+                        </div>
+                        <div class="button-container">
+                                <%-- 수정하기 버튼 --%>
+                            <c:if test="${not empty pageContext.request.userPrincipal }">
+                                <button class="search-button" id="modifyButton" data-product-id="${product.id}">수정하기
+                                </button>
+                            </c:if>
+                            <c:choose>
+                                <c:when test="${product.enabled}">
+                                    <button class="search-button stopButton" data-product-id="${product.id}" style="background-color: red">판매중지</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="search-button sellButton" data-product-id="${product.id}" style="background-color: blue">판매재개</button>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </div>
@@ -159,22 +162,43 @@
     </div>
 </div>
 <script>
-    /** 여행 상품 중 검색 */
-    function search(event) {
-        event.preventDefault();
-        var keyword = document.getElementById('searchInput').value;
+    // 수정하기 버튼 클릭 이벤트
+    $("#modifyButton").click(function () {
+        var productId = $(this).data("product-id");
+        window.location.href = "my-travel-places/modify?product_id=" + productId;
+    });
+
+    // 판매 중지 버튼 클릭 이벤트
+    $(".stopButton").click(function () {
+        var productId = $(this).data("product-id");
         $.ajax({
-            type: 'POST',
-            url: 'my-travel-places/search',
-            data: {"keyword": keyword},
-            success: function (response) {
-                $("#products_search_result").html(response);
+            url: "my-travel-places/enabled/false?product_id=" + productId,
+            type: "POST",
+            success: function (data) {
+                alert("판매를 중지했습니다.");
+                location.reload();
             },
             error: function (error) {
-
+                alert("판매 중지에 실패했습니다.");
             }
         });
-    }
+    });
+
+    // 판매 재개 버튼 클릭 이벤트
+    $(".sellButton").click(function () {
+        var productId = $(this).data("product-id");
+        $.ajax({
+            url: "my-travel-places/enabled/true?product_id=" + productId,
+            type: "POST",
+            success: function (data) {
+                alert("판매를 재개했습니다.");
+                location.reload();
+            },
+            error: function (error) {
+                alert("판매 재개에 실패했습니다.");
+            }
+        });
+    });
 </script>
 </body>
 </html>
