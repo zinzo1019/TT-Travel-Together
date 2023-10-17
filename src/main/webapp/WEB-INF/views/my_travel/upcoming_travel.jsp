@@ -23,7 +23,7 @@
         padding: 20px; /* 적절한 여백 */
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
-        margin-bottom: 5%;
+        margin-bottom: 4%;
         overflow-y: auto; /* 네비게이션 바 내용이 화면을 벗어날 경우 스크롤 바 추가 */
     }
 
@@ -69,15 +69,12 @@
         height: 100px;
     }
 
-    hr {
-        border: 1px solid #919191;
-    }
-
     .payment-table {
         width: 100%; /* 테이블을 부모 요소에 맞게 확장합니다. */
         border-collapse: collapse; /* 테두리가 서로 겹치지 않도록 설정합니다. */
         border: 1px solid #ccc; /* 테이블 테두리 추가 */
         margin-top: 2%;
+        margin-bottom: 5%;
     }
 
     .payment-table tr {
@@ -94,6 +91,15 @@
         font-weight: bold; /* 레이블 텍스트를 굵게 표시 */
         text-align: center;
     }
+
+    .refundButton {
+        background-color: #333;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 </style>
 <body>
 <div class="content">
@@ -101,61 +107,85 @@
         <div class="travel-container" id="products_search_result">
             <h1>${user.name}님이 결제한 ${fn:length(products)}건의 여행 상품이 있어요.</h1>
             <div style="margin-bottom: 5%">
-            <c:forEach var="product" items="${products}">
-                <div class="img-container">
-                    <a href="/guest/product/detail?product_id=${product.productDto.id}"
-                       style="text-decoration: none; color: inherit;">
-                        <div class="img" style="display: inline-block;">
-                            <img src="data:${product.productDto.type};base64,${product.productDto.encoding}"
-                                 class="img-fluid">
-                        </div>
-                    </a>
-                    <div class="text">
+                <c:forEach var="product" items="${products}">
+                    <div class="img-container">
                         <a href="/guest/product/detail?product_id=${product.productDto.id}"
                            style="text-decoration: none; color: inherit;">
-                            <p style="font-size: small; color: red">[${product.productDto.country}
-                                - ${product.productDto.city}]</p>
-                            <p>${product.productDto.name}${product.productDto.descriptions}</p>
-                            <fmt:formatNumber value="${product.productDto.cost}" pattern="#,###"/> 원
+                            <div class="img" style="display: inline-block;">
+                                <img src="data:${product.productDto.type};base64,${product.productDto.encoding}"
+                                     class="img-fluid">
+                            </div>
                         </a>
+                        <div class="text">
+                            <a href="/guest/product/detail?product_id=${product.productDto.id}"
+                               style="text-decoration: none; color: inherit;">
+                                <p style="font-size: small; color: red">[${product.productDto.country}
+                                    - ${product.productDto.city}]</p>
+                                <p>${product.productDto.name}${product.productDto.descriptions}</p>
+                                <fmt:formatNumber value="${product.productDto.cost}" pattern="#,###"/> 원
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <table class="payment-table">
-                    <tr>
-                        <td class="label">상품 이름</td>
-                        <td class="value">${product.productDto.productName}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">결제 방법</td>
-                        <td class="value">${product.pgProvider == 'kakaopay' ? '카카오페이' : product.pgProvider}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">결제 날짜</td>
-                        <td class="value">${product.createDate}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">결제 금액</td>
-                        <td class="value"><fmt:formatNumber value="${product.paidAmount}" pattern="#,###"/> 원</td>
-                    </tr>
-                    <tr>
-                        <td class="label">할인 금액</td>
-                        <td class="value"><fmt:formatNumber value="${product.productDto.cost - product.paidAmount}" pattern="#,###"/> 원</td>
-                    </tr>
-                    <tr>
-                        <td class="label">사용 여부</td>
-                        <td class="value">${product.available ? '사용 가능' : '사용 불가능 : 관리자가 삭제한 상품입니다.'}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">담당자</td>
-                        <td class="value">${product.productDto.email}</td>
-                    </tr>
-                </table>
+                    <table class="payment-table">
+                        <tr>
+                            <td class="label">상품 이름</td>
+                            <td class="value">${product.productDto.productName}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">결제 방법</td>
+                            <td class="value">${product.pgProvider == 'kakaopay' ? '카카오페이' : product.pgProvider}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">결제 날짜</td>
+                            <td class="value">${product.createDate}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">결제 금액</td>
+                            <td class="value"><fmt:formatNumber value="${product.paidAmount}" pattern="#,###"/> 원</td>
+                        </tr>
+                        <tr>
+                            <td class="label">할인 금액</td>
+                            <td class="value"><fmt:formatNumber value="${product.productDto.cost - product.paidAmount}"
+                                                                pattern="#,###"/> 원
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">사용 여부</td>
+                            <td class="value">${product.available ? '사용 가능' : '사용 불가능 : 관리자가 삭제한 상품입니다.'}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">담당자</td>
+                            <td class="value">${product.productDto.email}</td>
+                        </tr>
+                        <tr>
+                            <td class="label">환불하기</td>
+                            <td class="value">
+                                <button class="refundButton" data-payment-id="${product.paymentId}">환불하기</button>
+                            </td>
+                        </tr>
+                    </table>
+                </c:forEach>
             </div>
-            </c:forEach>
         </div>
     </div>
 </div>
 <script>
+    // 환불하기 버튼 클릭 이벤트
+    $(".refundButton").click(function () {
+        var paymentId = $(this).data("payment-id");
+        $.ajax({
+            url: "refund",
+            type: "POST",
+            data: {
+                "paymentId": paymentId
+            },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (error) {
+            }
+        });
+    });
 </script>
 </body>
 </html>
