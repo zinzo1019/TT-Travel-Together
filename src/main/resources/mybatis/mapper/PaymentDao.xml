@@ -219,11 +219,13 @@
                tpp.paid_amount as paidAmount,
                tpp.create_date as createDate,
                tpp.pg_tid,
+               tpp.pg_provider,
                tp.id           as productId,
                tp.name         as productName,
                tpp.tb_user_id  as userId,
-               tu.name as userName,
-               tu.email as email,
+               tu.name         as userName,
+               tu2.email       as adminEmail,
+               tu.email        as email,
                tp.cost,
                tpi.pic_byte,
                tpi.type
@@ -234,22 +236,24 @@
                            on tpp.travel_product_id = tp.id
                  left join travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
+                 left join second_project.tb_user tu2
+                           on tp.tb_user_id = tu2.id
         where tpp.available = true
         order by tpp.create_date desc
     </select>
 
     <!--    모든 여행 상품 환불건 가져오기-->
     <select id="findAllRefunds" resultType="com.example.choyoujin.dto.RefundDto">
-        select tpr.id          as refundId,
-               tpr.refund_date as refundDate,
+        select tpr.id            as refundId,
+               tpr.refund_date   as refundDate,
                tpr.refund_reason as refundReason,
-               tpp.id          as paymentId,
-               tpp.paid_amount as paidAmount,
-               tpp.tb_user_id  as userId,
-               tu.email as email,
-               tu.name as userName,
-               tp.id           as productId,
-               tp.name         as productName,
+               tpp.id            as paymentId,
+               tpp.paid_amount   as paidAmount,
+               tpp.tb_user_id    as userId,
+               tu.email          as email,
+               tu.name           as userName,
+               tp.id             as productId,
+               tp.name           as productName,
                tp.cost,
                tpi.pic_byte,
                tpi.type
@@ -267,7 +271,7 @@
 
     <update id="updatePaymentAvailable">
         update travel_product_payment
-        set available = false,
+        set available            = false,
             not_available_reason = '관리자에 의해 사용 완료 처리된 상품입니다.'
         where id = #{paymentId}
     </update>

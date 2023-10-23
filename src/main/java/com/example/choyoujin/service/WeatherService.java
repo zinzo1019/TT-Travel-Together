@@ -16,6 +16,8 @@ public class WeatherService {
 
     public WeatherData getWeatherByCity(String city) {
         String url = String.format(apiUrl, city, apiKey);
-        return restTemplate.getForObject(url, WeatherData.class);
+        WeatherData weatherData = restTemplate.getForObject(url, WeatherData.class);
+        System.out.println(weatherData.toString());
+        return weatherData;
     }
 }

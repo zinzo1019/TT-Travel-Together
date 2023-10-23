@@ -18,6 +18,7 @@ public class PaymentDto {
     private boolean available;
     private String reason; // 사용 불가 이유
     private String refundReason; // 환불 사유
+    private String adminEmail; // 관리자 이메일
 
     private int productId;
     private String productName;

@@ -317,6 +317,8 @@
                                 <p style="font-size: small; color: red; display: inline-block">* 판매 중지된 상품입니다.</p>
                             </c:otherwise>
                         </c:choose>
+
+                        <span id="temperature" style="color: red; font-size: medium; float: right; margin-right: 3%; padding-top: 2%;">현재 온도: </span>
                     </div>
                     <p>[${product.country}
                         - ${product.city}] ${product.name}${product.descriptions}</p>
@@ -620,6 +622,59 @@
         } else {
             return false;
         }
+    }
+
+    /** 날씨 띄우기 */
+    document.addEventListener('DOMContentLoaded', function () {
+        var koreanCityName = '${product.city}';
+        var englishCityName = cityNameToEnglish(koreanCityName);
+        displayWeather(englishCityName);
+    });
+
+    // 날씨 정보를 가져와서 표시하는 함수
+    function displayWeather(englishCityName) {
+        var apiUrl = 'http://localhost:8080/weather/' + englishCityName + '&units=metric';
+
+        fetch(apiUrl)
+            .then(function (response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('날씨 정보를 가져올 수 없습니다.');
+                }
+            })
+            .then(function (data) {
+                // 날씨 데이터를 처리하고 원하는 방식으로 표시
+                console.log('날씨 데이터:', data);
+
+                // 온도를 가져와서 화면에 표시
+                var temperature = data.main.temp.toFixed(1); // 소수 첫 째 자리까지 제한
+                var temperatureElement = document.getElementById('temperature');
+                temperatureElement.innerText = '현재 온도: ' + temperature + '°C';
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+
+    /** 도시 이름 -> 영어 변환 */
+    function cityNameToEnglish(cityName) {
+        // 도시 이름을 한글에서 영어로 변환하는 매핑 테이블
+        var cityMapping = {
+            '서울': 'seoul',
+            '부산': 'busan',
+            '도쿄': 'tokyo',
+            '오사카': 'osaka',
+            '뉴욕': 'new york',
+            '로스앤젤레스': 'los-angeles',
+            '시드니': 'sydney',
+            '코타키나발루': 'kota kinabalu',
+            '런던': 'london',
+            '프라하': 'prague',
+            '코펜하겐': 'copenhagen',
+            '파리': 'paris'
+        };
+        return cityMapping[cityName] || cityName;
     }
 </script>
 </body>

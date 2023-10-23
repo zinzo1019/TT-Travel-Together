@@ -96,6 +96,32 @@
         border-radius: 4px;
         cursor: pointer;
     }
+
+    .payment-table {
+        width: 100%; /* 테이블을 부모 요소에 맞게 확장합니다. */
+        border-collapse: collapse; /* 테두리가 서로 겹치지 않도록 설정합니다. */
+        border: 1px solid #ccc; /* 테이블 테두리 추가 */
+        margin-top: 2%;
+        margin-bottom: 5%;
+        background-color: whitesmoke;
+        border-radius: 15px;
+        margin-left: 1%;
+    }
+
+    .payment-table tr {
+        border: 1px solid #ccc; /* 각 행에 테두리 추가 */
+    }
+
+    .payment-table td {
+        padding: 10px 15px; /* 셀 내부 여백 추가 */
+        border: 1px solid #ccc; /* 각 셀에 테두리 추가 */
+    }
+
+    .label {
+        width: 12%;
+        font-weight: bold; /* 레이블 텍스트를 굵게 표시 */
+        text-align: center;
+    }
 </style>
 <body>
 <div class="content">
@@ -118,28 +144,69 @@
                             : '일'})
                     </p>
                     <div class="img-container">
-                        <a href="/admin/payment/view/detail?payment_id=${payment.paymentId}"
+                        <a href="/guest/product/detail?product_id=${payment.productId}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img" style="display: inline-block;">
                                 <img src="data:${payment.type};base64,${payment.encoding}">
                             </div>
                         </a>
                         <div class="text">
-                            <a href="/admin/payment/view/detail?payment_id=${payment.paymentId}"
+                            <a href="/guest/product/detail?product_id=${payment.productId}"
                                style="text-decoration: none; color: inherit;">
                                 <p style="font-size: small; color: red;">${payment.pgTid}</p>
                                 <p style="font-weight: bold;">${payment.productName}</p>
-                                <fmt:formatNumber value="${payment.paidAmount}" pattern="#,###"/>원 -->
-                                <span style="color: red"><fmt:formatNumber value="${payment.cost}"
-                                                                           pattern="#,###"/>원</span>
+                                <fmt:formatNumber value="${payment.cost}" pattern="#,###"/>원 -->
+                                <span style="color: red"><fmt:formatNumber value="${payment.paidAmount}" pattern="#,###"/>원</span>
                             </a>
                         </div>
                         <div class="button-container">
-                        <button class="refund-button" data-payment-id="${payment.paymentId}" style="background-color: red;">환불처리</button>
-                        <button class="used-button" data-payment-id="${payment.paymentId}">사용완료처리</button>
+                            <button class="refund-button" data-payment-id="${payment.paymentId}"
+                                    style="background-color: red;">환불처리
+                            </button>
+                            <button class="used-button" data-payment-id="${payment.paymentId}">사용완료처리</button>
                         </div>
                     </div>
                 </div>
+                <table class="payment-table">
+                    <tr>
+                        <td class="label">상품 이름</td>
+                        <td class="value">${payment.productName}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">결제 코드</td>
+                        <td class="value">${payment.pgTid}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">결제 고객</td>
+                        <td class="value">${payment.email}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">결제 방법</td>
+                        <td class="value">${payment.pgProvider == 'kakaopay' ? '카카오페이' : payment.pgProvider}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">결제 날짜</td>
+                        <td class="value">${payment.createDate}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">결제 금액</td>
+                        <td class="value"><fmt:formatNumber value="${payment.paidAmount}" pattern="#,###"/> 원</td>
+                    </tr>
+                    <tr>
+                        <td class="label">할인 금액</td>
+                        <td class="value"><fmt:formatNumber value="${payment.cost - payment.paidAmount}"
+                                                            pattern="#,###"/> 원
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">사용 여부</td>
+                        <td class="value">사용 가능</td>
+                    </tr>
+                    <tr>
+                        <td class="label">관리자</td>
+                        <td class="value">${payment.adminEmail}</td>
+                    </tr>
+                </table>
             </c:forEach>
         </div>
     </div>
