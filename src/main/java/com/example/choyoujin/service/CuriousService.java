@@ -40,10 +40,16 @@ public class CuriousService {
      * 게시글 검색하기 (나라와 검색어)
      */
     public List<PostDto> findAllByCountryId(SearchDto searchDto) {
-        if (searchDto.getCountryId() == 0) { // 선택 없음
-            return curiousDao.findAllPosts();
+        if (searchDto.getCountryId() == 0) { // 나라 선택 없음
+            if (searchDto.getKeyword() == null || searchDto.getKeyword().isEmpty()) // 검색어 없음
+                return curiousDao.findAllPosts();
+            else // 검색어 있음
+                return curiousDao.findAllByKeyword(searchDto.getKeyword()); // 검색어 검색
+        } else { // 나라 선택 있음
+            if (searchDto.getKeyword() == null || searchDto.getKeyword().isEmpty()) // 검색어 없음
+                return curiousDao.findAllByCountryId(searchDto.getCountryId());
+            else return curiousDao.findAllByCountryIdAndKeyword(searchDto);
         }
-        return curiousDao.findAllByCountryId(searchDto);
     }
 
     /**

@@ -27,18 +27,4 @@
     postButton.addEventListener('click', function () {
         window.location.href = 'curious/post';
     });
-
-    /** 검색 버튼 클릭 이벤트 핸들러 */
-    $("#search-button").click(function () {
-        var countryId = $("#options").val(); // 나라 아이디
-        $.ajax({
-            url: "curious/search?countryId=" + countryId,
-            method: "POST",
-            success: function (response) {
-                $("#curious_search_result").html(response);
-            },
-            error: function (error) {
-            }
-        });
-    });
 </script>

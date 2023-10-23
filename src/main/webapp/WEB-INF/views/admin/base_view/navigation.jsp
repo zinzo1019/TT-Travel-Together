@@ -87,11 +87,11 @@
         <li><a href="/admin/coupon/save" class="child-title">쿠폰 등록하기</a></li>
 
         <li class="parent-board">결제 관리</li>
-        <li><a href="/admin/payment/view" class="child-title">결제 상태</a></li>
+        <li><a href="/admin/payment/view" class="child-title">결제 관리</a></li>
         <li><a href="/admin/statistics/payment" class="child-title">결제 통계</a></li>
 
         <li class="parent-board">환불 관리</li>
-        <li><a href="/admin/refund/view" class="child-title">환불 상태</a></li>
+        <li><a href="/admin/refund/view" class="child-title">환불 관리</a></li>
         <li><a href="/admin/statistics/refund" class="child-title">환불 통계</a></li>
 
         <%--    로그인 상태--%>

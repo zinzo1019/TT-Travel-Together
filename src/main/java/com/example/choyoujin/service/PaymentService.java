@@ -18,4 +18,5 @@ public interface PaymentService {
     List<PaymentDto> findAllByUserId();
     List<PaymentDto> findAllPayments();
     List<RefundDto> findAllRefunds();
+    void updatePaymentAvailable(int paymentId, boolean available);
 }

@@ -142,8 +142,6 @@ public class CommunityController {
      */
     @PostMapping("/search")
     public String searchTravelCurious(SearchDto searchDto, Model model) {
-        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-        model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
         model.addAttribute("posts", curiousService.findAllByCountryId(searchDto)); // 검색 결과 담기
         return "community/curious_search_result";
     }

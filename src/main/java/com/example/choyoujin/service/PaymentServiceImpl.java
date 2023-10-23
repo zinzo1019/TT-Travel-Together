@@ -78,7 +78,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<PaymentDto> findAllPayments() {
         List<PaymentDto> paymentDtos = paymentDao.findAllPayments();
-        System.out.println(paymentDtos);
+        paymentDtos.forEach(dto -> {
+            dto.setEncoding(decompressBytes(dto.getPicByte()));
+        });
         return paymentDtos;
     }
 
@@ -86,8 +88,15 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<RefundDto> findAllRefunds() {
         List<RefundDto> refundDtos = paymentDao.findAllRefunds();
-        System.out.println(refundDtos);
+        refundDtos.forEach(dto -> {
+            dto.setEncoding(decompressBytes(dto.getPicByte()));
+        });
         return refundDtos;
+    }
+
+    @Override
+    public void updatePaymentAvailable(int paymentId, boolean available) {
+        paymentDao.updatePaymentAvailable(paymentId, available);
     }
 
     /**
@@ -136,7 +145,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             refundPayment(refundDto); // 카카오페이 화불
             paymentDao.saveRefund(refundDto); // 환불 정보 저장
-            updateEnabledByProductId(refundDto.getPaymentId(), false, "환불된 상품입니다."); // 여행 상품 사용 불가능 처리
+            updateEnabledByProductId(refundDto.getPaymentId(), false, refundDto.getReason()); // 여행 상품 사용 불가능 처리
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

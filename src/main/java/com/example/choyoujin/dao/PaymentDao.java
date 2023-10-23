@@ -30,4 +30,5 @@ public interface PaymentDao {
     List<String> findAllRefundReasonByRefund();
     List<PaymentDto> findAllPayments();
     List<RefundDto> findAllRefunds();
+    void updatePaymentAvailable(int paymentId, boolean available);
 }

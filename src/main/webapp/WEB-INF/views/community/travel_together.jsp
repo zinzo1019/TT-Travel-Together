@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
@@ -16,6 +15,14 @@
 
 <!DOCTYPE html>
 <html>
+<head>
+    <!-- jQuery 포함 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI 포함 -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- jQuery UI CSS 포함 (선택 사항) -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
 <meta charset="UTF-8">
 <title>같이 여행 가요!</title>
 <style>
@@ -179,8 +186,8 @@
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>언제 갈까요?</label>
-                <input type="text" id="start-date" placeholder="날짜 선택" readonly>
-                <input type="text" id="end-date" placeholder="날짜 선택" readonly>
+                <input type="text" id="start-date" placeholder="날짜 선택">
+                <input type="text" id="end-date" placeholder="날짜 선택">
                 <button class="search-button" id="search-button">검색하기</button>
             </div>
         </div>

@@ -8,9 +8,6 @@ import java.time.LocalDate;
 public class PaymentDto {
     private int paymentId;
     private String impUid;
-    private int productId;
-    private int userId;
-    private String userName;
     private String merchantUid;
     private int paidAmount;
     private int paidAt;
@@ -21,6 +18,18 @@ public class PaymentDto {
     private boolean available;
     private String reason; // 사용 불가 이유
     private String refundReason; // 환불 사유
+
+    private int productId;
+    private String productName;
+    private int cost;
+    private int userId;
+    private String userName;
+    private String email;
+
+    private int imageId; // 이미지 아이디
+    private byte[] picByte; // 압축 이미지
+    private String type; // 이미지 타입
+    private String encoding; // 압축 해제한 이미지
 
     private ProductDto productDto;
 }

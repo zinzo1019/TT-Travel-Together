@@ -61,19 +61,35 @@
         WHERE id = #{id}
     </delete>
 
-    <!--     게시글 검색하기 (나라와 검색어)-->
+    <!--     나라 아이디로 게시글 검색하기-->
     <select id="findAllByCountryId" resultType="com.example.choyoujin.dto.PostDto">
-        select *, tu.email as email, tu.name as userName
-        from curious_post cp
-        left join tb_user tu
-        on cp.tb_user_id = tu.id
-        where cp.id > 0
-        <if test="countryId != 0">-- 나라를 입력받았다면
-            AND cp.country_id = #{countryId}
-        </if>
-        <if test="keyword != ''">-- 검색어를 입력받았다면
-            AND cp.title LIKE CONCAT('%', #{keyword}, '%')
-            OR cp.content LIKE CONCAT('%', #{keyword}, '%')
-        </if>
+        SELECT *, tu.email AS email, tu.name AS userName
+        FROM curious_post cp
+        LEFT JOIN tb_user tu ON cp.tb_user_id = tu.id
+        WHERE cp.country_id = #{countryId}
+        <!--        <if test="countryId != 0">-->
+        <!--            AND cp.country_id = #{countryId}-->
+        <!--        </if>-->
+        <!--        <if test="keyword != null and keyword != ''">-->
+        <!--            AND (cp.title LIKE CONCAT('%', #{keyword}, '%')-->
+        <!--            OR cp.content LIKE CONCAT('%', #{keyword}, '%'))-->
+        <!--        </if>-->
+    </select>
+
+    <!--    검색어로 게시글 검색하기 (제목과 내용)-->
+    <select id="findAllByKeyword" resultType="com.example.choyoujin.dto.PostDto">
+        SELECT *
+        FROM curious_post tp
+        WHERE (tp.title LIKE '%' || #{keyword} || '%'
+            OR tp.content LIKE '%' || #{keyword} || '%')
+    </select>
+
+    <!--    나라 아이디와 검색어로 게시글 검색하기-->
+    <select id="findAllByCountryIdAndKeyword" resultType="com.example.choyoujin.dto.PostDto">
+        SELECT *
+        FROM curious_post tp
+        WHERE tp.country_id = #{countryId}
+          AND (tp.title LIKE CONCAT('%', #{keyword}, '%')
+            OR tp.content LIKE CONCAT('%', #{keyword}, '%'))
     </select>
 </mapper>
