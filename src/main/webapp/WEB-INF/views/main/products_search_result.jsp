@@ -18,7 +18,7 @@
         <a href="/guest/product/detail?product_id=${product.id}"
            style="text-decoration: none; color: inherit;">
             <div class="img" style="display: inline-block;">
-                <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+                <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 10px;">
             </div>
         </a>
         <div class="text">
@@ -28,7 +28,7 @@
                 <br><br>
                 <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
             </a>
-            <div class="tag-div">
+            <div class="tag-div" style="font-weight: normal;">
                 <c:forEach var="tag" items="${product.tags}" varStatus="status">
                     # ${tag.tag}&nbsp;&nbsp;
                 </c:forEach>

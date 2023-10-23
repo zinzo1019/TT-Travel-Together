@@ -1,6 +1,6 @@
 package com.example.choyoujin.controller.userController;
 
-import com.example.choyoujin.service.PaymentService;
+import com.example.choyoujin.service.PaymentServiceImpl;
 import com.example.choyoujin.service.TravelProductServiceImpl;
 import com.example.choyoujin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +18,32 @@ public class MyTravelController {
     @Autowired
     private TravelProductServiceImpl productService;
     @Autowired
-    private PaymentService paymentService;
+    private PaymentServiceImpl paymentService;
 
     /** 곧 여기로 떠나요 */
     @GetMapping("/mytravel/upcoming")
     public String upcomingTravelPage(Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("products", paymentService.findAllByUserId());
+        model.addAttribute("available", 1);
+        return "my_travel/upcoming_travel";
+    }
+
+    /** 곧 여기로 떠나요 - 이용 가능한 상품 */
+    @GetMapping("/mytravel/upcoming/payment")
+    public String paymentTravelPage(Model model) {
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("products", paymentService.findAllByUserIdAndAvailable(true));
+        model.addAttribute("available", 2);
+        return "my_travel/upcoming_travel";
+    }
+
+    /** 곧 여기로 떠나요 - 이용 불가능한 상품 */
+    @GetMapping("/mytravel/upcoming/refund")
+    public String refundTravelPage(Model model) {
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("products", paymentService.findAllByUserIdAndAvailable(false));
+        model.addAttribute("available", 3);
         return "my_travel/upcoming_travel";
     }
 

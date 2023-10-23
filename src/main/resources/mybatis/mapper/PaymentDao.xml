@@ -14,6 +14,12 @@
                 #{paidAmount}, #{paidAt}, #{pgProvider}, #{pgTid}, #{receiptUrl}, true, now())
     </insert>
 
+    <!--    여행 상품 환불건 저장하기-->
+    <insert id="saveRefund">
+        insert into travel_product_refund (refund_reason, travel_product_payment_id, refund_date)
+        values (#{refundReason}, #{paymentId}, now())
+    </insert>
+
     <!--    여행 상품 결제 취소하기-->
     <update id="cancelPaymentById">
         update travel_product_payment
@@ -21,22 +27,52 @@
         where id = #{id}
     </update>
 
-    <!--    사용자 아이디로 사용자가 결제한 여행 상품 리스트 가져오기-->
-    <select id="findAllByUserId" resultType="com.example.choyoujin.dto.PaymentDto">
-        select tpp.id                as paymentId,
+    <!--    사용자 아이디와 이용 가능 여부로 사용자가 결제한 여행 상품 리스트 가져오기-->
+    <select id="findAllByUserIdAndAvailable" resultType="com.example.choyoujin.dto.PaymentDto">
+        select tpp.id                   as paymentId,
                tpp.paid_amount,
                pg_provider,
-               tpp.travel_product_id as productId,
+               tpp.travel_product_id    as productId,
                tpp.create_date,
                tpp.pg_provider,
                tpp.available,
-               tp.name               as productName
+               tpp.not_available_reason as reason,
+               tp.name                  as productName,
+               tpr.refund_reason,
+               tpr.refund_date
         from travel_product_payment tpp
                  left join tb_user tu
                            on tpp.tb_user_id = tu.id
                  left join travel_product tp
                            on tpp.travel_product_id = tp.id
+                 left join travel_product_refund tpr
+                           on tpr.travel_product_payment_id = tpp.id
         where tu.id = #{userId}
+          and tpp.available = #{available}
+    </select>
+
+    <!--    사용자 아이디로 사용자가 결제한 여행 상품 리스트 가져오기-->
+    <select id="findAllByUserId" resultType="com.example.choyoujin.dto.PaymentDto">
+        select tpp.id                   as paymentId,
+               tpp.paid_amount,
+               pg_provider,
+               tpp.travel_product_id    as productId,
+               tpp.create_date,
+               tpp.pg_provider,
+               tpp.available,
+               tpp.not_available_reason as reason,
+               tp.name                  as productName,
+               tpr.refund_reason,
+               tpr.refund_date
+        from travel_product_payment tpp
+                 left join tb_user tu
+                           on tpp.tb_user_id = tu.id
+                 left join travel_product tp
+                           on tpp.travel_product_id = tp.id
+                 left join travel_product_refund tpr
+                           on tpr.travel_product_payment_id = tpp.id
+        where tu.id = #{userId}
+        order by tpp.available desc
     </select>
 
     <update id="updateEnabledByProductId">
@@ -44,4 +80,180 @@
         set available = #{enabled}
         where travel_product_id = #{productId}
     </update>
+
+    <update id="updateNotAvailableByProductId">
+        update travel_product_payment
+        set available            = #{enabled},
+            not_available_reason = #{reason}
+        where id = #{paymentId}
+    </update>
+
+    <select id="findOneByPaymentId" resultType="com.example.choyoujin.dto.PaymentDto">
+        select tpp.id            as paymentId,
+               imp_uid,
+               travel_product_id as productId,
+               tb_user_id        as userId,
+               tu.name           as userName,
+               merchant_uid,
+               paid_amount,
+               pg_provider,
+               pg_tid,
+               available
+        from travel_product_payment tpp
+                 left join tb_user tu
+                           on tpp.tb_user_id = tu.id
+        where tpp.id = #{paymentId}
+    </select>
+
+    <!--    한 달 결제 건수-->
+    <select id="countPaymentByMonth" resultType="map">
+        SELECT TO_CHAR(create_date, 'YYYY-MM') AS month,
+            COUNT(id) AS count
+        FROM travel_product_payment
+        WHERE create_date >= DATE_TRUNC('month', NOW()) - INTERVAL '6 months'
+        GROUP BY TO_CHAR(create_date, 'YYYY-MM')
+        ORDER BY TO_CHAR(create_date, 'YYYY-MM')
+    </select>
+
+    <!--    한 달 환불 건수-->
+    <select id="countRefundByMonth" resultType="map">
+        SELECT TO_CHAR(refund_date, 'YYYY-MM') AS month,
+        COUNT(id) AS count
+        FROM travel_product_refund
+        WHERE refund_date >= DATE_TRUNC('month', NOW()) - INTERVAL '6 months'
+        GROUP BY TO_CHAR(refund_date, 'YYYY-MM')
+        ORDER BY TO_CHAR(refund_date, 'YYYY-MM')
+    </select>
+
+    <!--    6개월간 결제 건수-->
+    <select id="countPaymentBy6Month" resultType="int">
+        SELECT COUNT(id) AS count
+        FROM travel_product_payment
+        WHERE create_date >= DATE_TRUNC('month', NOW()) - INTERVAL '6 months'
+    </select>
+
+    <!--    6개월간 환불 건수-->
+    <select id="countRefundBy6Month" resultType="int">
+        SELECT COUNT(id) AS count
+        FROM travel_product_refund
+        WHERE refund_date >= DATE_TRUNC('month', NOW()) - INTERVAL '6 months'
+    </select>
+
+    <!--    여행 상품별 결제 건수 가져오기-->
+    <select id="countPaymentsByProduct" resultType="com.example.choyoujin.dto.StatisticsDto">
+        select tp.id, tp.name, count(tpp.id)
+        from second_project.travel_product tp
+                 left join second_project.travel_product_payment tpp
+                           on tp.id = tpp.travel_product_id
+        group by tp.id, tp.name
+        having count(tpp.id) >= 1
+        order by count(tpp.id) asc
+    </select>
+
+    <!--    여행 상품별 환불 건수 가져오기-->
+    <select id="countRefundsByProduct" resultType="com.example.choyoujin.dto.StatisticsDto">
+        select tp.id, tp.name, count(tpr.id)
+        from second_project.travel_product tp
+                 left join second_project.travel_product_payment tpp
+                           on tp.id = tpp.travel_product_id
+                 left join second_project.travel_product_refund tpr
+                           on tpp.id = tpr.travel_product_payment_id
+        group by tp.id, tp.name
+        having count(tpr.id) >= 1
+        order by count(tpr.id) asc
+    </select>
+
+    <!--    나라별 결제 건수-->
+    <select id="countPaymentsByCountry" resultType="com.example.choyoujin.dto.StatisticsDto">
+        select c.id, c.country as name, count(tpp.id)
+        from second_project.country c
+                 left join second_project.travel_product tp
+                           on c.id = tp.country_id
+                 left join second_project.travel_product_payment tpp
+                           on tp.id = tpp.travel_product_id
+        group by c.id
+        having count(tpp.id) >= 1
+        order by count(tpp.id) asc
+    </select>
+
+    <!--    나라별 환불 건수-->
+    <select id="countRefundsByCountry" resultType="com.example.choyoujin.dto.StatisticsDto">
+        select c.id, c.country as name, count(tpr.id)
+        from second_project.country c
+                 left join second_project.travel_product tp
+                           on c.id = tp.country_id
+                 left join second_project.travel_product_payment tpp
+                           on tp.id = tpp.travel_product_id
+                 left join second_project.travel_product_refund tpr
+                           on tpp.id = tpr.travel_product_payment_id
+        group by c.id
+        having count(tpr.id) >= 1
+        order by count(tpr.id) asc
+    </select>
+
+    <!--    환불된 여행 상품 찾기-->
+    <select id="findAllProductsByRefund" resultType="com.example.choyoujin.dto.RefundDto">
+        select distinct
+        on (tp.id)
+            tpr.id as refundId,
+            tpr.refund_reason,
+            tpp.id as paymentId,
+            tpr.refund_date,
+            tpp.travel_product_id as productId
+        from travel_product_refund tpr
+            left join travel_product_payment tpp
+        on tpr.travel_product_payment_id = tpp.id
+            left join travel_product tp
+            on tpp.travel_product_id = tp.id
+    </select>
+
+    <!--    환불 사유 리스트 가져오기-->
+    <select id="findAllRefundReasonByRefund" resultType="String">
+        select refund_reason
+        from travel_product_refund
+    </select>
+
+    <!--    모든 여행 상품 결제건 가져오기-->
+    <select id="findAllPayments" resultType="com.example.choyoujin.dto.PaymentDto">
+        select tpp.id          as paymentId,
+               tpp.paid_amount as paidAmount,
+               tpp.create_date as createDate,
+               tp.id           as productId,
+               tp.name         as productName,
+               tpp.tb_user_id  as userId,
+               tp.cost,
+               tpi.pic_byte,
+               tpi.type
+        from travel_product_payment tpp
+                 left join tb_user tu
+                           on tpp.tb_user_id = tu.id
+                 left join travel_product tp
+                           on tpp.travel_product_id = tp.id
+                 left join travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+    </select>
+
+    <!--    모든 여행 상품 환불건 가져오기-->
+    <select id="findAllRefunds" resultType="com.example.choyoujin.dto.PaymentDto">
+        select tpr.id          as refundId,
+               tpr.refund_date as refundDate,
+               tpr.refund_reason as refundReason,
+               tpp.id          as paymentId,
+               tpp.paid_amount as paidAmount,
+               tpp.tb_user_id  as userId,
+               tp.id           as productId,
+               tp.name         as productName,
+               tp.cost,
+               tpi.pic_byte,
+               tpi.type
+        from travel_product_refund tpr
+                 left join travel_product_payment tpp
+                           on tpr.travel_product_payment_id = tpp.id
+                 left join tb_user tu
+                           on tpr.tb_user_id = tu.id
+                 left join travel_product tp
+                           on tpr.travel_product_id = tp.id
+                 left join travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+    </select>
 </mapper>

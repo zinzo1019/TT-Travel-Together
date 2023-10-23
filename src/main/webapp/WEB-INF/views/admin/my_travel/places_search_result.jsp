@@ -17,7 +17,7 @@
         <a href="/guest/product/detail?product_id=${product.id}"
            style="text-decoration: none; color: inherit;">
             <div class="img" style="display: inline-block;">
-                <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+                <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 10px;">
             </div>
         </a>
         <div class="text">

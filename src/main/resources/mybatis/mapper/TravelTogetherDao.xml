@@ -90,7 +90,6 @@
             content = #{content},
             country_id = #{countryId},
             total_number = #{totalNum},
-            recruited_number = #{recruitedNumber},
             deadline = #{deadline}
         WHERE id = #{id}
     </update>

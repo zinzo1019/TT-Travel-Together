@@ -18,6 +18,8 @@
         display: flex;
         overflow: hidden;
         align-items: center;
+        border-radius: 15px;
+        background-color: white;
     }
 
     .search-img {
@@ -37,6 +39,7 @@
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
         font-size: large;
         font-weight: bold;
+        padding: 3% 3% 3% 0;
     }
 
     .tag-div {
@@ -54,9 +57,11 @@
 
     .like-container {
         display: flex;
-        align-items: center; /* 세로 중앙 정렬 */
-        height: 0;
-        margin-top: 1%;
+        justify-content: flex-start; /* 좌측 정렬 */
+        align-items: center; /* 요소들을 수직 가운데로 정렬 */
+        padding: 8px 0; /* 위아래 패딩 추가 */
+        position: absolute;
+        bottom: 0;
     }
 </style>
 <h1>"${keyword}"에 대한 ${fn:length(products)}건의 여행지가 있어요!</h1>
@@ -65,7 +70,7 @@
         <a href="/guest/product/detail?product_id=${product.id}"
            style="text-decoration: none; color: inherit;">
             <div class="search-img" style="display: inline-block;">
-                <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+                <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px 0 0 15px;">
             </div>
         </a>
         <div class="search-text">

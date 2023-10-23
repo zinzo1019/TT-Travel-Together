@@ -30,10 +30,6 @@
             </p>
             <p style="font-size: medium"><strong>쿠폰 코드: </strong>${coupon.code}</p>
         </div>
-        <div class="edit-button">
-            <button class="modify-button" data-coupon-id="${coupon.id}">수정</button>
-            <button class="delete-button" data-coupon-id="${coupon.id}">삭제</button>
-        </div>
     </div>
 </c:forEach>
 <script>
@@ -42,7 +38,7 @@
         // 수정 버튼 클릭 이벤트 핸들러
         $(document).ready(function () {
             $(".modify-button").click(function () {
-                var couponId = $(this).data("coupon-id"); // 데이터 속성에서 쿠폰 ID를 가져옵니다.
+                var couponId = $(this).data("coupon-id");
                 window.location.href = "update?coupon_id=" + couponId;
             });
         });

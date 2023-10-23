@@ -16,6 +16,16 @@
 <title>어디로 여행을 떠날까요?</title>
 
 <style>
+    body {
+        /*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*/
+        background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');
+        background-size: cover; /* 배경 이미지를 뷰포트에 맞게 확대/축소 */
+        background-repeat: no-repeat; /* 배경 이미지 반복 비활성화 */
+        background-attachment: fixed; /* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) */
+        background-position: center center; /* 배경 이미지를 중앙에 위치시킴 */
+        height: 100vh; /* 화면 높이만큼 배경 이미지 표시 */
+    }
+
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -61,22 +71,49 @@
     /* 검색창 컨테이너 스타일 */
     .travel-container {
         margin-top: 5%;
+        margin-bottom: 10%;
     }
 
     .img-container {
         display: flex;
+        justify-content: space-between; /* 가로 간격을 동일하게 설정합니다. */
         gap: 30px;
-        justify-content: flex-start; /* 왼쪽 정렬 (기본값) */
+    }
+
+    .img-container a {
+        flex: 1; /* 모든 <a> 태그의 너비를 동일하게 설정합니다. */
     }
 
     .img {
         flex: 1;
         margin-bottom: 10px;
+        position: relative;
     }
 
     .img img {
-        width: 200px;
-        height: 200px;
+        width: 100%;
+        height: 320px;
+        border-radius: 10px;
+    }
+
+    .img::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 37%; /* 이미지 높이의 1/3 */
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0.1, 0.8), transparent);
+        border-radius: 10px;
+    }
+
+    .img-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        color: white; /* 텍스트 색상 설정 */
+        padding: 10px; /* 텍스트 패딩 설정 */
+        box-sizing: border-box;
     }
 
     .img p {
@@ -144,42 +181,42 @@
             <button class="search-button" onclick="search(event)">검색</button>
         </div>
         <div class="travel-container" id="main_search_result">
-            <h1>최근 뜨는 여행지</h1>
+            <h1>인기 많은 여행지 Top 4</h1>
             <div class="img-container">
                 <c:forEach var="country" items="${countries4}">
                     <a href="/admin/country?country_id=${country.countryId}"
                        style="text-decoration: none; color: inherit;">
-                        <div class="img" style="display: inline-block; margin-right: 20px;">
+                        <div class="img">
                             <img src="${country.image}">
-                            <div>
+                            <div class="img-text">
                                 <p>${country.country} - ${country.city}</p>
-                                <p style="font-weight: normal; font-size: medium">좋아요 ${country.totalLikes}</p>
+                                <p style="font-weight: normal; font-size: medium;">
+                                    <img src='/images/like.png' class="like-img" style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">
+                                    <span style="display: inline-block; vertical-align: middle;">
+                                            ${country.totalLikes}
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     </a>
                 </c:forEach>
             </div>
             <div class="travel-container">
-                <h1>
-                    ${user.name}님이 좋아할 만한 상품이예요!
-                    <c:choose>
-                        <c:when test="${empty user.travelTag}">
-                            #힐링
-                        </c:when>
-                        <c:otherwise>
-                            #${user.travelTag}
-                        </c:otherwise>
-                    </c:choose>
-                </h1>
+                <h1>모든 여행지</h1>
                 <div class="img-container">
                     <c:forEach var="country" items="${countries.content}">
                         <a href="/admin/country?country_id=${country.countryId}"
                            style="text-decoration: none; color: inherit;">
-                            <div class="img" style="display: inline-block; margin-right: 20px;">
+                            <div class="img">
                                 <img src="${country.image}">
-                                <div>
+                                <div class="img-text">
                                     <p>${country.country} - ${country.city}</p>
-                                    <p style="font-weight: normal; font-size: medium">좋아요 ${country.totalLikes}</p>
+                                    <p style="font-weight: normal; font-size: medium;">
+                                        <img src='/images/like.png' class="like-img" style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">
+                                        <span style="display: inline-block; vertical-align: middle;">
+                                                ${country.totalLikes}
+                                        </span>
+                                    </p>
                                 </div>
                             </div>
                         </a>
@@ -187,27 +224,16 @@
                 </div>
                 <!-- 페이징 처리 -->
                 <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <c:forEach begin="2" end="${countries.totalPages-1}" varStatus="status">
+                    <c:forEach begin="2" end="${countries.totalPages}" varStatus="status">
                         <li class="page-item">
                             <a class="page-link" href="?page=${status.index}">${status.index-1}</a>
                         </li>
                     </c:forEach>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
-
 <script>
     /** 최근 게시글 중 검색 */
     function search(event) {

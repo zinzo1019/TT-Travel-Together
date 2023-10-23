@@ -40,4 +40,6 @@ public class ProductDto {
     private byte[] picByte; // 압축 이미지
     private String type; // 이미지 타입
     private String encoding; // 압축 해제한 이미지
+
+    private int countPayment; // 결제 건수
 }

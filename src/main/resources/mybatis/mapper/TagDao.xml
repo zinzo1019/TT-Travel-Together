@@ -14,6 +14,12 @@
         where travel_product_id = #{productId}
     </select>
 
+<!--    모든 태그 가져오기-->
+    <select id="findAll" resultType="com.example.choyoujin.dto.TagDto">
+        select id, tag
+        from travel_tags
+    </select>
+
 <!--    아이디로 태그 삭제하기-->
     <delete id="deleteOneById">
         delete from travel_product_tag

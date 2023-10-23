@@ -52,6 +52,7 @@
                tp.name,
                tp.country_id,
                tp."like",
+               tp.cost,
                tpi.pic_byte,
                tpi.type,
                c.country,
@@ -68,6 +69,32 @@
         where tt.tag = #{travelTag}
         order by tp.like desc
             LIMIT #{size}
+        OFFSET (#{start})
+    </select>
+
+    <!--    여행 태그로 여행 상품 리스트 가져오기-->
+    <select id="findAllByTravelTags" resultType="com.example.choyoujin.dto.ProductDto">
+        select tp.id,
+               tp.name,
+               tp.country_id,
+               tp."like",
+               tp.cost,
+               tpi.pic_byte,
+               tpi.type,
+               c.country,
+               c.city
+        from travel_product tp
+                 left join travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+                 left join second_project.country c
+                           on tp.country_id = c.id
+        where tt.tag = #{tag}
+        order by tp.like desc
+            LIMIT #{size}
         OFFSET ((#{page}-1)*#{size})
     </select>
 
@@ -77,6 +104,7 @@
                tp.name,
                tp.country_id,
                tp."like",
+               tp.cost,
                tpi.pic_byte,
                tpi.type,
                c.country,
@@ -160,7 +188,6 @@
         ORDER BY tp.like DESC
     </select>
 
-
     <!-- 전체 여행 상품 중 검색 -->
     <select id="findAllByKeyword" resultType="com.example.choyoujin.dto.ProductDto">
         SELECT DISTINCT(tp.id), tp.*, tpi.*, c.country, c.city
@@ -179,6 +206,44 @@
             OR c.city LIKE '%' || #{keyword} || '%'
             OR tt.tag LIKE '%' || #{keyword} || '%')
         ORDER BY tp.like DESC
+    </select>
+
+    <!-- 전체 여행 상품 중 검색 -->
+    <select id="findAllByTravelTagAndKeyword" resultType="com.example.choyoujin.dto.ProductDto">
+        SELECT DISTINCT(tp.id), tp.*, tpi.*, c.country, c.city
+        FROM travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+                 left join country c
+                           on tp.country_id = c.id
+        WHERE (tp.name LIKE '%' || #{keyword} || '%'
+            OR tp.description LIKE '%' || #{keyword} || '%'
+            OR c.country LIKE '%' || #{keyword} || '%'
+            OR c.city LIKE '%' || #{keyword} || '%')
+          and tt.tag = #{tag}
+        ORDER BY tp.like DESC
+            LIMIT #{size}
+        OFFSET (#{start})
+    </select>
+
+    <select id="countAllByTravelTagAndKeyword" resultType="int">
+        select count(tp.id)
+        from travel_product tp
+                 left join travel_product_tag tpt
+                           on tp.id = tpt.travel_product_id
+                 left join travel_tags tt
+                           on tpt.travel_tags_id = tt.id
+                 left join country c
+                           on tp.country_id = c.id
+        WHERE (tp.name LIKE '%' || #{keyword} || '%'
+            OR tp.description LIKE '%' || #{keyword} || '%'
+            OR c.country LIKE '%' || #{keyword} || '%'
+            OR c.city LIKE '%' || #{keyword} || '%')
+          and tt.tag = #{tag}
     </select>
 
     <!--    나라별 여행 상품 리스트 중 검색하기 (name과 description 고려) - 로그인 후-->
@@ -216,8 +281,8 @@
                            on tp.country_id = c.id
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
-            left join tb_user tu
-            on tp.tb_user_id = tu.id
+                 left join tb_user tu
+                           on tp.tb_user_id = tu.id
         where tp.id = #{productId}
     </select>
 

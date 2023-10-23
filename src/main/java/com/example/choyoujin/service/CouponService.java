@@ -28,8 +28,8 @@ public class CouponService {
             if (couponDto.getProductIds().contains(0)) {
                 List<Integer> productIds = productService.findAllProductIdsByCountryId(couponDto.getCountryId()); // 나라별 여행 상품 가져오기
                 couponDto.setProductIds(productIds); // 여행 상품 Set
-                couponDto.setCode(String.valueOf(UUID.randomUUID()));
             }
+            couponDto.setCode(String.valueOf(UUID.randomUUID())); // 쿠폰 코드 Set
             couponDao.saveCoupon(couponDto);
         } catch (Exception e) {
             System.out.println(e.getMessage());

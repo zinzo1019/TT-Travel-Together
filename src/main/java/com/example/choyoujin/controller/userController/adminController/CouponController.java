@@ -136,6 +136,6 @@ public class CouponController {
     public String searchMyCoupons(String keyword, Model model) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("coupons", couponService.findAllByKeywordAndUserId(keyword)); // 검색 결과 담기
-        return "admin/coupon/coupon_search_result";
+        return "admin/coupon/my_coupon_search_result";
     }
 }

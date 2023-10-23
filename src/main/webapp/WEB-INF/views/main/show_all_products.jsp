@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <%@ include file="../base_view/header.jsp" %>
@@ -16,6 +17,16 @@
 <meta charset="UTF-8">
 <title>어디로 여행을 떠날까요?</title>
 <style>
+    body {
+        /*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*/
+        background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');
+        background-size: cover; /* 배경 이미지를 뷰포트에 맞게 확대/축소 */
+        background-repeat: no-repeat; /* 배경 이미지 반복 비활성화 */
+        background-attachment: fixed; /* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) */
+        background-position: center center; /* 배경 이미지를 중앙에 위치시킴 */
+        height: 100vh; /* 화면 높이만큼 배경 이미지 표시 */
+    }
+
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -63,43 +74,69 @@
         margin-bottom: 5%;
     }
 
-    /* 이미지 컨테이너 스타일 */
     .img-container {
         display: flex;
+        gap: 30px;
+        height: 320px;
     }
 
-    .img-container a {
-        flex: 0.25; /* 1/4(25%)의 가로 공간을 갖도록 설정합니다. */
-        text-align: center; /* 이미지 가운데 정렬을 위한 설정입니다. */
-        height: 300px;
+    .shadowed {
+        flex: 1; /* 모든 <a> 태그의 너비를 동일하게 설정합니다. */
+        text-decoration: none;
+        color: inherit;
+        border: 0;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
     }
 
-    .img, .img img {
-        width: 100%; /* 이미지를 컨테이너에 맞게 조절합니다. */
-        height: 200px;
-    }
-
-    .img-container {
-        display: flex;
-        gap: 20px;
-        justify-content: flex-start; /* 왼쪽 정렬 (기본값) */
+    .img img {
+        width: 100%;
+        height: 320px;
+        border-radius: 10px;
     }
 
     .img p {
         font-size: large;
         font-weight: bold;
-        margin: 1% 0;
     }
 
-    .img-text {
-        text-align: left; /* 텍스트를 왼쪽 정렬로 설정합니다. */
+    .img div {
+        width: 90%;
+    }
+
+    .product-img {
+        border-radius: 10px;
+        height: 350px;
+    }
+
+    .product-img img {
+        width: 100%;
+        height: 220px;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .product-info {
+        text-align: left;
+        padding: 5px;
+        height: 120px;
+        position: relative;
+        background-color: whitesmoke;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .like-container {
+        font-weight: normal;
+        font-size: medium;
+        position: absolute;
+        bottom: 15%;
+        left: 5%;
     }
 
     .pagination {
         margin-bottom: 8%;
         text-align: center;
         padding-right: 5%;
-        margin-top: 3%;
+        margin-top: 5%;
     }
 
     .pagination .page-item {
@@ -108,7 +145,7 @@
     }
 
     .pagination .page-link {
-        padding: 10px 15px;
+        padding: 5px 10px;
         border: 1px solid #ddd; /* Optional: Border style */
         background-color: #f8f9fa; /* Optional: Background color */
         color: #333; /* Optional: Text color */
@@ -152,17 +189,26 @@
         <div class="travel-container" id="main_search_result">
             <div class="popular-container">
                 <h1>최근 뜨는 여행 상품</h1>
-                <div class="img-container">
+                <div class="img-container" style="height: 350px;">
                     <c:forEach var="product" items="${productsTop4}">
-                        <a href="../product/detail?product_id=${product.id}"
-                           style="text-decoration: none; color: inherit;">
-                            <div class="img" style="display: inline-block;">
-                                <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
-                                <div class="img-text">
-                                    <p style="font-size: small; color: red;">${product.country}
+                        <a href="/guest/product/detail?product_id=${product.id}" class="shadowed">
+                            <div class="product-img" style="display: inline-block;">
+                                <img src="data:${product.type};base64,${product.encoding}">
+                                <div class="product-info">
+                                    <p style="font-size: small; color: red; margin-bottom: 0;">${product.country}
                                         - ${product.city}</p>
-                                    <p>${product.name}</p>
-                                    <p style="font-weight: normal; font-size: medium;">좋아요 ${product.like}</p>
+                                    <p style="margin-top: 0; font-weight: bold;">${product.name}</p>
+                                    <p style="font-weight: normal; font-size: medium; margin-bottom: 1px">
+                                    <div class="like-container">
+                                        <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
+                                        <span style="opacity: 0.6;">/ 1인</span>
+                                            <%--                                        <img src='/images/like.png' class="like-img"--%>
+                                            <%--                                             style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">--%>
+                                            <%--                                        <span style="display: inline-block; vertical-align: middle;">--%>
+                                            <%--                                                ${product.like}--%>
+                                            <%--                                        </span>--%>
+                                    </div>
+                                    </p>
                                 </div>
                             </div>
                         </a>
@@ -173,17 +219,26 @@
                 <c:forEach var="productsByTag" items="${productsByTags}">
                     <h1>이런 여행지는 어떠세요? #${productsByTag.tag}</h1>
                     <div class="change-container">
-                        <div class="img-container">
+                        <div class="img-container" style="height: 350px;">
                             <c:forEach var="product" items="${productsByTag.productDtos}">
-                                <a href="/guest/product/detail?product_id=${product.id}"
-                                   style="text-decoration: none; color: inherit;">
-                                    <div class="img">
-                                        <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
-                                        <div style="text-align: left;">
-                                            <p style="font-size: small; color: red;">${product.country}
+                                <a href="/guest/product/detail?product_id=${product.id}" class="shadowed" style="flex: 0.24;">
+                                    <div class="product-img" style="display: inline-block;">
+                                        <img src="data:${product.type};base64,${product.encoding}">
+                                        <div class="product-info">
+                                            <p style="font-size: small; color: red; margin-bottom: 0;">${product.country}
                                                 - ${product.city}</p>
-                                            <p>${product.name}</p>
-                                            <p style="font-weight: normal; font-size: medium;">좋아요 ${product.like}</p>
+                                            <p style="margin-top: 0; font-weight: bold;">${product.name}</p>
+                                            <p style="font-weight: normal; font-size: medium; margin-bottom: 1px">
+                                            <div class="like-container">
+                                                <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
+                                                <span style="opacity: 0.6;">/ 1인</span>
+                                                    <%--                                        <img src='/images/like.png' class="like-img"--%>
+                                                    <%--                                             style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">--%>
+                                                    <%--                                        <span style="display: inline-block; vertical-align: middle;">--%>
+                                                    <%--                                                ${product.like}--%>
+                                                    <%--                                        </span>--%>
+                                            </div>
+                                            </p>
                                         </div>
                                     </div>
                                 </a>

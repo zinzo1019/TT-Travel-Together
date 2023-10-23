@@ -38,7 +38,6 @@ public class AdminMainController {
         Pagination pagination = getPagination();
         pagination.setTotalCount(countryService.countAllCountries()); // 총 개수
         model.addAttribute("pagination", pagination); // 페이징 담기
-
         return "admin/main/main";
     }
 
@@ -145,7 +144,7 @@ public class AdminMainController {
     /**
      * Pagination 생성
      */
-    private static Pagination getPagination() {
+    public static Pagination getPagination() {
         Pagination pagination = new Pagination();
         pagination.setPageRequest(new PageRequest());
         return pagination;

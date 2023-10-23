@@ -103,7 +103,7 @@
                     <a href="/guest/product/detail?product_id=${product.id}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block;">
-                            <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+                            <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px;">
                         </div>
                     </a>
                     <div class="text">
@@ -142,7 +142,7 @@
                         <div class="button-container">
                                 <%-- 수정하기 버튼 --%>
                             <c:if test="${not empty pageContext.request.userPrincipal }">
-                                <button class="search-button" id="modifyButton" data-product-id="${product.id}">수정하기
+                                <button class="search-button modifyButton" data-product-id="${product.id}">수정하기
                                 </button>
                             </c:if>
                             <c:choose>
@@ -163,7 +163,7 @@
 </div>
 <script>
     // 수정하기 버튼 클릭 이벤트
-    $("#modifyButton").click(function () {
+    $(".modifyButton").click(function () {
         var productId = $(this).data("product-id");
         window.location.href = "my-travel-places/modify?product_id=" + productId;
     });

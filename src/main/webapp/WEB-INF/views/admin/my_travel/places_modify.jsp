@@ -162,7 +162,7 @@
         <div class="travel-container">
             <div class="header-container">
                 <div style="flex: 1; display: flex; align-items: center;">
-                    <h1>어떤 여행지를 등록할까요?</h1>
+                    <h1>여행지를 어떻게 수정할까요?</h1>
                 </div>
             </div>
         </div>
@@ -220,7 +220,7 @@
             </div>
             <div class="country-container" style="margin-top: 3%">
             <label>기존 이미지</label>
-            <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+            <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px;">
             </div>
         </div>
         <div class="background-container" style="margin-top: 4%; padding-bottom: 4%">
@@ -348,7 +348,6 @@
             formData.append("stringTags", tagsData);
 
             if (image) { // 이미지가 있을 때만 넣기
-                formData.append("imageId", ${product.imageId});
                 formData.append("image", $("#imageInput")[0].files[0]);
             }
 

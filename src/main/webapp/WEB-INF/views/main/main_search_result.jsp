@@ -15,26 +15,41 @@
     }
 
     .img-container a {
-        flex: 0.25; /* 1/4(25%)의 가로 공간을 갖도록 설정합니다. */
-        text-align: center; /* 이미지 가운데 정렬을 위한 설정입니다. */
-        height: 300px;
+        flex: 0.22; /* 1/4(25%)의 가로 공간을 갖도록 설정합니다. */
+        height: 320px;
     }
 
-    .img, .img img {
-        width: 100%; /* 이미지를 컨테이너에 맞게 조절합니다. */
-        height: 200px;
+    .img {
+        flex: 1;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .img img {
+        width: 100%;
+        height: 320px;
+        border-radius: 10px;
     }
 
     .img-container {
         display: flex;
-        gap: 20px;
+        gap: 30px;
         justify-content: flex-start; /* 왼쪽 정렬 (기본값) */
     }
 
     .img p {
         font-size: large;
         font-weight: bold;
-        margin: 1% 0;
+    }
+
+    .img-text {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        color: white; /* 텍스트 색상 설정 */
+        padding: 10px; /* 텍스트 패딩 설정 */
+        box-sizing: border-box;
     }
 </style>
 <h1>이 여행지를 찾으셨나요?</h1>
@@ -42,11 +57,16 @@
     <c:forEach var="country" items="${searchResults.content}">
         <a href="/guest/country?country_id=${country.countryId}"
            style="text-decoration: none; color: inherit;">
-            <div class="img" style="display: inline-block; margin-right: 20px;">
+            <div class="img">
                 <img src="${country.image}">
-                <div style="text-align: left">
+                <div class="img-text">
                     <p>${country.country} - ${country.city}</p>
-                    <p style="font-weight: normal; font-size: medium">좋아요 ${country.totalLikes}</p>
+                    <p style="font-weight: normal; font-size: medium;">
+                        <img src='/images/like.png' class="like-img" style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">
+                        <span style="display: inline-block; vertical-align: middle;">
+                                ${country.totalLikes}
+                        </span>
+                    </p>
                 </div>
             </div>
         </a>
@@ -54,21 +74,11 @@
 </div>
 <!-- 페이징 처리 -->
 <ul class="pagination">
-    <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-        </a>
-    </li>
     <c:forEach begin="1" end="${pagination.endPage}" varStatus="status">
         <li class="page-item">
             <a class="page-link" href="?page=${status.index}">${status.index}</a>
         </li>
     </c:forEach>
-    <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-        </a>
-    </li>
 </ul>
 <script>
     /** 최근 게시글 중 검색 */

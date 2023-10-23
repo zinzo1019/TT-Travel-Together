@@ -40,6 +40,9 @@ public class CuriousService {
      * 게시글 검색하기 (나라와 검색어)
      */
     public List<PostDto> findAllByCountryId(SearchDto searchDto) {
+        if (searchDto.getCountryId() == 0) { // 선택 없음
+            return curiousDao.findAllPosts();
+        }
         return curiousDao.findAllByCountryId(searchDto);
     }
 

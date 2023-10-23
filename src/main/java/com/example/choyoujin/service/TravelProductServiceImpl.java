@@ -3,6 +3,8 @@ package com.example.choyoujin.service;
 import com.example.choyoujin.dao.*;
 import com.example.choyoujin.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -34,7 +36,7 @@ public class TravelProductServiceImpl implements TravelProductService {
     @Autowired
     private TravelTagsDao tagsDao;
     @Autowired
-    private PaymentService paymentService;
+    private PaymentServiceImpl paymentService;
 
     /**
      * 최근 뜨는 여행지 4개 (좋아요 순으로 정렬)
@@ -146,7 +148,7 @@ public class TravelProductServiceImpl implements TravelProductService {
                 travelProductDao.saveProductDetails(productDto.getStringDetailDescriptions(), productDto.getId()); // 설명 저장
             if (!productDto.getStringTags().isEmpty())
                 saveTags(productDto); // 태그 저장
-                fileService.updateProductImage(productDto.getImageId(), productDto.getImage()); // 이미지 수정
+                fileService.updateProductImage(productDto.getId(), productDto.getImage()); // 이미지 수정
             travelProductDao.updateProduct(productDto); // 여행 상품 수정
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -184,20 +186,29 @@ public class TravelProductServiceImpl implements TravelProductService {
         return productDtos;
     }
 
-    /** 여행 태그별 여행 상품 리스트 가져오기 */
-    public List<ProductDto> findAllByTravelTag(int page, int size, Model model) {
-        List<ProductDto> productDtos = new ArrayList<>();
-        try { // 로그인 후
-            String travelTag = userService.getUserData().getTravelTag(); // 사용자 여행 태그 가져오기
-            productDtos = travelProductDao.findAllByTravelTag(travelTag, page, size);
-            Pagination pagination = getPagination(); // 페이징 처리
-            pagination.setTotalCount(travelProductDao.countAllByTravelTag(travelTag)); // 여행 상품 개수
-            model.addAttribute("pagination", pagination); // 페이징 담기
-        } catch (Exception e) { // 로그인 전
-            productDtos = travelProductDao.findAllByTravelTag("힐링", page, size);
+    /**
+     * 여행 태그별 여행 상품 리스트 가져오기
+     */
+    public PageImpl<ProductDto> findAllByTravelTag(int page, int size) {
+        int start = (page - 1) * size;
+        String travelTag = "힐링";
+        if (userService.getUserData() != null) { // 로그인 후
+            travelTag = userService.getUserData().getTravelTag(); // 사용자 여행 태그 가져오기
         }
+        int total = travelProductDao.countAllByTravelTag(travelTag); // 여행 상품 개수
+        List<ProductDto> productDtos = travelProductDao.findAllByTravelTag(travelTag, start, size);
         setImage(productDtos); // 이미지 Set
-        return productDtos;
+        return new PageImpl<>(productDtos, org.springframework.data.domain.PageRequest.of(page -1, size), total);
+    }
+
+    /** 여행 태그별 여행 상품 리스트 - 페이징 처리 */
+    @Override
+    public PageImpl<ProductDto> findAllByTravelTag(String tag, int page, int size) {
+        int start = (page - 1) * size;
+        int total = travelProductDao.countAllByTravelTag(tag); // 여행 상품 개수
+        List<ProductDto> productDtos = travelProductDao.findAllByTravelTag(tag, start, size);
+        setImage(productDtos); // 이미지 Set
+        return new PageImpl<>(productDtos, org.springframework.data.domain.PageRequest.of(page -1, size), total);
     }
 
     /** 상위 4개 여행 상품 리스트 가져오기 */
@@ -209,11 +220,11 @@ public class TravelProductServiceImpl implements TravelProductService {
 
     /** 여행 태그별 여행 상품 리스트 가져오기 */
     @Override
-    public List<ProductsByTagDto> findAllByTravelTags(int page, int size, Model model) {
+    public List<ProductsByTagDto> findAllByTravelTags(int page, int size) {
         List<ProductsByTagDto> productDtos = new ArrayList<>();
         List<TagDto> tagDtos = tagsDao.findAllTags(); // 모든 태그 가져오기
         for (TagDto dto : tagDtos) {
-            List<ProductDto> productDtoList = travelProductDao.findAllByTravelTag(dto.getTag(), page, size);
+            List<ProductDto> productDtoList = travelProductDao.findAllByTravelTags(dto.getTag(), page, size);
             setImage(productDtoList); // 이미지 Set
             Pagination pagination = getPagination(); // 페이징 처리
             pagination.setTotalCount(travelProductDao.countAllByTravelTag(dto.getTag())); // 여행 상품 개수
@@ -243,6 +254,15 @@ public class TravelProductServiceImpl implements TravelProductService {
         model.addAttribute("pagination", pagination); // 페이징 담기
         model.addAttribute("tagId", tagId); // 페이징 담기
         return productDtos;
+    }
+
+    @Override
+    public PageImpl<ProductDto> findAllByTravelTagAndKeyword(String tag, String keyword, int page, int size) {
+        int start = (page - 1) * size;
+        int total = travelProductDao.countAllByTravelTagAndKeyword(tag, keyword); // 여행 상품 개수
+        List<ProductDto> productDtos = travelProductDao.findAllByTravelTagAndKeyword(tag, keyword, start, size);
+        setImage(productDtos); // 이미지 Set
+        return new PageImpl<>(productDtos, org.springframework.data.domain.PageRequest.of(page -1, size), total);
     }
 
     /** 여행 상품 판매 중지하기 */

@@ -9,4 +9,5 @@ import java.util.List;
 public interface TagDao {
     List<TagDto> findAllByProductId(int productId);
     void deleteOneById(int id);
+    List<TagDto> findAll();
 }

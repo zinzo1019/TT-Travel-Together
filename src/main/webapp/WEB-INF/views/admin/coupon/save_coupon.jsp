@@ -33,7 +33,7 @@
     .main-container {
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
-        margin-top: 4%;
+        margin-top: 3%;
     }
 
     .background-container {

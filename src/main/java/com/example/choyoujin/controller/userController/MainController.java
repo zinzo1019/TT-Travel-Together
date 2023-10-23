@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.choyoujin.controller.userController.adminController.AdminMainController.getPagination;
+
 @Controller
 public class MainController {
 
@@ -26,6 +28,8 @@ public class MainController {
     private ProductLikeServiceImpl likeService;
     @Autowired
     private CouponService couponService;
+    @Autowired
+    private TagService tagService;
 
     /**
      * 리다이렉션
@@ -42,19 +46,60 @@ public class MainController {
     public String mainPage(Model model, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("countries4", travelProductService.find4CountriesByCountryLike()); // 최근 뜨는 여행지 담기
-        model.addAttribute("products", travelProductService.findAllByTravelTag(page, 4, model)); // 태그별 추천 여행 상품 담기
+        model.addAttribute("countries", countryService.findAllCountriesOrderByLike(page, 4)); // 모든 여행지 담기
+        model.addAttribute("products", travelProductService.findAllByTravelTag(page, 4)); // 태그별 추천 여행 상품 담기
         return "main/main";
     }
 
+    /** 메인 페이지 - 여행 상품 페이징 처리 */
+    @PostMapping("/guest/product/pagination")
+    public String mainPageProductPagination(String tag, @RequestParam(defaultValue = "1") int page, Model model) {
+        model.addAttribute("products", travelProductService.findAllByTravelTag(tag, page, 4)); // 태그별 추천 여행 상품 담기
+        return "main/main_products_by_page";
+    }
+
+    /** 메인 페이지 - 태그별 여행 상품 모아보기 */
+    @GetMapping("/guest/all/products/tag")
+    public String productsByTag(@RequestParam("tag") String tag, @RequestParam(defaultValue = "1") int page, Model model) {
+        model.addAttribute("products", travelProductService.findAllByTravelTag(tag, page, 4));
+        model.addAttribute("tag", tag);
+        return "main/products_by_tag";
+    }
+
+    /** 태그별 여행 상품 - 검색하기 */
+    @PostMapping("/guest/all/products/tag/search")
+    public String searchPproductsByTag(String tag, String keyword, @RequestParam(defaultValue = "1") int page, Model model) {
+        model.addAttribute("products", travelProductService.findAllByTravelTagAndKeyword(tag, keyword, page, 4));
+        return "main/products_by_tag_search_result";
+    }
+
+    /** 메인 페이지 - 여행지 페이징 처리 */
+    @PostMapping("/guest/country/pagination")
+    public String mainPageCountryPagination(@RequestParam(defaultValue = "1") int page, Model model) {
+        model.addAttribute("countries", countryService.findAllCountriesOrderByLike(page, 4)); // 태그별 추천 여행 상품 담기
+        return "main/main_country_by_page";
+    }
+
     /**
-     * 어디로 갈지 모르겠어요.
+     * 어디로 갈지 모르겠어요 - 모든 여행지 둘러보기
      */
     @GetMapping("/guest/all/products")
     public String allProductsPage(Model model, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("productsTop4", travelProductService.findProductsTop4ByLike()); // 상위 4개 여행 상품 담기
-        model.addAttribute("productsByTags", travelProductService.findAllByTravelTags(page, 4, model)); // 태그 별로 여행 상품 담기
+        model.addAttribute("productsByTags", travelProductService.findAllByTravelTags(page, 4)); // 태그 별로 여행 상품 담기
         return "main/show_all_products";
+    }
+
+    /** 네비게이션 바 - 모든 태그 가져오기 */
+    @ResponseBody
+    @GetMapping("/guest/all/tags")
+    public List<TagDto> getAllTags() {
+        try {
+            return tagService.findAll();
+        } catch (Exception e) {
+            System.out.println(e.getMessage()); return null;
+        }
     }
 
     /**

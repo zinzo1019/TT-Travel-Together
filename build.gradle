@@ -88,6 +88,12 @@ dependencies {
     // Google Maps API
     implementation 'com.google.maps:google-maps-services:0.15.0'
 
+    // @RegisteredOAuth2AuthorizedClient
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // weather api
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 }
 
 tasks.named('test') {

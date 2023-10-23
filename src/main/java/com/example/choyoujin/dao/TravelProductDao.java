@@ -20,7 +20,7 @@ public interface TravelProductDao {
     List<ProductDto> findAllByCountryId(int countryId);
     List<Integer> findAllProductIdsByCountryId(int countryId);
     List<ProductDto> findAllByUserLike(int userId);
-    List<ProductDto> findAllByTravelTag(String travelTag, int page, int size);
+    List<ProductDto> findAllByTravelTag(String travelTag, int start, int size);
     List<ProductDto> findProductsTop4ByLike();
     List<ProductDto> findAllByKeyword(String keyword);
     int countAllByTravelTag(String travelTag);
@@ -28,4 +28,7 @@ public interface TravelProductDao {
     int countAllByTravelTagId(int tagId);
     void updateProduct(ProductDto productDto);
     void updateEnabledByProductId(int productId, boolean enabled);
+    List<ProductDto> findAllByTravelTagAndKeyword(String tag, String keyword, int start, int size);
+    List<ProductDto> findAllByTravelTags(String tag, int page, int size);
+    int countAllByTravelTagAndKeyword(String tag, String keyword);
 }

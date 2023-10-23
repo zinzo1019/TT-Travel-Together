@@ -41,7 +41,7 @@
         GROUP BY c.id
         ORDER BY totalLikes DESC
             LIMIT #{size}
-        OFFSET #{page}
+        OFFSET #{start}
     </select>
 
     <!-- 메인 페이지 - 나라 검색 -->
@@ -57,7 +57,7 @@
                      else 0
                      END, SUM(tp.like) DESC
             LIMIT #{size}
-        OFFSET #{page}
+        OFFSET (#{start})
     </select>
 
     <!-- 메인 페이지 - 나라 검색 결과 개수 -->

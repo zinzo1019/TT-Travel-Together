@@ -2,7 +2,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <div class="header-container">
     <div style="flex: 1; display: flex; align-items: center;">
         <h1>아래 내용을 찾으시나요?</h1>
@@ -10,7 +9,6 @@
     </div>
     <button class="post-button" id="postButton">게시글 작성하기</button>
 </div>
-
 <ul class="post-list">
     <c:forEach var="post" items="${posts}">
         <li class="post-list-item">

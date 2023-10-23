@@ -22,4 +22,11 @@ public class TagService {
     public void deleteOneById(int id) {
         tagDao.deleteOneById(id);
     }
+
+    /**
+     * 모든 여행 태그 가져오기
+     */
+    public List<TagDto> findAll() {
+        return tagDao.findAll();
+    }
 }

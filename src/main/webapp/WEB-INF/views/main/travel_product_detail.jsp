@@ -27,6 +27,16 @@
 <meta charset="UTF-8">
 <title>이 상품은 어떠세요?</title>
 <style>
+    body {
+        /*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*/
+        background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');
+        background-size: cover; /* 배경 이미지를 뷰포트에 맞게 확대/축소 */
+        background-repeat: no-repeat; /* 배경 이미지 반복 비활성화 */
+        background-attachment: fixed; /* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) */
+        background-position: center center; /* 배경 이미지를 중앙에 위치시킴 */
+        height: 100vh; /* 화면 높이만큼 배경 이미지 표시 */
+    }
+
     .welcome-message button {
         padding: 0;
         margin: 0 11px;
@@ -44,6 +54,7 @@
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
         margin: 0 auto;
+        margin-bottom: 5%;
     }
 
     /* 여행 상품 컨테이너 */
@@ -53,6 +64,7 @@
         border-radius: 10px; /* 모서리 둥글게 만들기 */
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
         padding: 3%;
+        background-color: white;
     }
 
     .img-container {
@@ -278,7 +290,7 @@
         <div class="travel-container">
             <div class="img-container">
                 <div class="img" style="display: inline-block;">
-                    <img src="data:${product.type};base64,${product.encoding}" class="img-fluid">
+                    <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 10px;">
                 </div>
                 <div class="text">
                     <div>
@@ -318,13 +330,15 @@
                                     <c:choose>
                                         <c:when test="${coupon.percentage > 0}">
                                             <option value="${coupon.id}">
-                                            ${coupon.name} ---> ${coupon.percentage}% 할인
+                                                    ${coupon.name} ---> ${coupon.percentage}% 할인
+                                            </option>
                                         </c:when>
-                                        <c:otherwise>
-                                            ${coupon.name} ---> ${coupon.amount} 원 할인
-                                        </c:otherwise>
+                                        <c:when test="${coupon.amount > 0}">
+                                            <option value="${coupon.id}">
+                                                    ${coupon.name} ---> ${coupon.amount} 원 할인
+                                            </option>
+                                        </c:when>
                                     </c:choose>
-                                    </option>
                                 </c:forEach>
                             </select>
                             <button class="submit-comment-button" id="couponButton" style="margin: 0">적용</button>

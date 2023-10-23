@@ -18,6 +18,16 @@
 <meta charset="UTF-8">
 <title>곧 여기로 떠나요!</title>
 <style>
+    /*body {*/
+    /*    !*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*!*/
+    /*    background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');*/
+    /*    background-size: cover; !* 배경 이미지를 뷰포트에 맞게 확대/축소 *!*/
+    /*    background-repeat: no-repeat; !* 배경 이미지 반복 비활성화 *!*/
+    /*    background-attachment: fixed; !* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) *!*/
+    /*    background-position: center center; !* 배경 이미지를 중앙에 위치시킴 *!*/
+    /*    height: 100vh; !* 화면 높이만큼 배경 이미지 표시 *!*/
+    /*}*/
+
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -44,7 +54,7 @@
         overflow: hidden; /* 넘치는 내용을 가리기 위해 */
         display: flex; /* Flexbox 레이아웃 사용 */
         align-items: center; /* 수직 가운데 정렬 */
-        background-color: #eeeeee;
+        background-color: whitesmoke;
         border: 1px solid #ccc; /* 테두리 추가 */
         border-radius: 15px;
         padding: 2% 0 2% 2%;
@@ -75,6 +85,8 @@
         border: 1px solid #ccc; /* 테이블 테두리 추가 */
         margin-top: 2%;
         margin-bottom: 5%;
+        background-color: whitesmoke;
+        border-radius: 15px;
     }
 
     .payment-table tr {
@@ -105,15 +117,25 @@
 <div class="content">
     <div class="main-container">
         <div class="travel-container" id="products_search_result">
-            <h1>${user.name}님이 결제한 ${fn:length(products)}건의 여행 상품이 있어요.</h1>
-            <div style="margin-bottom: 5%">
+            <c:choose>
+                <c:when test="${available == 2}">
+                    <h1>${fn:length(products)}건의 이용 가능한 여행 상품이 있어요.</h1>
+                </c:when>
+                <c:when test="${available == 3}">
+                    <h1>${fn:length(products)}건의 이용 불가능한 상품이 있어요.</h1>
+                </c:when>
+                <c:otherwise>
+                    <h1>${user.name}님이 결제한 ${fn:length(products)}건의 여행 상품이 있어요!</h1>
+                </c:otherwise>
+            </c:choose>
+            <div style="margin-bottom: 13%">
                 <c:forEach var="product" items="${products}">
                     <div class="img-container">
                         <a href="/guest/product/detail?product_id=${product.productDto.id}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img" style="display: inline-block;">
                                 <img src="data:${product.productDto.type};base64,${product.productDto.encoding}"
-                                     class="img-fluid">
+                                     style="border-radius: 15px;">
                             </div>
                         </a>
                         <div class="text">
@@ -149,19 +171,38 @@
                                                                 pattern="#,###"/> 원
                             </td>
                         </tr>
-                        <tr>
-                            <td class="label">사용 여부</td>
-                            <td class="value">${product.available ? '사용 가능' : '사용 불가능 : 관리자가 삭제한 상품입니다.'}</td>
-                        </tr>
+                        <c:choose>
+                            <c:when test="${product.available}">
+                                <tr>
+                                    <td class="label">사용 여부</td>
+                                    <td class="value">
+                                        사용 가능
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="label">환불하기</td>
+                                    <td class="value">
+                                        <button class="refundButton" data-payment-id="${product.paymentId}">환불하기
+                                        </button>
+                                    </td>
+                                </tr>
+                            </c:when>
+                            <c:otherwise>
+                                <tr>
+                                    <td class="label">사용 여부</td>
+                                    <td class="value" style="color: red">
+                                        사용 불가능 - ${product.reason}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="label">환불 사유</td>
+                                    <td class="value">${product.refundReason}</td>
+                                </tr>
+                            </c:otherwise>
+                        </c:choose>
                         <tr>
                             <td class="label">담당자</td>
                             <td class="value">${product.productDto.email}</td>
-                        </tr>
-                        <tr>
-                            <td class="label">환불하기</td>
-                            <td class="value">
-                                <button class="refundButton" data-payment-id="${product.paymentId}">환불하기</button>
-                            </td>
                         </tr>
                     </table>
                 </c:forEach>
@@ -170,21 +211,30 @@
     </div>
 </div>
 <script>
-    // 환불하기 버튼 클릭 이벤트
+    /** 환불하기 버튼 클릭 이벤트 */
     $(".refundButton").click(function () {
-        var paymentId = $(this).data("payment-id");
-        $.ajax({
-            url: "refund",
-            type: "POST",
-            data: {
-                "paymentId": paymentId
-            },
-            success: function (data) {
-                location.reload();
-            },
-            error: function (error) {
+        if (confirm("환불하시겠습니까?")) {
+            var refundReason = prompt("환불 사유를 입력해주세요 (필수)");
+            if (refundReason !== "") {
+                var paymentId = $(this).data("payment-id");
+                $.ajax({
+                    url: "refund",
+                    type: "POST",
+                    data: {
+                        "paymentId": paymentId,
+                        "refundReason": refundReason
+                    },
+                    success: function (data) {
+                        alert("환불 처리했습니다.");
+                        location.reload();
+                    },
+                    error: function (error) {
+                    }
+                });
+            } else {
+                return false;
             }
-        });
+        }
     });
 </script>
 </body>

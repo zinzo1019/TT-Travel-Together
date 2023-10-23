@@ -10,6 +10,7 @@ public class PaymentDto {
     private String impUid;
     private int productId;
     private int userId;
+    private String userName;
     private String merchantUid;
     private int paidAmount;
     private int paidAt;
@@ -18,6 +19,8 @@ public class PaymentDto {
     private String receiptUrl;
     private LocalDate createDate;
     private boolean available;
+    private String reason; // 사용 불가 이유
+    private String refundReason; // 환불 사유
 
     private ProductDto productDto;
 }
