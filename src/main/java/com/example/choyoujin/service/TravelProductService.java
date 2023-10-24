@@ -2,7 +2,6 @@ package com.example.choyoujin.service;
 
 import com.example.choyoujin.dto.ProductDto;
 import com.example.choyoujin.dto.ProductsByTagDto;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.ui.Model;
 
@@ -31,4 +30,5 @@ public interface TravelProductService {
     List<ProductDto> findAllByKeyword(String keyword);
     List<ProductDto> findAllByTravelTagsWithPaging(int tagId, int page, int size, Model model);
     PageImpl<ProductDto> findAllByTravelTagAndKeyword(String tag, String keyword, int page, int size);
+    PageImpl<ProductDto> findAllProducts(int page, int size);
 }

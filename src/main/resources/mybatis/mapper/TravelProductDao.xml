@@ -5,12 +5,35 @@
 
 <mapper namespace="com.example.choyoujin.dao.TravelProductDao">
 
-    <!--    모든 상품 가져오기-->
+    <!--    모든 여행 상품 가져오기-->
     <select id="findAllProducts" resultType="com.example.choyoujin.dto.ProductDto">
+        select tp,
+               tp.name as productName,
+               tpi,
+               c
+        from travel_product tp
+                 LEFT JOIN travel_product_image tpi
+                           on tp.travel_product_image_id = tpi.id
+                 left join country c
+                           on tp.country_id = c.id
+    </select>
+
+    <!--    모든 여행 상품 개수 세기-->
+    <select id="countAllProducts" resultType="int">
+        select count(id)
+        from travel_product
+    </select>
+
+    <!--    모든 여행 상품 가져오기 - 페이징 처리-->
+    <select id="findAllProductsWithPaging" resultType="com.example.choyoujin.dto.ProductDto">
         select *
         from travel_product tp
                  LEFT JOIN travel_product_image tpi
                            on tp.travel_product_image_id = tpi.id
+                 left join country c
+                           on tp.country_id = c.id
+        order by tp.like desc limit #{size}
+        offset (#{start})
     </select>
 
     <!--    나라별 여행 상품 리스트 가져오기-->

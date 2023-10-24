@@ -19,19 +19,20 @@
         overflow: hidden;
         align-items: center;
         border-radius: 15px;
-        background-color: white;
     }
 
     .search-img {
+        display: inline-block;
         float: left; /* 이미지를 왼쪽으로 띄움 */
         margin-right: 20px; /* 이미지 사이의 간격 설정 */
         flex: 1; /* 이미지가 늘어날 수 있도록 flex 속성을 설정 */
         padding-right: 20px; /* 이미지와 텍스트 사이의 간격 설정 */
+        border-radius: 15px 0 0 15px;
     }
 
     .search-img img {
-        width: 200px;
-        height: 200px;
+        width: 180px;
+        height: 180px;
     }
 
     .search-text {
@@ -69,8 +70,8 @@
     <div class="search-img-container">
         <a href="/guest/product/detail?product_id=${product.id}"
            style="text-decoration: none; color: inherit;">
-            <div class="search-img" style="display: inline-block;">
-                <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px 0 0 15px;">
+            <div class="search-img">
+                <img src="data:${product.type};base64,${product.encoding}">
             </div>
         </a>
         <div class="search-text">

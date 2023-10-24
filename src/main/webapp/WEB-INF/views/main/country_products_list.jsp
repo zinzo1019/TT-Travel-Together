@@ -81,26 +81,24 @@
         overflow: hidden; /* 넘치는 내용을 가리기 위해 */
         display: flex; /* Flexbox 레이아웃 사용 */
         align-items: center; /* 수직 가운데 정렬 */
-        background-color: white;
         border-radius: 15px;
     }
 
     .img {
-        float: left; /* 이미지를 왼쪽으로 띄움 */
-        margin-right: 20px; /* 이미지 사이의 간격 설정 */
-        flex: 1; /* 이미지가 늘어날 수 있도록 flex 속성을 설정 */
         padding-right: 20px; /* 이미지와 텍스트 사이의 간격 설정 */
+        position: relative;
+        display: inline-block;
     }
 
     .text {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        padding-top: 1%;
         font-size: large;
         font-weight: bold;
-        height: 180px;
-        position: relative;
         border-radius: 15px;
+        background-color: whitesmoke;
+        padding: 20px;
+        height: 140px;
     }
 
     .tag-div {
@@ -109,27 +107,58 @@
         font-size: medium;
     }
 
-    .img img {
-        width: 200px;
-        height: 200px;
-        border-radius: 15px 0 0 15px;
+    .product-img-container {
+        position: relative; /* 포지션을 설정하여 내부 요소에 상대적으로 배치할 수 있도록 함 */
     }
 
-    .like-container {
-        display: flex;
-        justify-content: flex-start; /* 좌측 정렬 */
-        align-items: center; /* 요소들을 수직 가운데로 정렬 */
-        padding: 8px 0; /* 위아래 패딩 추가 */
+    .product-img {
+        display: block;
+        width: 100%;
+        height: auto;
+        transition: transform 0.2s ease; /* 이미지 변환 효과를 부드럽게 설정 (선택사항) */
+    }
+
+    .product-img-container::before {
+        content: ''; /* 가상 요소의 내용 비우기 */
         position: absolute;
+        top: 0;
+        left: 0;
+        width: 90%;
+        height: 30%; /* 이미지의 상단 절반에 그림자를 적용하기 위해 50%로 설정 (상단 절반만 어둡게 됩니다) */
+        background: linear-gradient(to bottom, transparent, rgba(173, 173, 173, 0.2)); /* 그림자 배경 설정 */
+        box-shadow: 0px 10px 10px -10px rgba(115, 115, 115, 0.2); /* 그림자 경계를 부드럽게 설정 */
+        z-index: 1; /* 이미지 위에 표시될 수 있도록 설정 */
+        pointer-events: none; /* 가상 요소에 마우스 이벤트를 적용하지 않음 */
+    }
+
+    .product-img {
+        width:180px;
+        height: 180px;
+        border-radius: 15px;
+    }
+
+    .cost-container {
+        display: flex;
+        align-items: center; /* 요소들을 수직 가운데로 정렬 */
         bottom: 0;
         width: 80%;
     }
 
     .like-img {
-        width: 17px; /* 좋아요 이미지 크기 조정 */
-        height: 17px;
-        margin-right: 3px; /* 이미지 사이 간격 추가 */
-        margin-top: 0.4%;
+        width: 25px; /* 좋아요 이미지 크기 조정 */
+        height: 25px;
+    }
+
+    .like-info {
+        position: absolute;
+        right: 40px;
+        top: 20px;
+    }
+
+    .like-text {
+        font-size: small;
+        color: blue;
+        font-weight: normal;
     }
 </style>
 <body>
@@ -142,41 +171,39 @@
         <div class="travel-container" id="products_search_result">
             <h1>[${country.country} - ${country.city}] ${fn:length(products)}건의 여행지가 있어요!</h1>
             <c:forEach var="product" items="${products}">
-                <div class="img-container">
-                    <a href="/guest/product/detail?product_id=${product.id}"
-                       style="text-decoration: none; color: inherit;">
-                        <div class="img" style="display: inline-block;">
-                            <img src="data:${product.type};base64,${product.encoding}">
+            <div class="img-container">
+                <a href="/guest/product/detail?product_id=${product.id}" style="text-decoration: none; color: inherit;">
+                    <div class="img product-img-container">
+                        <img src="data:${product.type};base64,${product.encoding}" class="product-img">
+                        <div class="like-info">
+                                <%-- 로그인 상태 --%>
+                            <c:if test="${not empty pageContext.request.userPrincipal }">
+                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}" class="like-img">
+                            </c:if>
+                                <%-- 로그아웃 상태 --%>
+                            <c:if test="${empty pageContext.request.userPrincipal }">
+                                <img src='/images/empty-like.png' class="like-img">
+                            </c:if>
                         </div>
-                    </a>
+                    </div>
+                </a>
                     <div class="text">
                         <a href="/guest/product/detail?product_id=${product.id}"
                            style="text-decoration: none; color: inherit;">
-                            <div style="margin-top: 3%;">
-                                <p style="padding-right: 5%;">
-                                    [${country.city}] ${product.name}${product.descriptions}</p>
-                                <div class="tag-div" style="font-weight: normal">
+                            <div style="">
+                                <div class="tag-div" style="font-size: small; color: red;">
                                     <c:forEach var="tag" items="${product.tags}" varStatus="status">
                                         # ${tag.tag}&nbsp;&nbsp;
                                     </c:forEach>
                                 </div>
+                                <p>${product.name}</p>
+                                <p>${product.descriptions}</p>
                             </div>
                         </a>
-                        <div class="like-container">
-                            <p style="padding-right: 1%;"><fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
-                                | </p>
-                                <%--    로그인 상태--%>
-                            <c:if test="${not empty pageContext.request.userPrincipal }">
-                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}"
-                                     class="like-img">
-                                <p>${product.like}</p>
-                            </c:if>
-                                <%--    로그아웃 상태--%>
-                            <c:if test="${empty pageContext.request.userPrincipal }">
-                                <img src='/images/empty-like.png' class="like-img">
-                                <p>${product.like}</p>
-                            </c:if>
+                        <div class="cost-container">
+                            <p style="padding-right: 1%;"><fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원</p>
                         </div>
+                        <p class="like-text">${product.like}명이 좋아하고 있어요!</p>
                     </div>
                 </div>
                 <br><br>

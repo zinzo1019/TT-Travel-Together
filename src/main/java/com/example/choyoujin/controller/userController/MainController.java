@@ -81,13 +81,24 @@ public class MainController {
     }
 
     /**
+     * 어디로 갈지 모르겠어요 - 모든 여행지 태그별로 둘러보기
+     */
+    @GetMapping("/guest/all/products/bytag")
+    public String allProductsPageByTag(Model model, @RequestParam(defaultValue = "1") int page) {
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("productsTop4", travelProductService.findProductsTop4ByLike()); // 상위 4개 여행 상품 담기
+        model.addAttribute("productsByTags", travelProductService.findAllByTravelTags(page, 4)); // 태그 별로 여행 상품 담기
+        return "main/show_all_products_by_tag";
+    }
+
+    /**
      * 어디로 갈지 모르겠어요 - 모든 여행지 둘러보기
      */
     @GetMapping("/guest/all/products")
     public String allProductsPage(Model model, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("productsTop4", travelProductService.findProductsTop4ByLike()); // 상위 4개 여행 상품 담기
-        model.addAttribute("productsByTags", travelProductService.findAllByTravelTags(page, 4)); // 태그 별로 여행 상품 담기
+        model.addAttribute("products", travelProductService.findAllProducts(page, 4)); // 모든 여행 상품 담기
         return "main/show_all_products";
     }
 

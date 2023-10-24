@@ -192,7 +192,7 @@
         </div>
         <div class="travel-container" id="main_search_result">
             <div class="popular-container">
-                <h1>이런 여행지는 어떠세요? #${tag}</h1>
+                <h1>"${tag}"에 대한 여행지예요!</h1>
                 <div class="change-container">
                     <div class="img-container" style="height: 350px;">
                         <c:forEach var="product" items="${products.content}">

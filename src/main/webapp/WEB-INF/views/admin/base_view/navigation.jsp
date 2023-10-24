@@ -67,15 +67,8 @@
 <nav>
     <ul>
         <li><a href="/admin">어디로 여행을 떠날까요?</a></li>
-        <li class="dropdown">
-            <a href="#" class="child-title dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-                어디로 갈지 모르겠어요 <i class="fa fa-caret-down"></i>
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/guest/all/products" style="margin-left: 20%">모든 여행 상품 둘러보기</a>
-            </div>
-        </li>
+        <li><a href="/guest/all/products" class="child-title">모든 여행지 둘러보기</a></li>
+        <li><a href="/guest/all/products/bytag" class="child-title">모든 여행지 태그별로 둘러보기</a></li>
 
         <li class="parent-board">나의 여행지</li>
         <li><a href="/admin/my-travel-places" class="child-title">내가 등록한 여행지</a></li>
@@ -101,30 +94,30 @@
     </ul>
 </nav>
 <script>
-    $(document).ready(function () {
-        /** 드롭다운 토글 */
-        $(".dropdown-toggle").click(function () {
-            // 드롭다운 메뉴 슬라이드 토글
-            $(this).next(".dropdown-menu").slideToggle("fast");
-        });
-
-        // AJAX로 데이터 받아오기
-        $.ajax({
-            url: "/guest/all/tags",
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                // 데이터를 받아왔으면 드롭다운 메뉴에 옵션을 추가
-                var dropdownMenu = $(".dropdown-menu");
-                // 데이터를 반복하면서 옵션을 생성하고 메뉴에 추가
-                data.forEach(function (tag) {
-                    var option = $("<a class='dropdown-item' href='/guest/all/products/tag?tag=" + tag.tag + "' style='margin-left: 20%;'>" + tag.tag + "</a>");
-                    dropdownMenu.append(option);
-                });
-            },
-            error: function (error) {
-                console.error("에러 발생: " + error);
-            }
-        });
-    });
+    // $(document).ready(function () {
+    //     /** 드롭다운 토글 */
+    //     $(".dropdown-toggle").click(function () {
+    //         // 드롭다운 메뉴 슬라이드 토글
+    //         $(this).next(".dropdown-menu").slideToggle("fast");
+    //     });
+    //
+    //     // AJAX로 데이터 받아오기
+    //     $.ajax({
+    //         url: "/guest/all/tags",
+    //         method: "GET",
+    //         dataType: "json",
+    //         success: function (data) {
+    //             // 데이터를 받아왔으면 드롭다운 메뉴에 옵션을 추가
+    //             var dropdownMenu = $(".dropdown-menu");
+    //             // 데이터를 반복하면서 옵션을 생성하고 메뉴에 추가
+    //             data.forEach(function (tag) {
+    //                 var option = $("<a class='dropdown-item' href='/guest/all/products/tag?tag=" + tag.tag + "' style='margin-left: 20%;'>" + tag.tag + "</a>");
+    //                 dropdownMenu.append(option);
+    //             });
+    //         },
+    //         error: function (error) {
+    //             console.error("에러 발생: " + error);
+    //         }
+    //     });
+    // });
 </script>

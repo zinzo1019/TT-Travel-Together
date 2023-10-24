@@ -89,11 +89,6 @@
         font-weight: bold;
     }
 
-    .like-img {
-        width: 20px;
-        height: 20px;
-    }
-
     .no-style {
         text-decoration: none;
         border: none;
@@ -108,6 +103,12 @@
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
         padding-top: 4%;
         font-size: medium;
+    }
+
+    .tag-a {
+        color: black;
+        padding-right: 2%;
+        text-decoration: none;
     }
 
     .img img {
@@ -283,6 +284,17 @@
     .post p {
         font-size: 16px;
     }
+
+    #like-link {
+        position: relative;
+    }
+
+    .like-img {
+        position: absolute;
+        width: 23px;
+        height: 23px;
+        top: 5px;
+    }
 </style>
 <body>
 <div class="content">
@@ -300,25 +312,30 @@
                                 <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}"
                                      class="like-img">
                             </a>
-                            ${product.like}
                         </c:if>
                         <%--    로그아웃 상태--%>
                         <c:if test="${empty pageContext.request.userPrincipal }">
                             <a href="#" class="no-style" id="like-link">
                                 <img src='/images/empty-like.png' class="like-img">
                             </a>
-                            ${product.like}
                         </c:if>
-                        <c:choose>
-                            <c:when test="${product.enabled}">
-                                <p style="font-size: small; color: blue; display: inline-block;">* 판매 중인 상품입니다.</p>
-                            </c:when>
-                            <c:otherwise>
-                                <p style="font-size: small; color: red; display: inline-block">* 판매 중지된 상품입니다.</p>
-                            </c:otherwise>
-                        </c:choose>
 
-                        <span id="temperature" style="color: red; font-size: medium; float: right; margin-right: 3%; padding-top: 2%;">현재 온도: </span>
+
+                        <div style="margin-left: 30px;">
+                            <span>${product.like}</span>
+
+                            <c:choose>
+                                <c:when test="${product.enabled}">
+                                    <p style="font-size: small; color: blue; display: inline-block;">* 판매 중인 상품입니다.</p>
+                                </c:when>
+                                <c:otherwise>
+                                    <p style="font-size: small; color: red; display: inline-block">* 판매 중지된 상품입니다.</p>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <span id="temperature"
+                                  style="color: darkgreen; font-size: medium; float: right; margin-right: 3%; padding-top: 2%;">현재 온도: </span>
+                        </div>
                     </div>
                     <p>[${product.country}
                         - ${product.city}] ${product.name}${product.descriptions}</p>
@@ -356,7 +373,7 @@
                     </div>
                     <div class="tag-div">
                         <c:forEach var="tag" items="${product.tags}" varStatus="status">
-                            # ${tag.tag}&nbsp;&nbsp;
+                            <a class="tag-a" href="/guest/all/products/tag?tag=${tag.tag}"># ${tag.tag}</a>
                         </c:forEach>
                     </div>
                 </div>
@@ -625,7 +642,7 @@
     }
 
     /** 날씨 띄우기 */
-    document.addEventListener('DOMContentLoaded', function () {
+    $(document).ready(function () {
         var koreanCityName = '${product.city}';
         var englishCityName = cityNameToEnglish(koreanCityName);
         displayWeather(englishCityName);
@@ -635,26 +652,20 @@
     function displayWeather(englishCityName) {
         var apiUrl = 'http://localhost:8080/weather/' + englishCityName + '&units=metric';
 
-        fetch(apiUrl)
-            .then(function (response) {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('날씨 정보를 가져올 수 없습니다.');
-                }
-            })
-            .then(function (data) {
-                // 날씨 데이터를 처리하고 원하는 방식으로 표시
+        $.ajax({
+            url: apiUrl,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
                 console.log('날씨 데이터:', data);
-
-                // 온도를 가져와서 화면에 표시
                 var temperature = data.main.temp.toFixed(1); // 소수 첫 째 자리까지 제한
-                var temperatureElement = document.getElementById('temperature');
-                temperatureElement.innerText = '현재 온도: ' + temperature + '°C';
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
+                var temperatureElement = $('#temperature');
+                temperatureElement.text('현재 온도: ' + temperature + '°C');
+            },
+            error: function (xhr, status, error) {
+                console.error('오류:', error);
+            }
+        });
     }
 
     /** 도시 이름 -> 영어 변환 */

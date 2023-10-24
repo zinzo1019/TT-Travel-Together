@@ -3,7 +3,6 @@ package com.example.choyoujin.service;
 import com.example.choyoujin.dao.*;
 import com.example.choyoujin.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -256,11 +255,24 @@ public class TravelProductServiceImpl implements TravelProductService {
         return productDtos;
     }
 
+    /** 태그와 검색어로 여행 상품 가져오기 */
     @Override
     public PageImpl<ProductDto> findAllByTravelTagAndKeyword(String tag, String keyword, int page, int size) {
         int start = (page - 1) * size;
         int total = travelProductDao.countAllByTravelTagAndKeyword(tag, keyword); // 여행 상품 개수
         List<ProductDto> productDtos = travelProductDao.findAllByTravelTagAndKeyword(tag, keyword, start, size);
+        setImage(productDtos); // 이미지 Set
+        return new PageImpl<>(productDtos, org.springframework.data.domain.PageRequest.of(page -1, size), total);
+    }
+
+    /**
+     * 모든 여행 상품 리스트 가져오기 - 페이징 처리
+     */
+    @Override
+    public PageImpl<ProductDto> findAllProducts(int page, int size) {
+        int start = (page - 1) * size;
+        int total = travelProductDao.countAllProducts(); // 여행 상품 개수
+        List<ProductDto> productDtos = travelProductDao.findAllProductsWithPaging(start, size);
         setImage(productDtos); // 이미지 Set
         return new PageImpl<>(productDtos, org.springframework.data.domain.PageRequest.of(page -1, size), total);
     }

@@ -67,5 +67,4 @@
         WHERE (country LIKE '%' || #{keyword} || '%'
             OR city LIKE '%' || #{keyword} || '%')
     </select>
-
 </mapper>

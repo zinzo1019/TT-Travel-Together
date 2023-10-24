@@ -143,7 +143,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void saveRefund(RefundDto refundDto) {
         try {
-            refundPayment(refundDto); // 카카오페이 화불
+            refundPayment(refundDto); // 카카오페이 환불
             paymentDao.saveRefund(refundDto); // 환불 정보 저장
             updateEnabledByProductId(refundDto.getPaymentId(), false, refundDto.getReason()); // 여행 상품 사용 불가능 처리
         } catch (Exception e) {

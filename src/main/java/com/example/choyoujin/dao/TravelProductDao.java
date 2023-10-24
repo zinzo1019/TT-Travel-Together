@@ -31,4 +31,7 @@ public interface TravelProductDao {
     List<ProductDto> findAllByTravelTagAndKeyword(String tag, String keyword, int start, int size);
     List<ProductDto> findAllByTravelTags(String tag, int page, int size);
     int countAllByTravelTagAndKeyword(String tag, String keyword);
+    List<ProductDto> findAllProducts(int start, int size);
+    int countAllProducts();
+    List<ProductDto> findAllProductsWithPaging(int start, int size);
 }
