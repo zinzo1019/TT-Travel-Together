@@ -20,7 +20,7 @@ public class CountryService {
      * 모든 여행지 가져오기 - 페이징 처리
      */
     public Page<CountryDto> findAllCountriesOrderByLike(int page, int size) {
-        int start = (page - 1) * size;
+        int start = (page - 1) * size + 4;
         List<CountryDto> productDtos = countryDao.findAllCountriesOrderByLike(start, size);
         int total = countryDao.countAllContries();
         return new PageImpl<>(productDtos, PageRequest.of(page -1, size), total);

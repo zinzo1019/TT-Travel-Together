@@ -264,7 +264,6 @@
                             </a>
                         </c:forEach>
                     </div>
-
                     <!-- 페이징 처리 -->
                     <ul class="product-pagination pagination">
                         <c:forEach begin="1" end="${products.totalPages}" varStatus="status">
@@ -298,7 +297,6 @@
                             </a>
                         </c:forEach>
                     </div>
-
                     <!-- 페이징 처리 -->
                     <ul class="country-pagination pagination">
                         <c:forEach begin="1" end="${countries.totalPages-1}" varStatus="status">

@@ -154,7 +154,7 @@
                         <a href="../community/together/view?postId=${post.id}"
                            style="text-decoration: none; color: inherit;">
                             <div class="post">
-                                <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
+                                <p style="margin: 1% 0; color: red; font-weight: bold; font-size: 13px;">${post.recruitedNumber}명이 함께하고 있어요!</p>
                                 <h2>${post.title}</h2>
                                 <p>${post.content}</p>
                                 <!-- 만약 현재 사용자가 글의 작성자라면 '모집 마감하기' 버튼을 표시 -->
@@ -183,7 +183,7 @@
                         <a href="../community/together/view?postId=${post.id}"
                            style="text-decoration: none; color: inherit;">
                             <div class="post">
-                                <p style="margin: 1% 0">${post.recruitedNumber}명이 함께하고 있어요!</p>
+                                <p style="margin: 1% 0; color: red; font-weight: bold; font-size: 13px;">${post.recruitedNumber}명이 함께하고 있어요!</p>
                                 <h2>${post.title}</h2>
                                 <p>${post.content}</p>
                                 <button class="support-button">모집 마감</button>

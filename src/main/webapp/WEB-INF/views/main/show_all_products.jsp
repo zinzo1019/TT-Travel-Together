@@ -220,7 +220,7 @@
                 <div class="change-container">
                     <div class="img-container" style="height: 350px;">
                         <c:forEach var="product" items="${products.content}">
-                            <a href="/guest/product/detail?product_id=${product.id}" class="shadowed">
+                            <a href="/guest/product/detail?product_id=${product.id}" class="shadowed" style="flex: 0.25;">
                                 <div class="product-img" style="display: inline-block;">
                                     <img src="data:${product.type};base64,${product.encoding}">
                                     <div class="product-info">
@@ -245,7 +245,7 @@
                     </div>
                     <!-- 페이징 처리 -->
                     <ul class="pagination">
-                        <c:forEach begin="1" end="${products.totalPages-1}" varStatus="status">
+                        <c:forEach begin="1" end="${products.totalPages}" varStatus="status">
                             <li class="page-item">
                                 <a class="page-link" href="?page=${status.index}">${status.index}</a>
                             </li>

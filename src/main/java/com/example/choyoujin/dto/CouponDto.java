@@ -21,4 +21,5 @@ public class CouponDto {
     private String productName; // 여행 상품 이름
     private String country; // 나라
     private String city; // 도시
+    private int couponCount; // 쿠폰 개수
 }

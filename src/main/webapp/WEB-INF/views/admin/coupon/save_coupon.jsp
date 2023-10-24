@@ -185,6 +185,10 @@
                 <label>쿠폰 설명</label>
                 <input type="text" id="description">
             </div>
+            <div class="country-container" style="margin-top: 3%">
+                <label>쿠폰 개수</label>
+                <input type="number" id="coupon-count">
+            </div>
             <button class="search-button" id="submitButton">작성하기</button>
         </div>
     </div>
@@ -222,6 +226,7 @@
         var description = document.getElementById("description").value;
         var percentage = document.getElementById("percentage").value;
         var amount = document.getElementById("amount").value;
+        var couponCount = document.getElementById("coupon-count").value;
 
         // 여행 상품 아이디 담기
         var selectedProductIds = [];
@@ -262,15 +267,23 @@
         if (amount == "") {
             amount = 0;
         }
+        if (couponCount === "") {
+            alert("쿠폰의 개수를 입력해주세요.");
+            return false;
+        }
+        if (couponCount < 0 || couponCount > 300) {
+            alert("쿠폰 개수는 0개 이상 300이하여야 합니다.");
+            return false;
+        }
 
-        // 선택한 값을 서버로 전송 (AJAX 사용)
         var data = {
             productIds: selectedProductIds,
             percentage: percentage,
             amount: amount,
             name: name,
             description: description,
-            countryId: countryId
+            countryId: countryId,
+            couponCount: couponCount
         };
 
         $.ajax({

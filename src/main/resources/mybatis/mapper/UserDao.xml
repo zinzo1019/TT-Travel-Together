@@ -32,4 +32,12 @@
                 #{userDto.createDate})
     </insert>
 
+
+<!--    사용자 여행 태그 수정하기-->
+    <update id="updateTravelTag">
+        update
+        tb_user
+        set travel_tag = #{travelTag}
+        where id = #{userId}
+    </update>
 </mapper>

@@ -139,16 +139,16 @@
 
     .pagination .page-link {
         padding: 10px 15px;
-        border: 1px solid #ddd; /* Optional: Border style */
-        background-color: #f8f9fa; /* Optional: Background color */
-        color: #333; /* Optional: Text color */
-        border-radius: 4px; /* Optional: Rounded corners */
+        border: 1px solid #000; /* 검은 색 테두리 */
+        background-color: #000; /* 검은 배경색 */
+        color: #fff; /* 흰색 텍스트 */
+        border-radius: 4px; /* 둥근 모서리 */
     }
 
     .pagination .page-link:hover {
-        background-color: #333; /* Optional: Hover background color */
-        color: #fff; /* Optional: Hover text color */
-        border-color: #333; /* Optional: Hover border color */
+        background-color: #fff; /* Hover 시 배경색을 흰색으로 변경 */
+        color: #000; /* Hover 시 텍스트 색을 검은색으로 변경 */
+        border-color: #000; /* Hover 시 테두리 색을 검은색으로 변경 */
     }
 
     .pagination .page-item.active .page-link {
@@ -172,7 +172,6 @@
         border-bottom-right-radius: 4px;
     }
 </style>
-
 <body>
 <div class="content">
     <div class="main-container">
@@ -224,9 +223,9 @@
                 </div>
                 <!-- 페이징 처리 -->
                 <ul class="pagination">
-                    <c:forEach begin="2" end="${countries.totalPages}" varStatus="status">
+                    <c:forEach begin="1" end="${countries.totalPages-1}" varStatus="status">
                         <li class="page-item">
-                            <a class="page-link" href="?page=${status.index}">${status.index-1}</a>
+                            <a class="page-link" href="?page=${status.index}">${status.index}</a>
                         </li>
                     </c:forEach>
                 </ul>

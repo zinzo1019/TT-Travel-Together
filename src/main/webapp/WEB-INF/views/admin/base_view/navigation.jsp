@@ -67,8 +67,8 @@
 <nav>
     <ul>
         <li><a href="/admin">어디로 여행을 떠날까요?</a></li>
-        <li><a href="/guest/all/products" class="child-title">모든 여행지 둘러보기</a></li>
-        <li><a href="/guest/all/products/bytag" class="child-title">모든 여행지 태그별로 둘러보기</a></li>
+        <li><a href="/guest/all/products" class="child-title">모든 여행 상품 둘러보기</a></li>
+        <li><a href="/guest/all/products/bytag" class="child-title">모든 여행 상품 태그별로 둘러보기</a></li>
 
         <li class="parent-board">나의 여행지</li>
         <li><a href="/admin/my-travel-places" class="child-title">내가 등록한 여행지</a></li>

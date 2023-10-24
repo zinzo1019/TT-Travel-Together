@@ -63,8 +63,8 @@
 <nav>
     <ul>
         <li><a href="/">어디로 여행을 떠날까요?</a></li>
-        <li><a href="/guest/all/products" class="child-title">모든 여행지 둘러보기</a></li>
-        <li><a href="/guest/all/products/bytag" class="child-title">모든 여행지 태그별로 둘러보기</a></li>
+        <li><a href="/guest/all/products" class="child-title">모든 여행 상품 둘러보기</a></li>
+        <li><a href="/guest/all/products/bytag" class="child-title">모든 여행 상품 태그별로 둘러보기</a></li>
 
         <li class="parent-board">커뮤니티</li>
         <li><a href="/user/community/together" class="child-title">같이 여행 가요!</a></li>

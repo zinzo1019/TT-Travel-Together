@@ -19,6 +19,7 @@
         background-color: #333;
         color: white;
         z-index: 1000; /* 다른 요소 위에 레이어 표시 */
+        height: 30px;
     }
 
     /* 왼쪽 서비스 이름 스타일 */
@@ -55,7 +56,7 @@
 <%--    로그인 상태--%>
     <c:if test="${not empty pageContext.request.userPrincipal }">
         <div class="welcome-message">
-            <a href="" class="bold-white">${user.name}</a> 님, 반갑습니다!
+            <a href="/user/mypage/modify/user" class="bold-white">${user.name}</a> 님, 반갑습니다!
         </div>
     </c:if>
 <%--    로그아웃 상태--%>
@@ -65,7 +66,6 @@
         <button type="button" onclick="location.href='signup'">회원가입</button>
     </div>
     </c:if>
-
 </header>
 </body>
 

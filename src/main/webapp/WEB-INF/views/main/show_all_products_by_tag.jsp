@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <%@ include file="../base_view/header.jsp" %>
@@ -32,13 +32,13 @@
         padding: 20px; /* 적절한 여백 */
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
-        margin-bottom: 5%;
         overflow-y: auto; /* 네비게이션 바 내용이 화면을 벗어날 경우 스크롤 바 추가 */
     }
 
     .main-container {
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
+        margin-bottom: 5%;
     }
 
     /* 검색창 컨테이너 스타일 */
@@ -221,7 +221,8 @@
                     <div class="change-container">
                         <div class="img-container" style="height: 350px;">
                             <c:forEach var="product" items="${productsByTag.productDtos}">
-                                <a href="/guest/product/detail?product_id=${product.id}" class="shadowed" style="flex: 0.24;">
+                                <a href="/guest/product/detail?product_id=${product.id}" class="shadowed"
+                                   style="flex: 0.24;">
                                     <div class="product-img" style="display: inline-block;">
                                         <img src="data:${product.type};base64,${product.encoding}">
                                         <div class="product-info">
@@ -262,7 +263,6 @@
         </div>
     </div>
 </div>
-</div>
 <script>
     /** 최근 게시글 중 검색 */
     function search(event) {
@@ -270,7 +270,7 @@
         var keyword = document.getElementById('searchInput').value;
         $.ajax({
             type: 'POST',
-            url: 'products/search',
+            url: '../products/search',
             data: {"keyword": keyword},
             success: function (response) {
                 $("#main_search_result").html(response);

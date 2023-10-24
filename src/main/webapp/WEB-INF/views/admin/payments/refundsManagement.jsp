@@ -120,10 +120,8 @@
                             <a href="/guest/product/detail?product_id=${refund.productId}"
                                style="text-decoration: none; color: inherit;">
                                 <p style="font-weight: bold;">${refund.productName}</p>
-                                <fmt:formatNumber value="${refund.paidAmount}" pattern="#,###"/>원 -->
-                                <span style="color: red"><fmt:formatNumber value="${refund.cost}"
-                                                                           pattern="#,###"/>원</span>
-
+                                <fmt:formatNumber value="${refund.cost}" pattern="#,###"/>원 ->
+                                <span style="color: red"><fmt:formatNumber value="${refund.paidAmount}" pattern="#,###"/>원</span>
                                 <div style="margin-top: 15px;">
                                     <span style="font-weight: bold">환불 사유:</span>
                                     <span>${refund.refundReason}</span>

@@ -8,10 +8,10 @@
     <!--    쿠폰 저장하기-->
     <insert id="saveCoupon">
         insert into coupon
-        (name, description, code, discount_amount, discount_percentage, travel_product_id, tb_user_id)
+        (name, description, code, discount_amount, discount_percentage, travel_product_id, tb_user_id, coupon_count)
         values
         <foreach item="productId" collection="productIds" separator=",">
-            (#{name}, #{description}, #{code}, #{amount}, #{percentage}, #{productId}, #{userId})
+            (#{name}, #{description}, #{code}, #{amount}, #{percentage}, #{productId}, #{userId}, #{couponCount})
         </foreach>
     </insert>
 

@@ -23,4 +23,5 @@ public class UserDto {
     private int imageId;
     private byte[] picByte;
     private String type;
+    private String encoding;
 }

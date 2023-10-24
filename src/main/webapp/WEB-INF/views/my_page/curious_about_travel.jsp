@@ -149,7 +149,7 @@
                     <li class="post-list-item">
                         <a href="../community/curious/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
                             <div class="post">
-                                <p>${post.country} - ${post.city}</p>
+                                <p style="font-size: 13px; color: red; font-weight: bold;">${post.country} - ${post.city}</p>
                                 <h2>${post.title}</h2>
                                 <p style="margin: 3% 0">${post.content}</p>
                             </div>

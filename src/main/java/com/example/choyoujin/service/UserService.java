@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import java.io.IOException;
 import java.time.LocalDate;
 
+import static com.example.choyoujin.service.FileService.decompressBytes;
+
 @Service
 public class UserService {
 
@@ -30,7 +32,9 @@ public class UserService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             String email = ((UserDetails) principal).getUsername();
-            return findUserByEmail(email);
+            UserDto userDto = findUserByEmail(email);
+            userDto.setEncoding(decompressBytes(userDto.getPicByte())); // 이미지 압축 해제
+            return userDto;
         }
         return null;
     }
@@ -87,4 +91,9 @@ public class UserService {
         else return false;
     }
 
+    /** 사용자 여행 태그 수정하기 */
+    public void updateTravelTag(String travelTag) {
+        int userId = getUserData().getId();
+        userDao.updateTravelTag(userId, travelTag);
+    }
 }

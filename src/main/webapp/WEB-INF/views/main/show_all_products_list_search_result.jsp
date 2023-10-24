@@ -26,13 +26,12 @@
         float: left; /* 이미지를 왼쪽으로 띄움 */
         margin-right: 20px; /* 이미지 사이의 간격 설정 */
         flex: 1; /* 이미지가 늘어날 수 있도록 flex 속성을 설정 */
-        padding-right: 20px; /* 이미지와 텍스트 사이의 간격 설정 */
-        border-radius: 15px 0 0 15px;
     }
 
     .search-img img {
         width: 180px;
         height: 180px;
+        border-radius: 15px;
     }
 
     .search-text {
@@ -40,13 +39,17 @@
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
         font-size: large;
         font-weight: bold;
-        padding: 3% 3% 3% 0;
+        padding: 20px;
+        background-color: whitesmoke;
+        border-radius: 15px;
+        height: 140px;
     }
 
     .tag-div {
         flex: 2; /* 텍스트 영역이 이미지보다 더 넓게 설정 */
         align-self: flex-start; /* 텍스트를 세로로 맨 위에 정렬 */
-        font-size: medium;
+        font-size: small;
+        color: blue;
     }
 
     .like-img {
@@ -102,6 +105,7 @@
     </div>
     <br><br>
 </c:forEach>
+<br><br><br><br>
 <script>
     /** 최근 게시글 중 검색 */
     function search(event) {
@@ -109,7 +113,7 @@
         var keyword = document.getElementById('searchInput').value;
         $.ajax({
             type: 'POST',
-            url: 'products/search',
+            url: '../products/search',
             data: {"keyword": keyword},
             success: function (response) {
                 $("#main_search_result").html(response);

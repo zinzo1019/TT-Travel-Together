@@ -55,7 +55,7 @@ public class CouponController {
     }
 
     /**
-     * 쿠폰 등록하기 페이지
+     * 쿠폰 저장하기 페이지
      */
     @GetMapping("/save")
     public String saveCouponPage(Model model) {
@@ -64,7 +64,7 @@ public class CouponController {
         return "admin/coupon/save_coupon";
     }
 
-    /** 쿠폰 등록하기 - post action */
+    /** 쿠폰 저장하기 - post action */
     @PostMapping("/save")
     public ResponseEntity<String> saveCouponAction(CouponDto couponDto) {
         try {

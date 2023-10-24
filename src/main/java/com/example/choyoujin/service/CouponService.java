@@ -30,6 +30,9 @@ public class CouponService {
                 couponDto.setProductIds(productIds); // 여행 상품 Set
             }
             couponDto.setCode(String.valueOf(UUID.randomUUID())); // 쿠폰 코드 Set
+
+            System.out.println(couponDto.getCouponCount());
+
             couponDao.saveCoupon(couponDto);
         } catch (Exception e) {
             System.out.println(e.getMessage());
