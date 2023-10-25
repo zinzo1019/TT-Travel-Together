@@ -59,24 +59,16 @@
         padding: 10px;
         font-weight: bold;
     }
-
-    .dropdown-menu {
-        display: none;
-    }
 </style>
 <nav>
     <ul>
-        <li><a href="/admin">어디로 여행을 떠날까요?</a></li>
-        <li><a href="/guest/all/products" class="child-title">모든 여행 상품 둘러보기</a></li>
-        <li><a href="/guest/all/products/bytag" class="child-title">모든 여행 상품 태그별로 둘러보기</a></li>
+        <li class="parent-board">여행 상품 관리</li>
+        <li><a href="/admin/my-travel-places" class="child-title">내가 등록한 여행 상품</a></li>
+        <li><a href="/admin/my-travel-places/save" class="child-title">여행 상품 등록하기</a></li>
 
-        <li class="parent-board">나의 여행지</li>
-        <li><a href="/admin/my-travel-places" class="child-title">내가 등록한 여행지</a></li>
-        <li><a href="/admin/my-travel-places/save" class="child-title">여행지 등록하기</a></li>
-
-        <li class="parent-board">쿠폰</li>
+        <li class="parent-board">쿠폰 관리</li>
         <li><a href="/admin/coupon/all" class="child-title">모든 쿠폰</a></li>
-        <li><a href="/admin/coupon/my" class="child-title">나의 쿠폰</a></li>
+        <li><a href="/admin/coupon/my" class="child-title">내가 등록한 쿠폰</a></li>
         <li><a href="/admin/coupon/save" class="child-title">쿠폰 등록하기</a></li>
 
         <li class="parent-board">결제 관리</li>
@@ -94,30 +86,4 @@
     </ul>
 </nav>
 <script>
-    // $(document).ready(function () {
-    //     /** 드롭다운 토글 */
-    //     $(".dropdown-toggle").click(function () {
-    //         // 드롭다운 메뉴 슬라이드 토글
-    //         $(this).next(".dropdown-menu").slideToggle("fast");
-    //     });
-    //
-    //     // AJAX로 데이터 받아오기
-    //     $.ajax({
-    //         url: "/guest/all/tags",
-    //         method: "GET",
-    //         dataType: "json",
-    //         success: function (data) {
-    //             // 데이터를 받아왔으면 드롭다운 메뉴에 옵션을 추가
-    //             var dropdownMenu = $(".dropdown-menu");
-    //             // 데이터를 반복하면서 옵션을 생성하고 메뉴에 추가
-    //             data.forEach(function (tag) {
-    //                 var option = $("<a class='dropdown-item' href='/guest/all/products/tag?tag=" + tag.tag + "' style='margin-left: 20%;'>" + tag.tag + "</a>");
-    //                 dropdownMenu.append(option);
-    //             });
-    //         },
-    //         error: function (error) {
-    //             console.error("에러 발생: " + error);
-    //         }
-    //     });
-    // });
 </script>

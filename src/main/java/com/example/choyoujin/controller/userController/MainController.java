@@ -269,6 +269,7 @@ public class MainController {
      */
     @RequestMapping("/guest/signup-process")
     public String signUpProcess(UserDto userDto) {
+        // todo 유효성 처리
         int imageId = userService.saveImageAndGetImageId(userDto); // 이미지 저장
         userService.saveUser(userDto, "ROLE_USER", 1, imageId); // 사용자 저장
         return "login";

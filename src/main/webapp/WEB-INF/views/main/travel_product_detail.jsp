@@ -319,8 +319,6 @@
                                 <img src='/images/empty-like.png' class="like-img">
                             </a>
                         </c:if>
-
-
                         <div style="margin-left: 30px;">
                             <span>${product.like}</span>
 
@@ -534,7 +532,7 @@
     $("#couponButton").on("click", function () {
         var couponId = $('#coupons').val(); // 쿠폰 아이디
         if (couponId == 0) { // 선택 없음
-            pdatedCost = ${product.cost}; // 할인가
+            updatedCost = ${product.cost}; // 할인가
             var formattedCost = new Intl.NumberFormat('ko-KR', {
                 style: 'currency',
                 currency: 'KRW'

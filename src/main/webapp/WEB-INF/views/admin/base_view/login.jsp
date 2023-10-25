@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+    <title>관리자 로그인</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -71,13 +71,12 @@
 <div class="login-container">
     <form action="/login" method="post">
         <c:if test="${param.error != null}">
-        <p>
-            로그인 실패 <br/>
-                ${error_message}
-        </p>
+            <p>
+                로그인 실패 <br/>
+                    ${error_message}
+            </p>
         </c:if>
-
-    <h2>로그인</h2>
+        <h2>로그인</h2>
         <div class="form-group">
             <label for="email">이메일</label>
             <input type="text" id="email" name="email" required>

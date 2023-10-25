@@ -142,6 +142,14 @@ public class AdminMainController {
     }
 
     /**
+     * 관리자 로그인 페이지
+     */
+    @RequestMapping("/login/admin")
+    public String loginPage() {
+        return "admin/base_view/login";
+    }
+
+    /**
      * Pagination 생성
      */
     public static Pagination getPagination() {
