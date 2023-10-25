@@ -565,11 +565,7 @@
         }
     });
 
-    /** 결제 하기 버튼 글릭 시 */
-    const buyButton = document.getElementById('payment')
-    buyButton.setAttribute('onclick', `kakaoPay()`)
-
-    var IMP = window.IMP;
+    /** 결제 금액 변경되지 않도록 */
 
     function generateUniqueMerchantUid() {
         var today = new Date();
@@ -580,65 +576,230 @@
         return hours + "" + minutes + "" + seconds + "" + milliseconds; // 고유한 값
     }
 
-    function kakaoPay() {
-        if (!${product.enabled}) { // 판매 중지 여부 확인
+    /** 결제하기 버튼 글릭 시 */
+    const buyButton = document.getElementById('payment')
+    buyButton.setAttribute('onclick', `handleKakaoPay()`)
+
+
+    /** 결제하기 로직 - 비동기 처리 */
+    // async 함수 -> Promise 반환
+    // Promise는 비동기 작업이 완료되기를 기다릴 수 있게 함
+    async function handleKakaoPay() {
+        try {
+            const paymentResponse = await KakaoPay();
+        } catch (error) {
+            alert("결제에 실패했습니다.");
+            console.error("Payment Error:", error);
+        }
+    }
+
+    <%--var IMP = window.IMP;--%>
+
+    <%--function KakaoPay() {--%>
+    <%--    if (!${product.enabled}) { // 판매 중지 여부 확인--%>
+    <%--        alert("판매 중지된 상품입니다.\n다음에 다시 이용해주세요.");--%>
+    <%--        return;--%>
+    <%--    }--%>
+    <%--    if (confirm("구매하시겠습니까?")) {--%>
+    <%--        if ("${user.email}" != "") { // 로그인 후--%>
+    <%--            return new Promise((resolve, reject) => {--%>
+    <%--                var merchantUid = "IMP" + generateUniqueMerchantUid();--%>
+    <%--                IMP.init("imp75526378");--%>
+    <%--                IMP.request_pay({--%>
+    <%--                    pg: 'kakaopay.TC0ONETIME',--%>
+    <%--                    pay_method: 'card',--%>
+    <%--                    merchant_uid: merchantUid,--%>
+    <%--                    productId: ${product.id},--%>
+    <%--                    name: "${product.name}",--%>
+    <%--                    amount: updatedCost,--%>
+    <%--                    buyer_email: `${user.email}`,--%>
+    <%--                    buyer_name: `${user.name}`--%>
+    <%--                }, async function (rsp) {--%>
+    <%--                    if (rsp.success) { // 카카오페이 결제 성공--%>
+    <%--                        console.log(rsp);--%>
+    <%--                        resolve(rsp);--%>
+    <%--                        if ("${user.id}" === "")--%>
+    <%--                            userId = 0;--%>
+    <%--                        else--%>
+    <%--                            userId =--%>
+    <%--                        ${user.id}--%>
+
+    <%--                        /** 쿠폰 동시성 처리 */--%>
+    <%--                        var couponId = $('#coupons').val(); // 쿠폰 아이디--%>
+    <%--                        if (couponId != 0) { // 쿠폰 적용--%>
+    <%--                            $.ajax({--%>
+    <%--                                type: "POST",--%>
+    <%--                                url: "/user/product/payment/coupon",--%>
+    <%--                                data: {--%>
+    <%--                                    impUid: rsp.imp_uid,--%>
+    <%--                                    pgTid: rsp.pg_tid,--%>
+    <%--                                    productId: ${product.id},--%>
+    <%--                                    userId: userId,--%>
+    <%--                                    paidAmount: rsp.paid_amount,--%>
+    <%--                                    couponId: couponId--%>
+    <%--                                },--%>
+    <%--                                success: function (response) {--%>
+    <%--                                    alert("good coupon")--%>
+    <%--                                },--%>
+    <%--                                error: function (xhr, status, error) {--%>
+    <%--                                    alert("bad coupon")--%>
+    <%--                                }--%>
+    <%--                            });--%>
+    <%--                        }--%>
+
+    <%--                        /** 결제 db에 저장 */--%>
+    <%--                        $.ajax({--%>
+    <%--                            type: "POST",--%>
+    <%--                            url: "/user/product/payment",--%>
+    <%--                            data: {--%>
+    <%--                                impUid: rsp.imp_uid,--%>
+    <%--                                productId: ${product.id},--%>
+    <%--                                userId: userId,--%>
+    <%--                                merchantUid: rsp.merchant_uid,--%>
+    <%--                                paidAmount: rsp.paid_amount,--%>
+    <%--                                paidAt: rsp.paid_at,--%>
+    <%--                                pgProvider: rsp.pg_provider,--%>
+    <%--                                pgTid: rsp.pg_tid,--%>
+    <%--                                receiptUrl: rsp.receipt_url--%>
+    <%--                            },--%>
+    <%--                            success: function (response) {--%>
+    <%--                                alert("결제가 완료됐습니다.");--%>
+    <%--                            },--%>
+    <%--                            error: function (xhr, status, error) {--%>
+    <%--                                alert("결제에 실패했습니다.");--%>
+    <%--                            }--%>
+    <%--                        });--%>
+    <%--                    } else if (rsp.success == false) {--%>
+    <%--                        alert(rsp.error_msg);--%>
+    <%--                    }--%>
+    <%--                });--%>
+    <%--            });--%>
+    <%--        } else { // 로그인 전--%>
+    <%--            alert('로그인이 필요한 서비스입니다.');--%>
+    <%--            window.location.href = '/login';--%>
+    <%--        }--%>
+    <%--    } else {--%>
+    <%--        return false;--%>
+    <%--    }--%>
+    <%--}--%>
+
+    <%--async function handleKakaoPay() {--%>
+    <%--    try {--%>
+    <%--        const paymentResponse = await KakaoPay();--%>
+    <%--        // 여기에 결제 성공 처리 로직을 추가--%>
+    <%--        console.log("Payment Success:", paymentResponse);--%>
+    <%--    } catch (error) {--%>
+    <%--        // 여기에 결제 실패 처리 로직을 추가--%>
+    <%--        console.error("Payment Error:", error);--%>
+    <%--    }--%>
+    <%--}--%>
+
+    var IMP = window.IMP;
+
+    async function KakaoPay() {
+        if (!${product.enabled}) {
             alert("판매 중지된 상품입니다.\n다음에 다시 이용해주세요.");
             return;
         }
-        if (confirm("구매하시겠습니까?")) {
-            if ("${user.email}" != "") { // 로그인 후
-                var merchantUid = "IMP" + generateUniqueMerchantUid();
-                IMP.init("imp75526378");
-                IMP.request_pay({
-                    pg: 'kakaopay.TC0ONETIME',
-                    pay_method: 'card',
-                    merchant_uid: merchantUid,
-                    productId: ${product.id},
-                    name: "${product.name}",
-                    amount: updatedCost,
-                    buyer_email: `${user.email}`,
-                    buyer_name: `${user.name}`
-                }, async function (rsp) {
-                    if (rsp.success) {
-                        console.log(rsp);
-                        if ("${user.id}" === "")
-                            userId = 0;
-                        else
-                            userId = ${user.id}
 
-                                /** 결제 db에 저장 */
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/user/product/payment",
-                                    data: {
-                                        impUid: rsp.imp_uid,
-                                        productId: ${product.id},
-                                        userId: userId,
-                                        merchantUid: rsp.merchant_uid,
-                                        paidAmount: rsp.paid_amount,
-                                        paidAt: rsp.paid_at,
-                                        pgProvider: rsp.pg_provider,
-                                        pgTid: rsp.pg_tid,
-                                        receiptUrl: rsp.receipt_url
-                                    },
-                                    success: function (response) {
-                                        alert("결제가 완료됐습니다.");
-                                    },
-                                    error: function (xhr, status, error) {
-                                        alert("결제에 실패했습니다.");
-                                    }
-                                });
-                    } else if (rsp.success == false) {
-                        alert(rsp.error_msg);
+        if (confirm("구매하시겠습니까?")) {
+            if ("${user.email}" !== "") {
+                try {
+                    const paymentResponse = await requestKakaoPay();
+                    console.log(paymentResponse);
+                    const userId = "${user.id}" === "" ? 0 : ${user.id};
+                    const couponId = $('#coupons').val();
+                    if (couponId !== 0) {
+                        // await - Promise가 처리될 때까지 실행을 일시 중지
+                        await applyCoupon(paymentResponse, userId, couponId);
+                        alert("good coupon");
                     }
-                });
-            } else { // 로그인 전
+                    await savePaymentToDatabase(paymentResponse, userId);
+                    alert("결제가 완료됐습니다.");
+                } catch (error) {
+                    alert("결제에 실패했습니다.");
+                    console.error(error);
+                }
+            } else {
                 alert('로그인이 필요한 서비스입니다.');
                 window.location.href = '/login';
             }
         } else {
             return false;
         }
+    }
+
+    function requestKakaoPay() {
+        return new Promise((resolve, reject) => {
+            const merchantUid = "IMP" + generateUniqueMerchantUid();
+
+            IMP.init("imp75526378");
+            IMP.request_pay({
+                pg: 'kakaopay.TC0ONETIME',
+                pay_method: 'card',
+                merchant_uid: merchantUid,
+                productId: ${product.id},
+                name: "${product.name}",
+                amount: updatedCost,
+                buyer_email: `${user.email}`,
+                buyer_name: `${user.name}`
+            }, function (rsp) {
+                if (rsp.success) {
+                    resolve(rsp);
+                } else {
+                    reject(new Error(rsp.error_msg));
+                }
+            });
+        });
+    }
+
+    function applyCoupon(paymentResponse, userId, couponId) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: "/user/product/payment/coupon",
+                data: {
+                    impUid: paymentResponse.imp_uid,
+                    pgTid: paymentResponse.pg_tid,
+                    productId: ${product.id},
+                    userId: userId,
+                    paidAmount: paymentResponse.paid_amount,
+                    couponId: couponId
+                },
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (xhr, status, error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    function savePaymentToDatabase(paymentResponse, userId) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "POST",
+                url: "/user/product/payment",
+                data: {
+                    impUid: paymentResponse.imp_uid,
+                    productId: ${product.id},
+                    userId: userId,
+                    merchantUid: paymentResponse.merchant_uid,
+                    paidAmount: paymentResponse.paid_amount,
+                    paidAt: paymentResponse.paid_at,
+                    pgProvider: paymentResponse.pg_provider,
+                    pgTid: paymentResponse.pg_tid,
+                    receiptUrl: paymentResponse.receipt_url
+                },
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (xhr, status, error) {
+                    reject(error);
+                }
+            });
+        });
     }
 
     /** 날씨 띄우기 */
@@ -650,7 +811,7 @@
 
     // 날씨 정보를 가져와서 표시하는 함수
     function displayWeather(englishCityName) {
-        var apiUrl = 'http://localhost:8080/weather/' + englishCityName + '&units=metric';
+        var apiUrl = 'http://localhost:8080/guest/weather/' + englishCityName + '&units=metric';
 
         $.ajax({
             url: apiUrl,

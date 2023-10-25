@@ -2,6 +2,7 @@ package com.example.choyoujin.controller.userController;
 
 import com.example.choyoujin.dto.PaymentDto;
 import com.example.choyoujin.dto.RefundDto;
+import com.example.choyoujin.service.CouponService;
 import com.example.choyoujin.service.PaymentService;
 import com.example.choyoujin.service.PaymentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class PaymentController {
 
     @Autowired
     private PaymentServiceImpl paymentService;
+    @Autowired
+    private CouponService couponService;
 
     /** 여행 상품 결제하기 */
     @PostMapping("/product/payment")
@@ -27,6 +30,18 @@ public class PaymentController {
             return ResponseEntity.ok("결제가 완료됐습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("결제에 실패했습니다");
+        }
+    }
+
+    /** 여행 상품 쿠폰 사용 -  동시성 처리하기 */
+    @PostMapping("/product/payment/coupon")
+    public ResponseEntity<String> couponCount(PaymentDto paymentDto) {
+        try {
+            couponService.updateCouponCount(paymentDto.getCouponId());
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
         }
     }
 

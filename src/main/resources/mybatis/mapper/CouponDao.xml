@@ -148,4 +148,10 @@
                            on c.travel_product_id = tp.id
         where c.travel_product_id = #{productId}
     </select>
+
+    <update id="updateCouponCount">
+        update coupon c
+        set coupon_count = coupon_count - 1
+        where id = #{couponId}
+    </update>
 </mapper>
