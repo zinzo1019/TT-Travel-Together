@@ -71,14 +71,14 @@
 <h1>"${keyword}"에 대한 ${fn:length(products)}건의 여행지가 있어요!</h1>
 <c:forEach var="product" items="${products}">
     <div class="search-img-container">
-        <a href="/guest/product/detail?product_id=${product.id}"
+        <a href="/guest/product/detail?product_id=${product.travelProductId}"
            style="text-decoration: none; color: inherit;">
             <div class="search-img">
                 <img src="data:${product.type};base64,${product.encoding}">
             </div>
         </a>
         <div class="search-text">
-            <a href="/guest/product/detail?product_id=${product.id}"
+            <a href="/guest/product/detail?product_id=${product.travelProductId}"
                style="text-decoration: none; color: inherit;">
                 <p style="font-size: small; color: red;">${product.country} - ${product.city}</p>
                 <p style="margin-bottom: 2%; font-size: large; font-weight: bold;">${product.name}${product.descriptions}</p>

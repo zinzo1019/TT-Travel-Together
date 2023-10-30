@@ -193,8 +193,8 @@
                     productsSelect.append($('<option>', {value: 0, text: '전체'}));
                     data.products.forEach(function (product) {
                         productsSelect.append($('<option>', {
-                            value: product.id,
-                            text: '[' + product.id + '] ' + product.name
+                            value: product.travelProductId,
+                            text: '[' + product.travelProductId + '] ' + product.name
                         }));
                     });
                 },
@@ -234,7 +234,7 @@
 
         // 선택한 값을 서버로 전송 (AJAX 사용)
         var data = {
-            id: ${coupon.id},
+            id: ${coupon.couponId},
             percentage: percentage,
             amount: amount,
             name: name,

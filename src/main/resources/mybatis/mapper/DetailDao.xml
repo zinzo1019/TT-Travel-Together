@@ -20,6 +20,6 @@
 
     <delete id="deleteOneById">
         delete from travel_product_detail
-        where id = #{id}
+        where travel_product_detail_id = #{id}
     </delete>
 </mapper>

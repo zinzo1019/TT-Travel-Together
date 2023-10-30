@@ -6,7 +6,7 @@
 <mapper namespace="com.example.choyoujin.dao.TravelTagsDao">
 
     <select id="findAllTags" resultType="com.example.choyoujin.dto.TagDto">
-        select *
+        select travel_tags_id as tagId, *
         from travel_tags
     </select>
 
@@ -18,7 +18,7 @@
     </insert>
 
     <select id="findOneByTag" resultType="com.example.choyoujin.dto.TagDto">
-        select *
+        select travel_tags_id as tagId, *
         from travel_tags
         where tag = #{tag}
     </select>

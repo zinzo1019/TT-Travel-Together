@@ -12,7 +12,7 @@
 <ul class="post-list">
     <c:forEach var="post" items="${posts}">
         <li class="post-list-item">
-            <a href="curious/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+            <a href="curious/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
                 <div class="post">
                     <h2>${post.title}</h2>
                     <p style="margin: 3% 0">${post.content}</p>

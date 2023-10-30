@@ -7,38 +7,38 @@
 
     <!--    모든 나라 가져오기-->
     <select id="findAllCountries" resultType="com.example.choyoujin.dto.CountryDto">
-        select id as countryId, *
+        select *
         from country
     </select>
 
     <!--    나라 아이디로 나라 데이터 가져오기-->
     <select id="findCountryByCountryId" resultType="com.example.choyoujin.dto.CountryDto">
-        select id as countryId, *
+        select *
         from country
-        where id = #{countryId}
+        where country_id = #{countryId}
     </select>
 
     <!--    모든 나라 개수 세기-->
     <select id="countAllContries" resultType="int">
-        select count(id)
+        select count(country_id)
         from country
     </select>
 
     <!--    나라별 좋아요가 많은 순으로 상위 4개 나라 가져오기-->
     <select id="find4CountriesByCountryLike" resultType="com.example.choyoujin.dto.CountryDto">
-        SELECT COALESCE(SUM(tp.like), 0) AS totalLikes, c.id as countryId, c.country, c.city, c.image
+        SELECT COALESCE(SUM(tp.like), 0) AS totalLikes, c.country_id, c.country, c.city, c.image
         FROM country c
-                 LEFT JOIN travel_product tp ON c.id = tp.country_id
-        GROUP BY c.id
+                 LEFT JOIN travel_product tp ON c.country_id = tp.country_id
+        GROUP BY c.country_id
         ORDER BY totalLikes DESC LIMIT 4;
     </select>
 
     <!--    나라별 좋아요가 많은 순으로 모든 나라 가져오기-->
     <select id="findAllCountriesOrderByLike" resultType="com.example.choyoujin.dto.CountryDto">
-        SELECT COALESCE(SUM(tp.like), 0) AS totalLikes, c.id as countryId, c.country, c.city, c.image
+        SELECT COALESCE(SUM(tp.like), 0) AS totalLikes, c.country_id, c.country, c.city, c.image
         FROM country c
-                 LEFT JOIN travel_product tp ON c.id = tp.country_id
-        GROUP BY c.id
+                 LEFT JOIN travel_product tp ON c.country_id = tp.country_id
+        GROUP BY c.country_id
         ORDER BY totalLikes DESC
             LIMIT #{size}
         OFFSET #{start}
@@ -46,12 +46,12 @@
 
     <!-- 메인 페이지 - 나라 검색 -->
     <select id="findAllCountriesByKeyword" resultType="com.example.choyoujin.dto.CountryDto">
-        SELECT MAX(tp.id) AS id, c.id AS countryId, c.*, SUM(tp.like) AS totalLikes
+        SELECT MAX(tp.country_id) AS countryId, c.*, SUM(tp.like) AS totalLikes
         FROM country c
-                 LEFT JOIN travel_product tp ON c.id = tp.country_id
+                 LEFT JOIN travel_product tp ON country.id = tp.country_id
         WHERE (c.country LIKE '%' || #{keyword} || '%'
             OR c.city LIKE '%' || #{keyword} || '%')
-        GROUP BY c.id
+        GROUP BY c.country_id
         ORDER BY CASE
                      WHEN SUM(tp.like) IS NULL THEN 1
                      else 0
@@ -62,7 +62,7 @@
 
     <!-- 메인 페이지 - 나라 검색 결과 개수 -->
     <select id="countAllCountriesByKeyword" resultType="int">
-        SELECT COUNT(id)
+        SELECT COUNT(country_id)
         FROM country
         WHERE (country LIKE '%' || #{keyword} || '%'
             OR city LIKE '%' || #{keyword} || '%')

@@ -7,7 +7,7 @@
 
     <!--    아이디로 사용자 사진 찾기-->
     <select id="findImageById" resultType="com.example.choyoujin.dto.ImageDto">
-        select *
+        select tb_user_image_id as imageId, *
         from tb_user_image
         where id = #{id}
     </select>
@@ -30,25 +30,25 @@
             set name = #{name},
                 type = #{type},
                 pic_byte = #{picByte}
-        where id = #{id}
+        where travel_product_image_id = #{imageId}
     </update>
 
     <!--    이메일로 이미지 찾기-->
     <select id="findIdByEmail" resultType="com.example.choyoujin.dto.ImageDto">
-        select id
+        select tb_user_image_id as imageId, *
         from tb_user_image
         where tb_user_email = #{email}
     </select>
 
     <!--    사용자 - 가장 최근 이미지 아이디 가져오기-->
     <select id="findLastImageId" resultType="_int">
-        SELECT max(id)
+        SELECT max(tb_user_image_id)
         FROM tb_user_image
     </select>
 
     <!--    여행 상품 - 가장 최근 이미지 아이디 가져오기-->
     <select id="findLastTravelProductImageId" resultType="_int">
-        SELECT max(id)
+        SELECT max(travel_product_image_id)
         FROM travel_product_image
     </select>
 </mapper>

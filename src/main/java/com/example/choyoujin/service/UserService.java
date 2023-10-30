@@ -86,13 +86,13 @@ public class UserService {
      * 게시글 작성자와 로그인자 비교
      */
     public boolean compareWriterAndUser(int writerId) {
-        if (writerId == getUserData().getId()) return true;
+        if (writerId == getUserData().getUserId()) return true;
         else return false;
     }
 
     /** 사용자 여행 태그 수정하기 */
     public void updateTravelTag(String travelTag) {
-        int userId = getUserData().getId();
+        int userId = getUserData().getUserId();
         userDao.updateTravelTag(userId, travelTag);
     }
 }

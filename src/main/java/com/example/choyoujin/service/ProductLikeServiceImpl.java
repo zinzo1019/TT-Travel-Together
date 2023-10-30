@@ -20,7 +20,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     @Override
     public void saveProductLike(int productId) throws Exception {
         try {
-            productLikeDao.saveProductLike(productId, userService.getUserData().getId()); // 좋아요 저장
+            productLikeDao.saveProductLike(productId, userService.getUserData().getUserId()); // 좋아요 저장
             productService.plusLike(productId); // 좋아요 수 늘리기
         } catch (Exception e) {
             throw new Exception("좋아요 저장 중 오류가 발생했습니다.");
@@ -33,7 +33,7 @@ public class ProductLikeServiceImpl implements ProductLikeService {
     @Override
     public void deleteProductLike(int productId) throws Exception {
         try {
-            productLikeDao.deleteProductLike(productId, userService.getUserData().getId()); // 좋아요 취소
+            productLikeDao.deleteProductLike(productId, userService.getUserData().getUserId()); // 좋아요 취소
             productService.plusUnLike(productId); // 좋아요 수 줄이기
         } catch (Exception e) {
             throw new Exception("좋아요 취소 중 오류가 발생했습니다.");

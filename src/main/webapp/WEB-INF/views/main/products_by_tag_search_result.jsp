@@ -7,7 +7,7 @@
     <div class="change-container">
         <div class="img-container" style="height: 350px;">
             <c:forEach var="product" items="${products.content}">
-                <a href="/guest/product/detail?product_id=${product.id}" class="shadowed"
+                <a href="/guest/product/detail?product_id=${product.travelProductId}" class="shadowed"
                    style="flex: 0.235;">
                     <div class="product-img" style="display: inline-block;">
                         <img src="data:${product.type};base64,${product.encoding}">

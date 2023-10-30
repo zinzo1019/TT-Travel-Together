@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ImageDto {
-    private int id;
+    private int imageId;
     private String name;
     private String type;
     private byte[] picByte;
@@ -19,7 +19,7 @@ public class ImageDto {
     }
 
     public ImageDto(int imageId, String name, String type, byte[] picByte) {
-        this.id = imageId;
+        this.imageId = imageId;
         this.name = name;
         this.type = type;
         this.picByte = picByte;

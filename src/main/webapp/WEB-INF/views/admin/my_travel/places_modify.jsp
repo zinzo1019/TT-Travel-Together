@@ -188,7 +188,7 @@
                     <c:forEach items="${product.detailDescriptions}" var="description">
                         <div>
                             <p>${description.description}</p>
-                            <button class="delete-button" data-description-id=${description.id}>X</button>
+                            <button class="delete-button description-delete-button" data-description-id=${description.travelProductDetailId}>X</button>
                         </div>
                     </c:forEach>
                 </div>
@@ -204,7 +204,7 @@
                     <c:forEach items="${product.tags}" var="tag">
                         <div>
                             <p>${tag.tag}</p>
-                            <button class="delete-button" data-tag-id=${tag.productTagId}>X</button>
+                            <button class="delete-button tag-delete-button" data-tag-id=${tag.productTagId}>X</button>
                         </div>
                     </c:forEach>
                 </div>
@@ -271,7 +271,7 @@
     });
 
     /** 설명 삭제 */
-    $(".delete-button").click(function () {
+    $(".description-delete-button").click(function () {
         const descriptionId = $(this).data("description-id");
         $.ajax({
             url: "delete/description?description_id=" + descriptionId,
@@ -285,7 +285,7 @@
     });
 
     /** 태그 삭제 */
-    $(".delete-button").click(function () {
+    $(".tag-delete-button").click(function () {
         const tagId = $(this).data("tag-id");
         $.ajax({
             url: "delete/tag?tag_id=" + tagId,
@@ -338,12 +338,12 @@
             return false;
         } else { // 게시글 저장
             var formData = new FormData();
-            formData.append("id", ${product.id}); // 여행 상품 아이디
+            formData.append("travelProductId", ${product.travelProductId}); // 여행 상품 아이디
             formData.append("countryId", countryValue); // 나라 아이디
             formData.append("cost", cost);
             formData.append("productName", name);
             formData.append("description", description);
-            formData.append("userId", ${user.id});
+            formData.append("userId", ${user.userId});
             formData.append("stringDetailDescriptions", descriptionsData);
             formData.append("stringTags", tagsData);
 

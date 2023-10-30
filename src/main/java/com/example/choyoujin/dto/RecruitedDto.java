@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class RecruitedDto {
-    private int id;
+    private int recruitedId;
     private int userId;
     private String userEamil;
     private int postId;

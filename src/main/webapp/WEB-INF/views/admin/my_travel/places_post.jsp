@@ -278,7 +278,7 @@
             formData.append("cost", cost);
             formData.append("productName", name);
             formData.append("description", description);
-            formData.append("userId", ${user.id});
+            formData.append("userId", ${user.userId});
             formData.append("stringDetailDescriptions", descriptionsData);
             formData.append("stringTags", tagsData);
             formData.append("image", $("#imageInput")[0].files[0]);

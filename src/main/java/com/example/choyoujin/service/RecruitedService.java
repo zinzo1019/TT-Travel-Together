@@ -34,10 +34,10 @@ public class RecruitedService {
     /** 모집글에 지원하기 */
     public void applyToRecruitment(int postId) throws Exception {
         // 이미 지원한 모집글인지 확인
-        RecruitedDto recruitedDto = findOneByPostIdAndUserId(userService.getUserData().getId(), postId); // 모집 db에서 지원 데이터 찾기
+        RecruitedDto recruitedDto = findOneByPostIdAndUserId(userService.getUserData().getUserId(), postId); // 모집 db에서 지원 데이터 찾기
         if (recruitedDto != null) throw new Exception("이미 지원한 모집글입니다."); // 이미 데이터가 있다면 이미 지원한 모집글 -> 에러 던지기
         togetherService.updateRecruitedNumber(postId); // 지원자 수 +1 증가
-        saveRecruitedMember(userService.getUserData().getId(), postId); // 지원자 저장
+        saveRecruitedMember(userService.getUserData().getUserId(), postId); // 지원자 저장
 
         // 모집 인원이 다 찼다면 모집 마감 처리
         PostDto postDto = togetherService.findOneByPostId(postId);
@@ -50,6 +50,6 @@ public class RecruitedService {
     /** 모집글에 지원 취소하기 */
     public void caneclToRecruitment(int postId) {
         togetherService.cancelRecruitedNumber(postId); // 지원자 수 -1 감소
-        deleteRecruitedMember(userService.getUserData().getId(), postId); // 지원자 삭제
+        deleteRecruitedMember(userService.getUserData().getUserId(), postId); // 지원자 삭제
     }
 }

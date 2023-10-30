@@ -18,8 +18,6 @@ public interface PaymentDao {
     void saveRefund(RefundDto refundDto);
     void updateNotAvailableByProductId(int paymentId, boolean enabled, String reason);
     List<PaymentDto> findAllByUserId(int userId);
-    Map<String, Integer> countPaymentByMonth();
-    Map<String, Integer> countRefundByMonth();
     int countPaymentBy6Month();
     int countRefundBy6Month();
     List<StatisticsDto> countPaymentsByProduct();

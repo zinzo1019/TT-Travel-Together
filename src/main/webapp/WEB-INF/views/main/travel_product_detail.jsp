@@ -346,12 +346,12 @@
                                 <c:forEach items="${product.coupons}" var="coupon">
                                     <c:choose>
                                         <c:when test="${coupon.percentage > 0}">
-                                            <option value="${coupon.id}">
+                                            <option value="${coupon.couponId}">
                                                     ${coupon.name} ---> ${coupon.percentage}% 할인
                                             </option>
                                         </c:when>
                                         <c:when test="${coupon.amount > 0}">
-                                            <option value="${coupon.id}">
+                                            <option value="${coupon.couponId}">
                                                     ${coupon.name} ---> ${coupon.amount} 원 할인
                                             </option>
                                         </c:when>
@@ -395,9 +395,9 @@
                             <p>${comment.content}</p>
                             <button class="reply-button" style="margin-top: 0%">답글 달기</button>
                             <c:choose>
-                                <c:when test="${comment.userId eq user.id}">
+                                <c:when test="${comment.userId eq user.userId}">
                                     <button class="reply-button delete-button" style="margin-top: 0%; color: red;"
-                                            data-comment-id="${comment.id}">삭제
+                                            data-comment-id="${comment.commentId}">삭제
                                     </button>
                                 </c:when>
                             </c:choose>
@@ -405,7 +405,7 @@
                         <!-- 대댓글 입력 칸 (초기에는 숨김) -->
                         <div class="reply-form" style="display: none;">
                             <textarea class="reply-textarea" placeholder="대댓글을 입력하세요"></textarea>
-                            <button class="submit-reply-button submit-comment-button" data-comment-id="${comment.id}">
+                            <button class="submit-reply-button submit-comment-button" data-comment-id="${comment.commentId}">
                                 대댓글 작성
                             </button>
                         </div>
@@ -450,7 +450,7 @@
     function likeAction(url) {
         $.ajax({
             type: "POST",
-            url: url + "?product_id=" + ${product.id},
+            url: url + "?product_id=" + ${product.travelProductId},
             success: function (data) {
                 window.location.reload();
             },
@@ -470,7 +470,7 @@
                 url: "comment",
                 data: {
                     content: content,
-                    productId: ${product.id},
+                    productId: ${product.travelProductId},
                     parentCommentId: 0 // 부모 댓글이라는 의미
                 },
                 success: function (response) {
@@ -499,7 +499,7 @@
                 method: "POST",
                 data: {
                     content: content,
-                    productId: ${product.id},
+                    productId: ${product.travelProductId},
                     parentCommentId: commentId
                 },
                 success: function (data) {
@@ -591,109 +591,7 @@
         }
     }
 
-    <%--var IMP = window.IMP;--%>
-
-    <%--function KakaoPay() {--%>
-    <%--    if (!${product.enabled}) { // 판매 중지 여부 확인--%>
-    <%--        alert("판매 중지된 상품입니다.\n다음에 다시 이용해주세요.");--%>
-    <%--        return;--%>
-    <%--    }--%>
-    <%--    if (confirm("구매하시겠습니까?")) {--%>
-    <%--        if ("${user.email}" != "") { // 로그인 후--%>
-    <%--            return new Promise((resolve, reject) => {--%>
-    <%--                var merchantUid = "IMP" + generateUniqueMerchantUid();--%>
-    <%--                IMP.init("imp75526378");--%>
-    <%--                IMP.request_pay({--%>
-    <%--                    pg: 'kakaopay.TC0ONETIME',--%>
-    <%--                    pay_method: 'card',--%>
-    <%--                    merchant_uid: merchantUid,--%>
-    <%--                    productId: ${product.id},--%>
-    <%--                    name: "${product.name}",--%>
-    <%--                    amount: updatedCost,--%>
-    <%--                    buyer_email: `${user.email}`,--%>
-    <%--                    buyer_name: `${user.name}`--%>
-    <%--                }, async function (rsp) {--%>
-    <%--                    if (rsp.success) { // 카카오페이 결제 성공--%>
-    <%--                        console.log(rsp);--%>
-    <%--                        resolve(rsp);--%>
-    <%--                        if ("${user.id}" === "")--%>
-    <%--                            userId = 0;--%>
-    <%--                        else--%>
-    <%--                            userId =--%>
-    <%--                        ${user.id}--%>
-
-    <%--                        /** 쿠폰 동시성 처리 */--%>
-    <%--                        var couponId = $('#coupons').val(); // 쿠폰 아이디--%>
-    <%--                        if (couponId != 0) { // 쿠폰 적용--%>
-    <%--                            $.ajax({--%>
-    <%--                                type: "POST",--%>
-    <%--                                url: "/user/product/payment/coupon",--%>
-    <%--                                data: {--%>
-    <%--                                    impUid: rsp.imp_uid,--%>
-    <%--                                    pgTid: rsp.pg_tid,--%>
-    <%--                                    productId: ${product.id},--%>
-    <%--                                    userId: userId,--%>
-    <%--                                    paidAmount: rsp.paid_amount,--%>
-    <%--                                    couponId: couponId--%>
-    <%--                                },--%>
-    <%--                                success: function (response) {--%>
-    <%--                                    alert("good coupon")--%>
-    <%--                                },--%>
-    <%--                                error: function (xhr, status, error) {--%>
-    <%--                                    alert("bad coupon")--%>
-    <%--                                }--%>
-    <%--                            });--%>
-    <%--                        }--%>
-
-    <%--                        /** 결제 db에 저장 */--%>
-    <%--                        $.ajax({--%>
-    <%--                            type: "POST",--%>
-    <%--                            url: "/user/product/payment",--%>
-    <%--                            data: {--%>
-    <%--                                impUid: rsp.imp_uid,--%>
-    <%--                                productId: ${product.id},--%>
-    <%--                                userId: userId,--%>
-    <%--                                merchantUid: rsp.merchant_uid,--%>
-    <%--                                paidAmount: rsp.paid_amount,--%>
-    <%--                                paidAt: rsp.paid_at,--%>
-    <%--                                pgProvider: rsp.pg_provider,--%>
-    <%--                                pgTid: rsp.pg_tid,--%>
-    <%--                                receiptUrl: rsp.receipt_url--%>
-    <%--                            },--%>
-    <%--                            success: function (response) {--%>
-    <%--                                alert("결제가 완료됐습니다.");--%>
-    <%--                            },--%>
-    <%--                            error: function (xhr, status, error) {--%>
-    <%--                                alert("결제에 실패했습니다.");--%>
-    <%--                            }--%>
-    <%--                        });--%>
-    <%--                    } else if (rsp.success == false) {--%>
-    <%--                        alert(rsp.error_msg);--%>
-    <%--                    }--%>
-    <%--                });--%>
-    <%--            });--%>
-    <%--        } else { // 로그인 전--%>
-    <%--            alert('로그인이 필요한 서비스입니다.');--%>
-    <%--            window.location.href = '/login';--%>
-    <%--        }--%>
-    <%--    } else {--%>
-    <%--        return false;--%>
-    <%--    }--%>
-    <%--}--%>
-
-    <%--async function handleKakaoPay() {--%>
-    <%--    try {--%>
-    <%--        const paymentResponse = await KakaoPay();--%>
-    <%--        // 여기에 결제 성공 처리 로직을 추가--%>
-    <%--        console.log("Payment Success:", paymentResponse);--%>
-    <%--    } catch (error) {--%>
-    <%--        // 여기에 결제 실패 처리 로직을 추가--%>
-    <%--        console.error("Payment Error:", error);--%>
-    <%--    }--%>
-    <%--}--%>
-
     var IMP = window.IMP;
-
     async function KakaoPay() {
         if (!${product.enabled}) {
             alert("판매 중지된 상품입니다.\n다음에 다시 이용해주세요.");
@@ -705,12 +603,11 @@
                 try {
                     const paymentResponse = await requestKakaoPay();
                     console.log(paymentResponse);
-                    const userId = "${user.id}" === "" ? 0 : ${user.id};
+                    const userId = "${user.userId}" === "" ? 0 : ${user.userId};
                     const couponId = $('#coupons').val();
                     if (couponId !== 0) {
                         // await - Promise가 처리될 때까지 실행을 일시 중지
                         await applyCoupon(paymentResponse, userId, couponId);
-                        alert("good coupon");
                     }
                     await savePaymentToDatabase(paymentResponse, userId);
                     alert("결제가 완료됐습니다.");
@@ -736,7 +633,7 @@
                 pg: 'kakaopay.TC0ONETIME',
                 pay_method: 'card',
                 merchant_uid: merchantUid,
-                productId: ${product.id},
+                productId: ${product.travelProductId},
                 name: "${product.name}",
                 amount: updatedCost,
                 buyer_email: `${user.email}`,
@@ -759,7 +656,7 @@
                 data: {
                     impUid: paymentResponse.imp_uid,
                     pgTid: paymentResponse.pg_tid,
-                    productId: ${product.id},
+                    productId: ${product.travelProductId},
                     userId: userId,
                     paidAmount: paymentResponse.paid_amount,
                     couponId: couponId
@@ -781,7 +678,7 @@
                 url: "/user/product/payment",
                 data: {
                     impUid: paymentResponse.imp_uid,
-                    productId: ${product.id},
+                    productId: ${product.travelProductId},
                     userId: userId,
                     merchantUid: paymentResponse.merchant_uid,
                     paidAmount: paymentResponse.paid_amount,

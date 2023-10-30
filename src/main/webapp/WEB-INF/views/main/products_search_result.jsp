@@ -15,14 +15,14 @@
 <h1>아래 여행지를 찾으시나요?</h1>
 <c:forEach var="product" items="${products}">
     <div class="img-container">
-        <a href="/guest/product/detail?product_id=${product.id}"
+        <a href="/guest/product/detail?product_id=${product.travelProductId}"
            style="text-decoration: none; color: inherit;">
             <div class="img" style="display: inline-block;">
                 <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 10px;">
             </div>
         </a>
         <div class="text">
-            <a href="/guest/product/detail?product_id=${product.id}"
+            <a href="/guest/product/detail?product_id=${product.travelProductId}"
                style="text-decoration: none; color: inherit;">
                 [${country.city}] ${product.name}${product.descriptions}
                 <br><br>

@@ -123,7 +123,7 @@
                 <h1>환불된 여행 상품</h1>
                 <div class="img-container" style="height: 300px;">
                     <c:forEach var="refundDto" items="${refundProducts}">
-                        <a href="/guest/product/detail?product_id=${refundDto.productDto.id}" class="shadowed">
+                        <a href="/guest/product/detail?product_id=${refundDto.productDto.travelProductId}" class="shadowed">
                             <div class="product-img" style="display: inline-block;">
                                 <img src="data:${refundDto.productDto.type};base64,${refundDto.productDto.encoding}"
                                      class="img-fluid">

@@ -111,14 +111,14 @@
             <h1>${user.name}님이 좋아한 ${fn:length(products)}건의 여행 상품이 있어요.</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
-                    <a href="/guest/product/detail?product_id=${product.id}"
+                    <a href="/guest/product/detail?product_id=${product.travelProductId}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block;">
                             <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 10px;">
                         </div>
                     </a>
                     <div class="text">
-                        <a href="/guest/product/detail?product_id=${product.id}"
+                        <a href="/guest/product/detail?product_id=${product.travelProductId}"
                            style="text-decoration: none; color: inherit;">
                             <p style="font-size: small; color: red;">[${product.country} - ${product.city}]</p>
                             <p style="padding-right: 5%;">${product.name}${product.descriptions}</p>

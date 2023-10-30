@@ -28,7 +28,7 @@ public class TravelTogetherService {
      * 모집 게시글 저장하기
      */
     public void saveTogetherPost(PostDto postDto) {
-        postDto.setUserId(userService.getUserData().getId()); // 작성자 아이디 Set
+        postDto.setUserId(userService.getUserData().getUserId()); // 작성자 아이디 Set
         postDto.setCreateDate(LocalDate.now()); // 생성 날짜 set
         togetherDao.saveTogetherPost(postDto);
     }
@@ -39,7 +39,7 @@ public class TravelTogetherService {
     public List<PostDto> findAllTogetherPostsByEnabled(boolean enabled) {
         List<PostDto> posts = togetherDao.findAllTogetherPostsByEnabled(enabled); // 모집글 리스트 가져오기
         for (PostDto dto : posts) {
-            boolean supported = togetherDao.findIsSupportedByPostIdAndUserId(userService.getUserData().getId(), dto.getId()); // 모집 지원 여부
+            boolean supported = togetherDao.findIsSupportedByPostIdAndUserId(userService.getUserData().getUserId(), dto.getPostId()); // 모집 지원 여부
             dto.setSupported(supported);
         }
         return calculateRemainingDays(posts); // 모집 마감까지 남은 날짜 계산
@@ -95,7 +95,7 @@ public class TravelTogetherService {
     }
 
     public List<PostDto> findAllTogetherPostsByEnabledAndUserId(boolean enabled) {
-        List<PostDto> postDtos = togetherDao.findAllTogetherPostsByEnabledAndUserId(enabled, userService.getUserData().getId());
+        List<PostDto> postDtos = togetherDao.findAllTogetherPostsByEnabledAndUserId(enabled, userService.getUserData().getUserId());
         return calculateRemainingDays(postDtos); // 모집 마감까지 남은 날짜 계산
     }
 
@@ -113,8 +113,8 @@ public class TravelTogetherService {
      */
     public void deletetogetherPost(PostDto postDto) throws Exception {
         if (userService.compareWriterAndUser(postDto.getUserId())) { // 삭제 권한 확인
-            commentService.deleteTogetherCommentsByPostId(postDto.getId()); // 댓글 리스트 삭제
-            recruitedDao.deleteAllByPostId(postDto.getId()); // 모집된 인원 삭제
+            commentService.deleteTogetherCommentsByPostId(postDto.getPostId()); // 댓글 리스트 삭제
+            recruitedDao.deleteAllByPostId(postDto.getPostId()); // 모집된 인원 삭제
             togetherDao.deletetogetherPost(postDto); // 게시글 삭제
         }
         else throw new Exception("수정 권한이 없습니다.");

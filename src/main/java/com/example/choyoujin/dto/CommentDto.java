@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class CommentDto {
-    private int id;
+    private int commentId;
     private String content;
     private int postId; // 게시글 아이디
     private int productId; // 여행 상품 아이디

@@ -24,6 +24,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String loginid = request.getParameter("email");
         String errormsg = "";
+        String loginUrl = request.getHeader("referer"); // 이전 주소 받아오기
 
         if (exception instanceof BadCredentialsException) {
             errormsg = "아이디나 비밀번호가 맞지 않습니다. 다시 확인해주세요.";
@@ -36,7 +37,13 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         }
 
         request.setAttribute("email", loginid);
-        request.setAttribute("error_message", errormsg);
-        request.getRequestDispatcher("/login?error=true").forward(request, response);
+        request.setAttribute("error_message", errormsg); // 에러 메세지 담기
+
+        if (loginUrl.endsWith("login")) { // 사용자 로그인
+            request.getRequestDispatcher("/login?error=true").forward(request, response);
+        }
+        if (loginUrl.endsWith("admin")) { // 관리자 로그인
+            request.getRequestDispatcher("/login/admin?error=true").forward(request, response);
+        }
     }
 }

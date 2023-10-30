@@ -197,9 +197,9 @@
                             <p>${comment.content}</p>
                             <button class="reply-button" style="margin-top: 0%">답글 달기</button>
                             <c:choose>
-                                <c:when test="${comment.userId eq user.id}">
+                                <c:when test="${comment.userId eq user.userId}">
                                     <button class="reply-button delete-button" style="margin-top: 0%; color: red;"
-                                            data-comment-id="${comment.id}">삭제
+                                            data-comment-id="${comment.commentId}">삭제
                                     </button>
                                 </c:when>
                             </c:choose>
@@ -207,7 +207,7 @@
                         <!-- 대댓글 입력 칸 (초기에는 숨김) -->
                         <div class="reply-form" style="display: none;">
                             <textarea class="reply-textarea" placeholder="대댓글을 입력하세요"></textarea>
-                            <button class="submit-reply-button submit-comment-button" data-comment-id="${comment.id}">
+                            <button class="submit-reply-button submit-comment-button" data-comment-id="${comment.commentId}">
                                 대댓글 작성
                             </button>
                         </div>
@@ -219,7 +219,7 @@
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var loggedInUserId = "${user.id}"; // 로그인한 사용자
+        var loggedInUserId = "${user.userId}"; // 로그인한 사용자
         var postUserId = "${post.userId}"; // 게시글을 작성한 사용자
         if (loggedInUserId === postUserId) {
             document.getElementById("edit-button").style.display = "block"; // 수정 버튼 표시
@@ -240,7 +240,7 @@
                 url: "comment",
                 data: {
                     content: content,
-                    postId: ${post.id},
+                    postId: ${post.postId},
                 },
                 success: function (response) {
                     location.reload();
@@ -268,7 +268,7 @@
                 method: "POST",
                 data: {
                     content: content,
-                    postId: ${post.id},
+                    postId: ${post.postId},
                     parentCommentId: commentId
                 },
                 success: function (data) {
@@ -284,7 +284,7 @@
     // 수정하기 버튼 클릭 이벤트
     $("#edit-button").click(function () {
         window.location.href = 'modify/view?postId=' +
-        ${post.id}
+        ${post.postId}
     });
 
     // 삭제하기 버튼 클릭 이벤트
@@ -296,7 +296,7 @@
                 method: "POST",
                 data: {
                     userId: ${post.userId},
-                    id: ${post.id},
+                    id: ${post.postId},
                 },
                 success: function (data) {
                     alert("게시글을 삭제했습니다.");

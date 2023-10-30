@@ -16,5 +16,4 @@ public interface CountryDao {
     int countAllCountriesByKeyword(String keyword);
     List<CountryDto> findAllCountriesByKeyword(String keyword, int start, int size);
     List<ProductDto> find4CountriesByCountryLike();
-    List<CountryDto> findAllCountriesWithPaging(int start, int size);
 }

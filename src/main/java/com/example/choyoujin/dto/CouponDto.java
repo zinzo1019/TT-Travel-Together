@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class CouponDto {
-    private int id; // 쿠폰 아이디
+    private int couponId; // 쿠폰 아이디
     private List<Integer> productIds; // 쿠폰 등록 - 여행 상품 아이디 리스트
     private int amount; // 가격
     private int percentage; // 할인

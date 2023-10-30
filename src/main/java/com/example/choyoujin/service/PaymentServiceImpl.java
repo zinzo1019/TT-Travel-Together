@@ -65,7 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Override
     public List<PaymentDto> findAllByUserId() {
-        List<PaymentDto> paymentDtos = paymentDao.findAllByUserId(userService.getUserData().getId()); // 결제한 정보 리스트
+        List<PaymentDto> paymentDtos = paymentDao.findAllByUserId(userService.getUserData().getUserId()); // 결제한 정보 리스트
         paymentDtos.stream().forEach(dto -> {
             ProductDto productDto = productDao.findProductByProductId(dto.getProductId()); // 여행 상품 Set
             productDto.setEncoding(decompressBytes(productDto.getPicByte())); // 이미지 Set
@@ -104,7 +104,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
     @Override
     public List<PaymentDto> findAllByUserIdAndAvailable(boolean available) {
-        List<PaymentDto> paymentDtos = paymentDao.findAllByUserIdAndAvailable(userService.getUserData().getId(), available); // 결제한 정보 리스트
+        List<PaymentDto> paymentDtos = paymentDao.findAllByUserIdAndAvailable(userService.getUserData().getUserId(), available); // 결제한 정보 리스트
         paymentDtos.stream().forEach(dto -> {
             ProductDto productDto = productDao.findProductByProductId(dto.getProductId()); // 여행 상품 Set
             productDto.setEncoding(decompressBytes(productDto.getPicByte())); // 이미지 Set

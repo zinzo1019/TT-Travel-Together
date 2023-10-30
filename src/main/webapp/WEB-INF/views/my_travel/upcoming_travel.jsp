@@ -131,7 +131,7 @@
             <div style="margin-bottom: 13%">
                 <c:forEach var="product" items="${products}">
                     <div class="img-container">
-                        <a href="/guest/product/detail?product_id=${product.productDto.id}"
+                        <a href="/guest/product/detail?product_id=${product.productDto.travelProductId}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img" style="display: inline-block;">
                                 <img src="data:${product.productDto.type};base64,${product.productDto.encoding}"
@@ -139,7 +139,7 @@
                             </div>
                         </a>
                         <div class="text">
-                            <a href="/guest/product/detail?product_id=${product.productDto.id}"
+                            <a href="/guest/product/detail?product_id=${product.productDto.travelProductId}"
                                style="text-decoration: none; color: inherit;">
                                 <p style="font-size: small; color: red">[${product.productDto.country}
                                     - ${product.productDto.city}]</p>

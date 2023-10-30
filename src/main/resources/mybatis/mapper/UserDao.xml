@@ -12,10 +12,10 @@
 
     <!--    이메일로 사용자 정보 찾기-->
     <select id="findUserByEmail" resultType="com.example.choyoujin.dto.UserDto">
-        select *
+        select u.tb_user_id as userId, *
         from tb_user u
                  left join tb_user_image i
-                     on u.image_id = i.id
+                     on u.image_id = i.tb_user_image_id
         where u.email = #{email}
     </select>
 
@@ -38,6 +38,6 @@
         update
         tb_user
         set travel_tag = #{travelTag}
-        where id = #{userId}
+        where tb_user_id = #{userId}
     </update>
 </mapper>

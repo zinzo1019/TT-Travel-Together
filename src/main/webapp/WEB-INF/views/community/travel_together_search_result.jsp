@@ -12,7 +12,7 @@
     <%--                모집 마감 전--%>
     <c:forEach var="post" items="${postsByTrue}">
         <li class="post-list-item">
-            <a href="together/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+            <a href="together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
 
                 <div class="post">
                     <p style="margin: 1% 0; color: red; font-weight: bold; font-size: 13px;">${post.recruitedNumber}명이 함께하고 있어요!</p>
@@ -21,13 +21,13 @@
                     <c:choose>
                         <c:when test="${post.email eq user.email}">
                             <!-- 만약 현재 사용자가 글의 작성자라면 '모집 마감하기' 버튼을 표시 -->
-                            <button class="support-button closeRecruitmentButton" data-post-id="${post.id}"
+                            <button class="support-button closeRecruitmentButton" data-post-id="${post.postId}"
                                     style="background-color: #1633b9">모집 마감하기
                             </button>
                         </c:when>
                         <c:otherwise>
                             <!-- 그렇지 않으면 '지원하기' 버튼을 표시 -->
-                            <button class="support-button pushRecruitmentButton" data-post-id="${post.id}"
+                            <button class="support-button pushRecruitmentButton" data-post-id="${post.postId}"
                                     style="background-color: #c40000">지원하기
                             </button>
                         </c:otherwise>

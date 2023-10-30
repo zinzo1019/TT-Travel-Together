@@ -177,7 +177,7 @@
             <ul class="post-list">
                 <c:forEach var="post" items="${posts}">
                     <li class="post-list-item">
-                        <a href="curious/view?postId=${post.id}" style="text-decoration: none; color: inherit;">
+                        <a href="curious/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
                             <div class="post">
                                 <p style="color: red; font-size: 13px; font-weight: bold;">${post.country} - ${post.city}</p>
                                 <h2>${post.title}</h2>

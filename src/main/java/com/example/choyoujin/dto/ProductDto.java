@@ -8,12 +8,11 @@ import java.util.List;
 
 @Data
 public class ProductDto {
-    private int id; // 상품 기본키
+    private int travelProductId; // 상품 기본키
     private String productName; // 여행 상품 이름
     private String description;
     private String descriptions; // 이어붙이 설명
     private MultipartFile image;
-    private String uesrId;
     private int cost;
     private LocalDate startDate;
     private LocalDate endDate;

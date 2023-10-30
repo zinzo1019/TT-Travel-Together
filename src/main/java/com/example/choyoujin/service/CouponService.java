@@ -23,7 +23,7 @@ public class CouponService {
     /** 쿠폰 등록하기 */
     public void saveCoupon(CouponDto couponDto) {
         try {
-            couponDto.setUserId(userService.getUserData().getId()); // 생성자 Set
+            couponDto.setUserId(userService.getUserData().getUserId()); // 생성자 Set
             // 만약 상품 '전체'를 선택했다면
             if (couponDto.getProductIds().contains(0)) {
                 List<Integer> productIds = productService.findAllProductIdsByCountryId(couponDto.getCountryId()); // 나라별 여행 상품 가져오기
@@ -38,7 +38,7 @@ public class CouponService {
 
     /** 관리자 '나의 쿠폰' - 관리자가 등록한 쿠폰 리스트 가져오기 */
     public List<CouponDto> findAllByUserId() {
-        return couponDao.findAllByUserId(userService.getUserData().getId());
+        return couponDao.findAllByUserId(userService.getUserData().getUserId());
     }
 
     /** 쿠폰 아이디로 쿠폰 데이터 가져오기 */
@@ -68,7 +68,7 @@ public class CouponService {
 
     /** 나의 쿠폰 - 검색하기 */
     public List<CouponDto> findAllByKeywordAndUserId(String keyword) {
-        return couponDao.findAllByKeywordAndUserId(keyword, userService.getUserData().getId());
+        return couponDao.findAllByKeywordAndUserId(keyword, userService.getUserData().getUserId());
     }
 
     /** 여행 상품 아이디로 쿠폰 리스트 가져오기 */

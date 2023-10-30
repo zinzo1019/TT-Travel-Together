@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 public class PostDto {
-    private int id; // 게시글 아이디
+    private int postId; // 게시글 아이디
     private String title; // 제목
     private String content; // 내용
     private String country; // 나라

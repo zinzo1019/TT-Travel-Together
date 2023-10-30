@@ -137,8 +137,8 @@
                         <p style="font-size: medium"><strong>쿠폰 코드: </strong>${coupon.code}</p>
                     </div>
                     <div class="edit-button">
-                        <button class="modify-button" data-coupon-id="${coupon.id}">수정</button>
-                        <button class="delete-button" data-coupon-id="${coupon.id}">삭제</button>
+                        <button class="modify-button" data-coupon-id="${coupon.couponId}">수정</button>
+                        <button class="delete-button" data-coupon-id="${coupon.couponId}">삭제</button>
                     </div>
                 </div>
             </c:forEach>

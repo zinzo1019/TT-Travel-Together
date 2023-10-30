@@ -160,8 +160,8 @@
                 <select id="products" name="products" multiple>
                     <option value="-1">선택 없음</option>
                     <c:forEach items="${products}" var="product">
-                        <option value="${product.id}">
-                                [${product.id}] ${product.name}
+                        <option value="${product.travelProductId}">
+                                [${product.travelProductId}] ${product.name}
                         </option>
                     </c:forEach>
                 </select>
@@ -209,7 +209,7 @@
                     productsSelect.empty();
                     productsSelect.append($('<option>', { value: 0, text: '전체' }));
                     data.products.forEach(function(product) {
-                        productsSelect.append($('<option>', { value: product.id, text: '[' + product.id + '] ' + product.name }));
+                        productsSelect.append($('<option>', { value: product.travelProductId, text: '[' + product.travelProductId + '] ' + product.name }));
                     });
                 },
                 error: function() {

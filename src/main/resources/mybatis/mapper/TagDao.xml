@@ -7,22 +7,22 @@
 
     <!--    여행 상품별 태그 리스트 가져오기-->
     <select id="findAllByProductId" resultType="com.example.choyoujin.dto.TagDto">
-        select travel_tags_id as id, tt.tag as tag, tpt.id as productTagId
+        select tpt.travel_product_tag_id as productTagId, tt.tag
         from travel_product_tag tpt
             left join travel_tags tt
-            on tpt.travel_tags_id = tt.id
-        where travel_product_id = #{productId}
+            on tpt.travel_tags_id = tt.travel_tags_id
+        where tpt.travel_product_id = #{productId}
     </select>
 
 <!--    모든 태그 가져오기-->
     <select id="findAll" resultType="com.example.choyoujin.dto.TagDto">
-        select id, tag
+        select tt.travel_tags_id as tagId, tag
         from travel_tags
     </select>
 
 <!--    아이디로 태그 삭제하기-->
     <delete id="deleteOneById">
         delete from travel_product_tag
-        where id = #{id}
+        where travel_product_tag_id = #{id}
     </delete>
 </mapper>

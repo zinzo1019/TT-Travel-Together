@@ -172,7 +172,7 @@
             <h1>[${country.country} - ${country.city}] ${fn:length(products)}건의 여행지가 있어요!</h1>
             <c:forEach var="product" items="${products}">
             <div class="img-container">
-                <a href="/guest/product/detail?product_id=${product.id}" style="text-decoration: none; color: inherit;">
+                <a href="/guest/product/detail?product_id=${product.travelProductId}" style="text-decoration: none; color: inherit;">
                     <div class="img product-img-container">
                         <img src="data:${product.type};base64,${product.encoding}" class="product-img">
                         <div class="like-info">
@@ -188,7 +188,7 @@
                     </div>
                 </a>
                     <div class="text">
-                        <a href="/guest/product/detail?product_id=${product.id}"
+                        <a href="/guest/product/detail?product_id=${product.travelProductId}"
                            style="text-decoration: none; color: inherit;">
                             <div style="">
                                 <div class="tag-div" style="font-size: small; color: red;">

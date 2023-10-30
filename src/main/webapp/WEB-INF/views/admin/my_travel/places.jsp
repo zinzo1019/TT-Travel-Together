@@ -100,21 +100,21 @@
             <h1 style="margin-top: 5%">${user.name}님이 등록한 ${fn:length(products)}건의 여행 상품이예요.</h1>
             <c:forEach var="product" items="${products}">
                 <div class="img-container">
-                    <a href="/guest/product/detail?product_id=${product.id}"
+                    <a href="/guest/product/detail?product_id=${product.travelProductId}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img" style="display: inline-block;">
                             <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px;">
                         </div>
                     </a>
                     <div class="text">
-                        <a href="/guest/product/detail?product_id=${product.id}"
+                        <a href="/guest/product/detail?product_id=${product.travelProductId}"
                            style="text-decoration: none; color: inherit;">
                             <c:choose>
                                 <c:when test="${!product.enabled}">
-                                    <p style="font-size: small; color: red;" data-product-id="${product.id}">* 현재 판매 중지된 상품입니다.</p>
+                                    <p style="font-size: small; color: red;" data-product-id="${product.travelProductId}">* 현재 판매 중지된 상품입니다.</p>
                                 </c:when>
                                 <c:otherwise>
-                                    <p style="font-size: small; color: blue;" data-product-id="${product.id}">* 현재 판매 중인 상품입니다.</p>
+                                    <p style="font-size: small; color: blue;" data-product-id="${product.travelProductId}">* 현재 판매 중인 상품입니다.</p>
                                 </c:otherwise>
                             </c:choose>
                             <p style="margin-bottom: 2%">
@@ -142,15 +142,15 @@
                         <div class="button-container">
                                 <%-- 수정하기 버튼 --%>
                             <c:if test="${not empty pageContext.request.userPrincipal }">
-                                <button class="search-button modifyButton" data-product-id="${product.id}">수정하기
+                                <button class="search-button modifyButton" data-product-id="${product.travelProductId}">수정하기
                                 </button>
                             </c:if>
                             <c:choose>
                                 <c:when test="${product.enabled}">
-                                    <button class="search-button stopButton" data-product-id="${product.id}" style="background-color: red">판매중지</button>
+                                    <button class="search-button stopButton" data-product-id="${product.travelProductId}" style="background-color: red">판매중지</button>
                                 </c:when>
                                 <c:otherwise>
-                                    <button class="search-button sellButton" data-product-id="${product.id}" style="background-color: blue">판매재개</button>
+                                    <button class="search-button sellButton" data-product-id="${product.travelProductId}" style="background-color: blue">판매재개</button>
                                 </c:otherwise>
                             </c:choose>
                         </div>

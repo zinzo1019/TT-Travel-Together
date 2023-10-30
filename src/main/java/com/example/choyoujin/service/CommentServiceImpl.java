@@ -25,7 +25,7 @@ public class CommentServiceImpl implements CommentService {
             throw new Exception("로그인 먼저 진행해주세요.");
         }
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
-        comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
+        comment.setUserId(userService.getUserData().getUserId()); // 사용자 아이디 Set
         commentDao.saveCuriousComment(comment);
     }
 
@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
             throw new Exception("로그인 먼저 진행해주세요.");
         }
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
-        comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
+        comment.setUserId(userService.getUserData().getUserId()); // 사용자 아이디 Set
         commentDao.saveTogetherComment(comment);
     }
 
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
             throw new Exception("로그인 먼저 진행해주세요.");
         }
         comment.setCreateDate(LocalDate.now()); // 생성 날짜 Set
-        comment.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
+        comment.setUserId(userService.getUserData().getUserId()); // 사용자 아이디 Set
         commentDao.saveProductComment(comment);
     }
 

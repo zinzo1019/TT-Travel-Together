@@ -73,7 +73,7 @@ public class MyTravelPlacesController {
         return "admin/my_travel/places_modify";
     }
 
-    /** 여행지 수정하기 동작 */
+    /** 여행지 수정하기 동작 - post action */
     @PostMapping("/modify")
     public ResponseEntity<String> myTravelPlacesModifyAction(ProductDto productDto) {
         try {

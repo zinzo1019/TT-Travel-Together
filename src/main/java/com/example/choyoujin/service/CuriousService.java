@@ -23,7 +23,7 @@ public class CuriousService {
      * 게시글 작성하기
      */
     public void saveCuriousPost(PostDto postDto) {
-        postDto.setUserId(userService.getUserData().getId()); // 사용자 아이디 Set
+        postDto.setUserId(userService.getUserData().getUserId()); // 사용자 아이디 Set
         postDto.setCreateDate(LocalDate.now());
         curiousDao.saveCuriousPost(postDto); // 게시글 저장
     }
@@ -56,7 +56,7 @@ public class CuriousService {
      * 사용자별 게시글 리스트 가져오기
      */
     public List<PostDto> findAllByUserId() {
-        return curiousDao.findAllByUserId(userService.getUserData().getId());
+        return curiousDao.findAllByUserId(userService.getUserData().getUserId());
     }
 
     /**
@@ -73,7 +73,7 @@ public class CuriousService {
      */
     public void deleteCuriousPost(PostDto postDto) throws Exception {
         if (userService.compareWriterAndUser(postDto.getUserId())) { // 삭제 권한 확인
-            commentService.deleteCuriousCommentsByPostId(postDto.getId()); // 게시글 댓글 리스트 삭제
+            commentService.deleteCuriousCommentsByPostId(postDto.getPostId()); // 게시글 댓글 리스트 삭제
             curiousDao.deleteCuriousPost(postDto); // 게시글 삭제
         } else throw new Exception("삭제 권한이 없습니다.");
     }

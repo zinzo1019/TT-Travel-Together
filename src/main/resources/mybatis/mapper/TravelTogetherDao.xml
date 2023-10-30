@@ -7,10 +7,11 @@
 
     <!--    모집 아이디로 모집글 가져오기-->
     <select id="findOneByPostId" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT ttp.*,
+        SELECT ttp.travel_together_post_id as postId,
+               ttp.*,
                ttp.recruited_number AS recruitedNumber,
                ttp.total_number     AS totalNum,
-               tu.id as userId,
+               tu.tb_user_id as userId,
                tu.email,
                tu.name              AS userName,
                c.country,
@@ -23,25 +24,26 @@
         END
         AS remainingDays
         FROM travel_together_post ttp
-        LEFT JOIN tb_user tu ON ttp.tb_user_id = tu.id
-        LEFT JOIN country c ON ttp.country_id  = c.id
-        WHERE ttp.id =
+        LEFT JOIN tb_user tu ON ttp.tb_user_id = tu.tb_user_id
+        LEFT JOIN country c ON ttp.country_id  = c.country_id
+        WHERE ttp.travel_together_post_id =
         #{postId};
     </select>
 
     <!--    모든 모집글 가져오기-->
     <select id="findAllTogetherPostsByEnabled" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT ttp.*, tu.email
+        SELECT ttp.travel_together_post_id as postId,
+               ttp.*, tu.email
         FROM travel_together_post ttp
                  LEFT JOIN tb_user tu
-                           ON ttp.tb_user_id = tu.id
+                           ON ttp.tb_user_id = tu.tb_user_id
         where ttp.enabled = #{enabled}
         ORDER BY ttp.deadline ASC
     </select>
 
     <!--    마이페이지 - 사용자별 모집글 가져오기-->
     <select id="findAllTogetherPostsByEnabledAndUserId" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT ttp.*
+        SELECT ttp.travel_together_post_id as postId, ttp.*
         FROM travel_together_post ttp
         where ttp.enabled = #{enabled}
           and ttp.tb_user_id = #{userId}
@@ -50,10 +52,11 @@
 
     <!--    모집글 검색하기 (나라와 날짜)-->
     <select id="findAllByCountryIdAndEnabled" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT ttp.*, tu.email
+        SELECT ttp.travel_together_post_id as postId,
+               ttp.*, tu.email
         FROM travel_together_post ttp
         LEFT JOIN tb_user tu
-        ON ttp.tb_user_id = tu.id
+        ON ttp.tb_user_id = tu.tb_user_id
         WHERE ttp.enabled = #{enabled}
         <if test="searchDto.countryId != 0">-- 나라를 입력받았다면
             AND ttp.country_id = #{searchDto.countryId}
@@ -91,14 +94,14 @@
             country_id = #{countryId},
             total_number = #{totalNum},
             deadline = #{deadline}
-        WHERE id = #{id}
+        where travel_together_post_id = #{postId}
     </update>
 
     <!--    게시글 삭제하기-->
     <delete id="deletetogetherPost">
         delete
         from travel_together_post
-        WHERE id = #{id}
+        where travel_together_post_id = #{id}
     </delete>
 
     <!--    모집 기한이 지나면 모집 마감 처리-->
@@ -113,14 +116,14 @@
     <update id="updateEnabledByPostId">
         UPDATE travel_together_post
         SET enabled = #{enabled}
-        WHERE id = #{postId}
+        where travel_together_post_id = #{postId}
     </update>
 
     <!--    모집된 인원수 1 증가-->
     <update id="updateRecruitedNumber">
         UPDATE travel_together_post
         SET recruited_number = recruited_number + 1
-        WHERE id = #{postId}
+        where travel_together_post_id = #{postId}
     </update>
 
 
@@ -128,7 +131,7 @@
     <update id="cancelRecruitedNumber">
         UPDATE travel_together_post
         SET recruited_number = recruited_number - 1
-        WHERE id = #{postId}
+        where travel_together_post_id = #{postId}
     </update>
 
     <!--    사용자 아이디와 게시글 아이디로 지원 여부 확인하기-->

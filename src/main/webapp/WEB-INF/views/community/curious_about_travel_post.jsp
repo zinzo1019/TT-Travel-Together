@@ -52,7 +52,7 @@
     .background-container {
         background-color: #f0f0f0; /* 원하는 배경 색상으로 설정 */
         padding: 20px; /* 내부 여백 추가 */
-        padding-bottom: 6%;
+        padding-bottom: 8%;
         border-radius: 10px; /* 모서리 둥글게 만들기 */
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
         position: relative; /* 상대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */

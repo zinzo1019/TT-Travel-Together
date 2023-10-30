@@ -65,19 +65,32 @@
         .form-group button:hover {
             background-color: #555;
         }
+        .error-message {
+            background-color: #f8d7da; /* 배경 색상 */
+            color: #721c24; /* 텍스트 색상 */
+            border: 1px solid #f5c6cb; /* 테두리 스타일 */
+            padding: 10px; /* 패딩 */
+            margin-bottom: 10px; /* 아래쪽 여백 */
+            border-radius: 0.25rem; /* 둥근 테두리 */
+        }
+
+        .error-message p {
+            margin: 0; /* 문단 간격 제거 */
+            font-weight: bold; /* 굵은 글씨 */
+        }
     </style>
 </head>
 <body>
 <div class="login-container">
     <form action="/login" method="post">
         <c:if test="${param.error != null}">
-        <p>
-            로그인 실패 <br/>
-                ${error_message}
-        </p>
+            <div class="error-message">
+                <p style="font-weight: bold; padding: 0;">로그인 실패</p>
+                <p style="color: red">${error_message}</p>
+            </div>
         </c:if>
 
-    <h2>로그인</h2>
+        <h2>회원 로그인</h2>
         <div class="form-group">
             <label for="email">이메일</label>
             <input type="text" id="email" name="email" required>

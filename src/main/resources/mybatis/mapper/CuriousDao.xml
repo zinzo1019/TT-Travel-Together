@@ -17,32 +17,32 @@
 
     <!--    전체 게시글 가져오기-->
     <select id="findAllPosts" resultType="com.example.choyoujin.dto.PostDto">
-        select *, tu.email as email
+        select curious_post_id as postId, *, tu.email as email
         from curious_post cp
                  left join tb_user tu
-                           on cp.tb_user_id = tu.id
+                           on cp.tb_user_id = tu.tb_user_id
                  left join country c
-                           on cp.country_id = c.id
+                           on cp.country_id = c.country_id
         ORDER BY cp.create_date DESC;
     </select>
 
     <!--    사용자별 게시글 리스트 가져오기-->
     <select id="findAllByUserId" resultType="com.example.choyoujin.dto.PostDto">
-        select *
+        select curious_post_id as postId, *
         from curious_post cp
                  left join country c
-                           on cp.country_id = c.id
+                           on cp.country_id = c.country_id
         where tb_user_id = #{userId}
         ORDER BY create_date DESC;
     </select>
 
     <!--    게시글 아이디로 게시글 가져오기-->
     <select id="findOneByPostId" resultType="com.example.choyoujin.dto.PostDto">
-        select *, tu.id as userId, tu.email as email, tu.name as userName
+        select curious_post_id as postId, *, tu.tb_user_id as userId, tu.email as email, tu.name as userName
         from curious_post cp
                  left join tb_user tu
-                           on cp.tb_user_id = tu.id
-        where cp.id = #{postId}
+                           on cp.tb_user_id = tu.tb_user_id
+        where cp.curious_post_id = #{postId}
     </select>
 
     <!--    게시글 수정하기-->
@@ -51,34 +51,27 @@
         SET title      = #{title},
             content    = #{content},
             country_id = #{countryId}
-        WHERE id = #{id}
+        where curious_post_id = #{postId}
     </update>
 
     <!--    게시글 삭제하기-->
     <delete id="deleteCuriousPost">
         delete
         from curious_post
-        WHERE id = #{id}
+        where curious_post_id = #{id}
     </delete>
 
     <!--     나라 아이디로 게시글 검색하기-->
     <select id="findAllByCountryId" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT *, tu.email AS email, tu.name AS userName
+        select curious_post_id as postId, *, tu.email AS email, tu.name AS userName
         FROM curious_post cp
-        LEFT JOIN tb_user tu ON cp.tb_user_id = tu.id
+        LEFT JOIN tb_user tu ON cp.tb_user_id = tu.tb_user_id
         WHERE cp.country_id = #{countryId}
-        <!--        <if test="countryId != 0">-->
-        <!--            AND cp.country_id = #{countryId}-->
-        <!--        </if>-->
-        <!--        <if test="keyword != null and keyword != ''">-->
-        <!--            AND (cp.title LIKE CONCAT('%', #{keyword}, '%')-->
-        <!--            OR cp.content LIKE CONCAT('%', #{keyword}, '%'))-->
-        <!--        </if>-->
     </select>
 
     <!--    검색어로 게시글 검색하기 (제목과 내용)-->
     <select id="findAllByKeyword" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT *
+        select curious_post_id as postId, *
         FROM curious_post tp
         WHERE (tp.title LIKE '%' || #{keyword} || '%'
             OR tp.content LIKE '%' || #{keyword} || '%')
@@ -86,7 +79,7 @@
 
     <!--    나라 아이디와 검색어로 게시글 검색하기-->
     <select id="findAllByCountryIdAndKeyword" resultType="com.example.choyoujin.dto.PostDto">
-        SELECT *
+        select curious_post_id as postId, *
         FROM curious_post tp
         WHERE tp.country_id = #{countryId}
           AND (tp.title LIKE CONCAT('%', #{keyword}, '%')

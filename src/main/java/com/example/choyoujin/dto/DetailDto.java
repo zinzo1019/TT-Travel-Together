@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class DetailDto {
-    private int id;
+    private int travelProductDetailId;
     private String description;
 }

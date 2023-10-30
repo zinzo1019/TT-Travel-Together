@@ -302,7 +302,7 @@
         }
         else { // 게시글 수정
             var formData = new FormData();
-            formData.append("id", ${post.id}); // 게시글 아이디
+            formData.append("postId", ${post.postId}); // 게시글 아이디
             formData.append("userId", ${post.userId}); // 게시글 아이디
             formData.append("countryId", countryValue); // 나라 아이디
             formData.append("startDate", startDateValue); // 시작 날짜
@@ -320,7 +320,7 @@
                 processData: false,
                 success: function (data) {
                     alert('게시글이 수정되었습니다.');
-                    window.location.href = '/user/community/together/view?postId=' + ${post.id};
+                    window.location.href = '/user/community/together/view?postId=' + ${post.postId};
                 },
                 error: function (xhr, error) {
                     alert(xhr.responseText);
