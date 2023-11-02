@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include file="../base_view/header.jsp" %>
 
 <div class="img-container" style="height: 350px;">
-    <c:forEach var="product" items="${products}">
-        <a href="guest/product/detail?product_id=${product.travelProductId}" class="shadowed" style="flex: 0.24;">
+    <c:forEach var="product" items="${products.content}">
+        <a href="guest/product/detail?product_id=${product.travelProductId}" class="shadowed" style="flex: 0.25;">
             <div class="product-img" style="display: inline-block;">
                 <img src="data:${product.type};base64,${product.encoding}">
                 <div class="product-info">
@@ -15,11 +15,6 @@
                     <div class="like-container">
                         <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
                         <span style="opacity: 0.6;">/ 1인</span>
-                            <%--                                        <img src='/images/like.png' class="like-img"--%>
-                            <%--                                             style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">--%>
-                            <%--                                        <span style="display: inline-block; vertical-align: middle;">--%>
-                            <%--                                                ${product.like}--%>
-                            <%--                                        </span>--%>
                     </div>
                     </p>
                 </div>
@@ -30,8 +25,7 @@
 <!-- 페이징 처리 -->
 <div>
     <ul class="pagination">
-        <c:forEach begin="${pagination.startPage + 1}"
-                   end="${pagination.endPage}" varStatus="status">
+        <c:forEach begin="1" end="${products.totalPages}" varStatus="status">
             <li class="page-item">
                 <a class="page-link"
                    data-tag-id=${tagId} data-page="${status.index}">${status.index}</a>

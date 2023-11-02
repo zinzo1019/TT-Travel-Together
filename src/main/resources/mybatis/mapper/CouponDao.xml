@@ -118,7 +118,7 @@
 
     <!--    쿠폰 아이디로 쿠폰 가져오기-->
     <select id="findOneByCouponId" resultType="com.example.choyoujin.dto.CouponDto">
-        select c.coupon_id,
+        select c.coupon_id         as couponId,
                c.name              as name,
                c.code,
                c.description       as description,

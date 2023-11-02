@@ -564,7 +564,6 @@
     });
 
     /** 결제 금액 변경되지 않도록 */
-
     function generateUniqueMerchantUid() {
         var today = new Date();
         var hours = today.getHours();
@@ -603,7 +602,7 @@
                 try {
                     const paymentResponse = await requestKakaoPay();
                     console.log(paymentResponse);
-                    const userId = "${user.userId}" === "" ? 0 : ${user.userId};
+                    const userId = "${user.userId}" === "" ? 0 : "${user.userId}";
                     const couponId = $('#coupons').val();
                     if (couponId !== 0) {
                         // await - Promise가 처리될 때까지 실행을 일시 중지
@@ -689,6 +688,7 @@
                 },
                 success: function (response) {
                     resolve(response);
+                    alert("결제가 완료됐습니다.");
                 },
                 error: function (xhr, status, error) {
                     reject(error);

@@ -49,6 +49,7 @@ public class TravelTogetherService {
      * 모집 마감 기한이 지난 게시글 -> enabled = false
      */
     public void disableExpiredPosts(LocalDate now) {
+        System.out.println("기한이 지난 모집글은 모집 마감 처리합니다.");
         togetherDao.disableExpiredPosts(now);
     }
 
@@ -85,6 +86,10 @@ public class TravelTogetherService {
 
     public PostDto findOneByPostId(int postId) {
         return togetherDao.findOneByPostId(postId);
+    }
+
+    public List<UserDto> findRecruitedMember(int postId) {
+        return recruitedDao.findRecruitedMember(postId);
     }
 
     /**

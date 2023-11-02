@@ -28,7 +28,7 @@ public interface TravelProductService {
     PageImpl<ProductDto> findAllByTravelTag(String tag, int page, int size);
     List<ProductsByTagDto> findAllByTravelTags(int page, int size);
     List<ProductDto> findAllByKeyword(String keyword);
-    List<ProductDto> findAllByTravelTagsWithPaging(int tagId, int page, int size, Model model);
+    PageImpl<ProductDto> findAllByTravelTagsWithPaging(int tagId, int page, int size, Model model);
     PageImpl<ProductDto> findAllByTravelTagAndKeyword(String tag, String keyword, int page, int size);
     PageImpl<ProductDto> findAllProducts(int page, int size);
 }

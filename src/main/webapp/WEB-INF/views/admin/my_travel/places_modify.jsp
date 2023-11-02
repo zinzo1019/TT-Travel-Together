@@ -86,7 +86,6 @@
 
     .tag-container p {
         display: inline-block; /* 한 줄에 표시 */
-
         border: 1px solid #ccc; /* 테두리 스타일과 색상 설정 */
         border-radius: 15px; /* 둥근 테두리 반지름 설정 */
         padding: 5px 10px; /* 내부 여백 설정 */
@@ -220,7 +219,7 @@
             </div>
             <div class="country-container" style="margin-top: 3%">
             <label>기존 이미지</label>
-            <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px;">
+            <img src="data:${product.type};base64,${product.encoding}" style="border-radius: 15px; width: 150px;">
             </div>
         </div>
         <div class="background-container" style="margin-top: 4%; padding-bottom: 4%">

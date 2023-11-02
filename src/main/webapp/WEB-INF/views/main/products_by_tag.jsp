@@ -111,6 +111,7 @@
     .product-img {
         border-radius: 10px;
         height: 350px;
+        width: 100%;
     }
 
     .product-img img {
@@ -207,11 +208,6 @@
                                         <div class="like-container">
                                             <fmt:formatNumber value="${product.cost}" pattern="#,###"/> 원
                                             <span style="opacity: 0.6;">/ 1인</span>
-                                                <%--                                        <img src='/images/like.png' class="like-img"--%>
-                                                <%--                                             style="width: 20px; height: 20px; vertical-align: middle; padding-top: 5px;">--%>
-                                                <%--                                        <span style="display: inline-block; vertical-align: middle;">--%>
-                                                <%--                                                ${product.like}--%>
-                                                <%--                                        </span>--%>
                                         </div>
                                         </p>
                                     </div>

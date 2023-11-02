@@ -123,34 +123,36 @@
 
     // 아이디 중복 체크
     $("#idCheck").click(function () {
-        var email = document.getElementById("email")
-        // 아이디 확인
+        var email = document.getElementById("email");
         if (email.value == "") {
-            alert("이메일을 입력하세요.")
+            alert("이메일을 입력하세요.");
             email.focus();
             return false;
         } else if (!regId.test(email.value)) {
-            alert("이메일 양식에 맞게 입력해주세요.")
+            alert("이메일 양식에 맞게 입력해주세요.");
             email.focus();
             return false;
         }
 
+        var formData = new FormData();
+        formData.append("email", email.value);
         $.ajax({
             url: "/guest/email/check",
-            type: "GET",
-            data: {
-                email: $('#email').val()
-            },
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function () {
-                alert("사용가능한 아이디입니다.")
+                alert("사용가능한 아이디입니다.");
                 isDuplicated = false;
-            }, error: function () {
-                alert("중복된 아이디입니다.")
+            },
+            error: function () {
+                alert("중복된 아이디입니다.");
                 isDuplicated = true;
             }
         });
         return false;
-    })
+    });
 
     function validation() {
         var password = document.getElementById("password")
@@ -207,6 +209,11 @@
         if (travelTag.value == "") {
             alert("여행 태그를 입력해주세요.")
             travelTag.focus();
+            return false;
+        }
+        // 중복된 아이디
+        if (isDuplicated) {
+            alert("중복된 아이디입니다.")
             return false;
         }
 

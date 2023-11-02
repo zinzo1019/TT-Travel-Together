@@ -81,6 +81,18 @@
         font-size: 16px;
     }
 
+    .tag-container div {
+        display: inline-block; /* 한 줄에 표시 */
+        margin-right: 2%;
+    }
+
+    .tag-container p {
+        display: inline-block; /* 한 줄에 표시 */
+        border: 1px solid #ccc; /* 테두리 스타일과 색상 설정 */
+        border-radius: 15px; /* 둥근 테두리 반지름 설정 */
+        padding: 5px 10px; /* 내부 여백 설정 */
+    }
+
     .header-container {
         display: flex;
         align-items: center;
@@ -166,6 +178,9 @@
                     <input type="text" class="simple-desc" style="flex: 1.72">
                     <button class="add-description-button">추가</button>
                 </div>
+
+                <div id="description_container" class="tag-container"></div>
+
             </div>
 
             <div id="tags">
@@ -174,6 +189,9 @@
                     <input type="text" class="tag" style="flex: 1.72">
                     <button class="add-tag-button">추가</button>
                 </div>
+
+                <div id="tag_container" class="tag-container"></div>
+
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>얼마인가요?</label>
@@ -203,10 +221,15 @@
             var descriptionContainer = button.parentElement;
             var input = descriptionContainer.querySelector(".simple-desc").value;
 
+            var p_tag = document.createElement("p"); // p 태그
+            p_tag.textContent = input; // tag 삽입
+            p_tag.style.marginRight = "2%";
+
             // 입력 내용을 화면에 표시
-            var descriptionDiv = document.createElement("div");
-            descriptionDiv.textContent = input;
-            document.getElementById("descriptions").appendChild(descriptionDiv);
+            // var descriptionDiv = document.createElement("div");
+            // descriptionDiv.textContent = input;
+
+            document.getElementById("description_container").appendChild(p_tag);
             descriptionsData.push(input); // 배열에 넣기
             var inputField = document.querySelector(".simple-desc");
             inputField.value = "";
@@ -219,10 +242,15 @@
             var tagContainer = button.parentElement;
             var input = tagContainer.querySelector(".tag").value;
 
+            var p_tag = document.createElement("p"); // p 태그
+            p_tag.textContent = input; // tag 삽입
+            p_tag.style.marginRight = "2%";
+
             // 입력 내용을 화면에 표시
-            var tagDiv = document.createElement("div");
-            tagDiv.textContent = input;
-            document.getElementById("tags").appendChild(tagDiv);
+            // var tagDiv = document.createElement("div");
+            // tagDiv.textContent = input;
+
+            document.getElementById("tag_container").appendChild(p_tag);
             tagsData.push(input);
             var inputField = document.querySelector(".tag");
             inputField.value = "";

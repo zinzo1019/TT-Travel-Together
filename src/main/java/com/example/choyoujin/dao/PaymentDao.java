@@ -2,11 +2,11 @@ package com.example.choyoujin.dao;
 
 import com.example.choyoujin.dto.PaymentDto;
 import com.example.choyoujin.dto.RefundDto;
+import com.example.choyoujin.dto.RefundReasonDto;
 import com.example.choyoujin.dto.StatisticsDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface PaymentDao {
@@ -25,7 +25,8 @@ public interface PaymentDao {
     List<StatisticsDto> countRefundsByCountry();
     List<StatisticsDto> countPaymentsByCountry();
     List<RefundDto> findAllProductsByRefund();
-    List<String> findAllRefundReasonByRefund();
+    List<RefundReasonDto> countRefundByRefundReason();
+    int countAllRefunds();
     List<PaymentDto> findAllPayments();
     List<RefundDto> findAllRefunds();
     void updatePaymentAvailable(int paymentId, boolean available);

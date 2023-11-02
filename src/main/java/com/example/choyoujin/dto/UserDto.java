@@ -24,4 +24,6 @@ public class UserDto {
     private byte[] picByte;
     private String type;
     private String encoding;
+
+    private int postId; // 모집글 아이디
 }

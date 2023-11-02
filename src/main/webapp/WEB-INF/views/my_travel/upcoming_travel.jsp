@@ -18,16 +18,6 @@
 <meta charset="UTF-8">
 <title>곧 여기로 떠나요!</title>
 <style>
-    /*body {*/
-    /*    !*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*!*/
-    /*    background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');*/
-    /*    background-size: cover; !* 배경 이미지를 뷰포트에 맞게 확대/축소 *!*/
-    /*    background-repeat: no-repeat; !* 배경 이미지 반복 비활성화 *!*/
-    /*    background-attachment: fixed; !* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) *!*/
-    /*    background-position: center center; !* 배경 이미지를 중앙에 위치시킴 *!*/
-    /*    height: 100vh; !* 화면 높이만큼 배경 이미지 표시 *!*/
-    /*}*/
-
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -214,25 +204,32 @@
     /** 환불하기 버튼 클릭 이벤트 */
     $(".refundButton").click(function () {
         if (confirm("환불하시겠습니까?")) {
-            var refundReason = prompt("환불 사유를 입력해주세요 (필수)");
-            if (refundReason !== "") {
-                var paymentId = $(this).data("payment-id");
-                $.ajax({
-                    url: "refund",
-                    type: "POST",
-                    data: {
-                        "paymentId": paymentId,
-                        "refundReason": refundReason
-                    },
-                    success: function (data) {
-                        alert("환불 처리했습니다.");
-                        location.reload();
-                    },
-                    error: function (error) {
-                    }
-                });
+            var refundReasonNumber = prompt("환불 사유를 번호로 입력해주세요. (필수)\n1. 단순 변심\n2. 더 좋은 상품 발견" +
+                "\n3. 환불 후 재결제 예정\n4. 여행 날짜 변경\n5. 기타");
+
+            if (refundReasonNumber !== null && refundReasonNumber !== "") { // 입력하지 않거나 취소 버튼을 누르면 환불 처리를 막음
+                if (!isNaN(refundReasonNumber) && refundReasonNumber >= 1 && refundReasonNumber <= 5) { // 1부터 5 사이의 숫자
+                    var paymentId = $(this).data("payment-id");
+                    $.ajax({
+                        url: "refund",
+                        type: "POST",
+                        data: {
+                            "paymentId": paymentId,
+                            "reasonId": refundReasonNumber
+                        },
+                        success: function (data) {
+                            alert("환불 처리했습니다.");
+                            location.reload();
+                        },
+                        error: function (error) {
+                            alert("환불 처리에 실패했습니다.");
+                        }
+                    })
+                } else {
+                    alert("1부터 5 사이의 번호를 입력해주세요.");
+                }
             } else {
-                return false;
+                alert("환불 사유를 입력해주세요.");
             }
         }
     });

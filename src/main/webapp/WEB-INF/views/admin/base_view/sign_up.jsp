@@ -138,9 +138,9 @@
 
         $.ajax({
             url: "/guest/email/check",
-            type: "GET",
+            type: "POST",
             data: {
-                email: $('#email').val()
+                email: email.value
             },
             success: function () {
                 alert("사용가능한 아이디입니다.")
@@ -223,7 +223,7 @@
             contentType: false,
             success: function () {
                 alert("회원가입을 성공했습니다.");
-                window.location.href = "/login";
+                window.location.href = "/login/admin";
             },
             error: function () {
                 alert("회원가입 실패!");

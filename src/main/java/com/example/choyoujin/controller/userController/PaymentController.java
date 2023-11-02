@@ -49,7 +49,7 @@ public class PaymentController {
     @PostMapping("/mytravel/upcoming/refund")
     public ResponseEntity<String> productRefund(RefundDto refundDto) {
         try {
-            refundDto.setReason("환불된 상품입니다.");
+            refundDto.setReason("구매자에 의해 환불 처리된 상품입니다.");
             paymentService.saveRefund(refundDto);
             return ResponseEntity.ok("환불되었습니다.");
         } catch (Exception e) {

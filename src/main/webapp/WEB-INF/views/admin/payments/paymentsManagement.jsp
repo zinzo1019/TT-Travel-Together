@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <%@ include file="../base_view/header.jsp" %>
 <c:choose>
@@ -156,7 +158,8 @@
                                 <p style="font-size: small; color: red;">${payment.pgTid}</p>
                                 <p style="font-weight: bold;">${payment.productName}</p>
                                 <fmt:formatNumber value="${payment.cost}" pattern="#,###"/>원 -->
-                                <span style="color: red"><fmt:formatNumber value="${payment.paidAmount}" pattern="#,###"/>원</span>
+                                <span style="color: red"><fmt:formatNumber value="${payment.paidAmount}"
+                                                                           pattern="#,###"/>원</span>
                             </a>
                         </div>
                         <div class="button-container">
@@ -221,25 +224,32 @@
     /** 환불하기 버튼 클릭 이벤트 */
     $(".refund-button").click(function () {
         if (confirm("환불하시겠습니까?")) {
-            var refundReason = prompt("환불 사유를 입력해주세요 (필수)");
-            if (refundReason !== "") {
-                var paymentId = $(this).data("payment-id");
-                $.ajax({
-                    url: "/admin/refund/processing",
-                    type: "POST",
-                    data: {
-                        "paymentId": paymentId,
-                        "refundReason": refundReason
-                    },
-                    success: function (data) {
-                        alert("환불 처리했습니다.");
-                        location.reload();
-                    },
-                    error: function (error) {
-                    }
-                });
+            var refundReasonNumber = prompt("환불 사유를 번호로 입력해주세요. (필수)\n1. 단순 변심\n2. 더 좋은 상품 발견" +
+                "\n3. 환불 후 재결제 예정\n4. 여행 날짜 변경\n5. 기타");
+
+            if (refundReasonNumber !== null && refundReasonNumber !== "") { // 입력하지 않거나 취소 버튼을 누르면 환불 처리를 막음
+                if (!isNaN(refundReasonNumber) && refundReasonNumber >= 1 && refundReasonNumber <= 5) { // 1부터 5 사이의 숫자
+                    var paymentId = $(this).data("payment-id");
+                    $.ajax({
+                        url: "/admin/refund/processing",
+                        type: "POST",
+                        data: {
+                            "paymentId": paymentId,
+                            "reasonId": refundReasonNumber
+                        },
+                        success: function (data) {
+                            alert("환불 처리했습니다.");
+                            location.reload();
+                        },
+                        error: function (error) {
+                            alert("환불 처리에 실패했습니다.");
+                        }
+                    })
+                } else {
+                    alert("1부터 5 사이의 번호를 입력해주세요.");
+                }
             } else {
-                return false;
+                alert("환불 사유를 입력해주세요.");
             }
         }
     });

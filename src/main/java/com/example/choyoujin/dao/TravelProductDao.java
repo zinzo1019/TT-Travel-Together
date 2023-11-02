@@ -24,7 +24,7 @@ public interface TravelProductDao {
     List<ProductDto> findProductsTop4ByLike();
     List<ProductDto> findAllByKeyword(String keyword);
     int countAllByTravelTag(String travelTag);
-    List<ProductDto> findAllByTravelTagId(int tagId, int page, int size);
+    List<ProductDto> findAllByTravelTagId(int tagId, int start, int size);
     int countAllByTravelTagId(int tagId);
     void updateProduct(ProductDto productDto);
     void updateEnabledByProductId(int productId, boolean enabled);

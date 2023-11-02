@@ -157,7 +157,7 @@
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>할인율</label>
-                <input type="number" id="percentage" value="${coupon.percentage}">
+                <input type="number" id="percentage" value="${coupon.percentage == 0 ? '' : coupon.percentage}">
             </div>
             <div class="country-container" style="margin-top: 3%">
                 <label>가격</label>
@@ -234,7 +234,7 @@
 
         // 선택한 값을 서버로 전송 (AJAX 사용)
         var data = {
-            id: ${coupon.couponId},
+            couponId: ${coupon.couponId},
             percentage: percentage,
             amount: amount,
             name: name,

@@ -72,7 +72,7 @@
     }
 
     .shadowed {
-        flex: 0.24;
+        flex: 0.25;
         text-decoration: none;
         color: inherit;
         border: 0;
@@ -124,7 +124,7 @@
                 <div class="img-container" style="height: 300px;">
                     <c:forEach var="refundDto" items="${refundProducts}">
                         <a href="/guest/product/detail?product_id=${refundDto.productDto.travelProductId}" class="shadowed">
-                            <div class="product-img" style="display: inline-block;">
+                            <div class="product-img" style="display: inline-block; width: 100%;">
                                 <img src="data:${refundDto.productDto.type};base64,${refundDto.productDto.encoding}"
                                      class="img-fluid">
                                 <div class="product-info">
@@ -142,13 +142,10 @@
         </div>
         <div style="margin-top: 7%;">
             <h1>환불 사유</h1>
-            <ul style="padding: 0">
-                <c:forEach var="reason" items="${refundReasons}">
-                    <div class="refund-reason">
-                        <li style="margin: 5px 0;">${reason}</li>
-                    </div>
-                </c:forEach>
-            </ul>
+            <div style="width: 400px; height: 400px;">
+                <!-- 차트를 그릴 캔버스 요소 -->
+                <canvas id="myChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -195,6 +192,37 @@
         error: function () {
             console.error('데이터를 불러오는 중 오류가 발생했습니다.');
         }
+    });
+
+    var refundData = ${refundReasons};
+
+    var refundLabels = refundData.map(function (item) {
+        return item.refundReason;
+    });
+    var refundDoubles = refundData.map(function (item) {
+        return item.refundDouble;
+    });
+
+
+    // 차트를 그릴 캔버스 요소 가져오기
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    // 차트 생성
+    var myChart = new Chart(ctx, {
+        type: 'doughnut', // 원형 차트
+        data: {
+            labels: refundLabels, // 레이블
+            datasets: [{
+                data: refundDoubles, // 데이터
+                backgroundColor: [ // 색상 설정 (커스터마이즈 가능)
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)'
+                ],
+            }]
+        },
     });
 
     var ctx = document.getElementById('percentageChart').getContext('2d');

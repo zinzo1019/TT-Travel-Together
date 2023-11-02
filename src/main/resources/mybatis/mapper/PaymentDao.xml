@@ -16,8 +16,8 @@
 
     <!--    여행 상품 환불건 저장하기-->
     <insert id="saveRefund">
-        insert into travel_product_refund (refund_reason, travel_product_payment_id, refund_date)
-        values (#{refundReason}, #{paymentId}, now())
+        insert into travel_product_refund (travel_product_payment_id, travel_product_refund_reason_id, refund_date)
+        values (#{paymentId}, #{reasonId}, now())
     </insert>
 
     <!--    여행 상품 결제 취소하기-->
@@ -38,7 +38,7 @@
                tpp.available,
                tpp.not_available_reason      as reason,
                tp.name                       as productName,
-               tpr.refund_reason,
+               tprr.refund_reason            as refundReason,
                tpr.refund_date
         from travel_product_payment tpp
                  left join tb_user tu
@@ -47,6 +47,8 @@
                            on tpp.travel_product_id = tp.travel_product_id
                  left join travel_product_refund tpr
                            on tpr.travel_product_payment_id = tpp.travel_product_payment_id
+                 left join travel_product_refund_reason tprr
+                           on tpr.travel_product_refund_reason_id = tprr.travel_product_refund_reason_id
         where tu.tb_user_id = #{userId}
           and tpp.available = #{available}
     </select>
@@ -62,7 +64,7 @@
                tpp.available,
                tpp.not_available_reason      as reason,
                tp.name                       as productName,
-               tpr.refund_reason,
+               tprr.refund_reason            as refundReason,
                tpr.refund_date
         from travel_product_payment tpp
                  left join tb_user tu
@@ -71,6 +73,8 @@
                            on tpp.travel_product_id = tp.travel_product_id
                  left join travel_product_refund tpr
                            on tpr.travel_product_payment_id = tpp.travel_product_payment_id
+                 left join travel_product_refund_reason tprr
+                           on tpr.travel_product_refund_reason_id = tprr.travel_product_refund_reason_id
         where tu.tb_user_id = #{userId}
         order by tpp.available desc
     </select>
@@ -92,7 +96,7 @@
         select tpp.travel_product_payment_id as paymentId,
                imp_uid,
                travel_product_id             as productId,
-               tb_user_id                    as userId,
+               tu.tb_user_id                 as userId,
                tu.name                       as userName,
                merchant_uid,
                paid_amount,
@@ -196,7 +200,7 @@
         select distinct
         on (tp.travel_product_id)
             tpr.travel_product_refund_id as refundId,
-            tpr.refund_reason,
+            tprr.refund_reason as refundReason,
             tpp.travel_product_payment_id as paymentId,
             tpr.refund_date,
             tpp.travel_product_id as productId
@@ -205,11 +209,24 @@
         on tpr.travel_product_payment_id = tpp.travel_product_payment_id
             left join travel_product tp
             on tpp.travel_product_id = tp.travel_product_id
+            left join travel_product_refund_reason tprr
+            on tpr.travel_product_refund_reason_id = tprr.travel_product_refund_reason_id
     </select>
 
     <!--    환불 사유 리스트 가져오기-->
-    <select id="findAllRefundReasonByRefund" resultType="String">
-        select refund_reason
+    <select id="countRefundByRefundReason" resultType="com.example.choyoujin.dto.RefundReasonDto">
+        select count(tpr.travel_product_refund_id)  as countReason,
+               tprr.refund_reason                   as refundReason,
+               tprr.travel_product_refund_reason_id as refundId
+        from travel_product_refund tpr
+                 left join travel_product_refund_reason tprr
+                           on tpr.travel_product_refund_reason_id = tprr.travel_product_refund_reason_id
+        group by tprr.travel_product_refund_reason_id
+    </select>
+
+    <!--    전체 환불 개수 세기-->
+    <select id="countAllRefunds" resultType="int">
+        select count(travel_product_refund_id)
         from travel_product_refund
     </select>
 
@@ -246,7 +263,7 @@
     <select id="findAllRefunds" resultType="com.example.choyoujin.dto.RefundDto">
         select tpr.travel_product_refund_id  as refundId,
                tpr.refund_date               as refundDate,
-               tpr.refund_reason             as refundReason,
+               tprr.refund_reason            as refundReason,
                tpp.travel_product_payment_id as paymentId,
                tpp.paid_amount               as paidAmount,
                tpp.tb_user_id                as userId,
@@ -266,6 +283,8 @@
                            on tpp.travel_product_id = tp.travel_product_id
                  left join travel_product_image tpi
                            on tp.travel_product_image_id = tpi.travel_product_image_id
+                 left join travel_product_refund_reason tprr
+                           on tpr.travel_product_refund_reason_id = tprr.travel_product_refund_reason_id
         order by tpr.refund_date desc
     </select>
 

@@ -34,7 +34,8 @@ public class WebSecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http.authorizeRequests()
-                    .antMatchers("/signup/**", "/login/**").permitAll()
+                    .antMatchers("/signup/**", "/login/**", "/guest/**").permitAll()
+                    .antMatchers("/images/**").permitAll()
                     .antMatchers("/user/**").hasAnyRole("USER") // user 게시판 -> 사용자만 접근 허용
                     .anyRequest().authenticated()
                     .and()

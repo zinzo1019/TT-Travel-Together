@@ -18,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.jsp.JspEngineInfo;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +145,9 @@ public class PaymentServiceImpl implements PaymentService {
     public void saveRefund(RefundDto refundDto) {
         try {
             refundPayment(refundDto); // 카카오페이 환불
+
+            System.out.println(refundDto);
+
             paymentDao.saveRefund(refundDto); // 환불 정보 저장
             updateEnabledByProductId(refundDto.getPaymentId(), false, refundDto.getReason()); // 여행 상품 사용 불가능 처리
         } catch (Exception e) {

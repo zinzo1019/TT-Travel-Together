@@ -13,14 +13,16 @@
 
     <!--    모집 지원자 삭제하기-->
     <delete id="deleteRecruitedMember">
-        delete from recruited_member
+        delete
+        from recruited_member
         where travel_together_post_id = #{postId}
-        and tb_user_id = #{userId}
+          and tb_user_id = #{userId}
     </delete>
 
     <!--    같이 여행 가요 - 게시글 삭제 시 모집된 인원도 삭제-->
     <delete id="deleteAllByPostId">
-        delete from recruited_member
+        delete
+        from recruited_member
         where travel_together_post_id = #{postId}
     </delete>
 
@@ -29,6 +31,14 @@
         select tb_user_id as userId, travel_together_post_id as postId
         from recruited_member rm
         where tb_user_id = #{userId}
-        and travel_together_post_id = #{postId}
+          and travel_together_post_id = #{postId}
+    </select>
+
+    <select id="findRecruitedMember" resultType="com.example.choyoujin.dto.UserDto">
+        select rm.recruited_member_id as postId, tu.tb_user_id as userId, tu.email as email, tu."name"
+        from recruited_member rm
+                 left join tb_user tu
+                           on rm.tb_user_id = tu.tb_user_id
+        where rm.travel_together_post_id = #{postId}
     </select>
 </mapper>

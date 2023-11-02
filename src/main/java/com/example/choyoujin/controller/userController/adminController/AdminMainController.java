@@ -36,7 +36,7 @@ public class AdminMainController {
 //        model.addAttribute("countries", countryService.findAllCountriesOrderByLike(page, 4)); // 전체 여행지 가져오기
 //
 //        Pagination pagination = getPagination();
-//        pagination.setTotalCount(countryService.countAllCountries()); // 총 개수
+//        int totalcountryService.countAllCountries()); // 총 개수
 //        model.addAttribute("pagination", pagination); // 페이징 담기
 //        return "admin/main/main";
 //    }
@@ -50,37 +50,32 @@ public class AdminMainController {
 //        model.addAttribute("searchResults", countryService.findAllCountriesByKeyword(keyword, page, 4)); // 검색 결과 담기
 //
 //        Pagination pagination = getPagination();
-//        pagination.setTotalCount(countryService.countAllCountriesByKeyword(keyword)); // 나라 이름으로 검색된 개수
+//        int totalcountryService.countAllCountriesByKeyword(keyword)); // 나라 이름으로 검색된 개수
 //        model.addAttribute("pagination", pagination); // 페이징 담기
 //        return "main/main_search_result";
 //    }
 //
-//    /**
-//     * 나라별 상품 리스트 페이지
-//     */
-//    @GetMapping("/admin/country")
-//    public String countryProductsListPage(@RequestParam("country_id") int countryId, Model model) {
-//        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-//        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
-//
-//        List<ProductDto> productDtos = travelProductService.findAllProductsByCountryId(countryId);
-//        model.addAttribute("products", travelProductService.findAllProductsByCountryId(countryId)); // 여행 상품 리스트 담기
-//        model.addAttribute("count", productDtos.size()); // 여행 상품 개수 담기
-//        return "main/country_products_list";
-//    }
-//
-//    /**
-//     * 나라별 상품 리스트 페이지 - 검색
-//     */
-//    @PostMapping("/admin/country/search")
-//    public String SearchCountryProductsListPage(@RequestParam("country_id") int countryId, String keyword, Model model) {
-//        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-//        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
-//        List<ProductDto> productDtos = travelProductService.findAllProductsByCountryIdAndKeyword(countryId, keyword);
-//        model.addAttribute("products", productDtos); // 여행 상품 리스트 담기
-//        model.addAttribute("count", productDtos.size()); // 여행 상품 개수 담기
-//        return "main/products_search_result";
-//    }
+    /**
+     * 나라별 상품 리스트 페이지
+     */
+    @GetMapping("/admin/country")
+    public String countryProductsListPage(@RequestParam("country_id") int countryId, Model model) {
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
+        model.addAttribute("products", travelProductService.findAllProductsByCountryId(countryId)); // 여행 상품 리스트 담기
+        return "main/country_products_list";
+    }
+
+    /**
+     * 나라별 상품 리스트 페이지 - 검색
+     */
+    @PostMapping("/admin/country/search")
+    public String SearchCountryProductsListPage(@RequestParam("country_id") int countryId, String keyword, Model model) {
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
+        model.addAttribute("products", travelProductService.findAllProductsByCountryIdAndKeyword(countryId, keyword)); // 여행 상품 리스트 담기
+        return "main/products_search_result";
+    }
 //
 //    /**
 //     * 여행지 상세 페이지
@@ -133,8 +128,7 @@ public class AdminMainController {
     @PostMapping("/guest/admin/signup-process")
     public ResponseEntity<String> signUpProcess(UserDto userDto) {
         try {
-            int imageId = userService.saveImageAndGetImageId(userDto); // 이미지 저장
-            userService.saveUser(userDto, "ROLE_ADMIN", 1, imageId); // 사용자 저장
+            userService.saveUser(userDto, "ROLE_ADMIN"); // 사용자 저장
             return ResponseEntity.ok("회원가입을 성공했습니다.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입을 실패했습니다.");
@@ -147,14 +141,5 @@ public class AdminMainController {
     @RequestMapping("/login/admin")
     public String loginPage() {
         return "admin/base_view/login";
-    }
-
-    /**
-     * Pagination 생성
-     */
-    public static Pagination getPagination() {
-        Pagination pagination = new Pagination();
-        pagination.setPageRequest(new PageRequest());
-        return pagination;
     }
 }

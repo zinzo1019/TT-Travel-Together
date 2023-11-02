@@ -23,7 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserDto userDto = userDao.findUserByEmail(email);
-
         return toUserDetails(userDto);
     }
 

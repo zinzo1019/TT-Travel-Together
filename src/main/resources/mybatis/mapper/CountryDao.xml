@@ -48,7 +48,7 @@
     <select id="findAllCountriesByKeyword" resultType="com.example.choyoujin.dto.CountryDto">
         SELECT MAX(tp.country_id) AS countryId, c.*, SUM(tp.like) AS totalLikes
         FROM country c
-                 LEFT JOIN travel_product tp ON country.id = tp.country_id
+                 LEFT JOIN travel_product tp ON c.country_id = tp.country_id
         WHERE (c.country LIKE '%' || #{keyword} || '%'
             OR c.city LIKE '%' || #{keyword} || '%')
         GROUP BY c.country_id

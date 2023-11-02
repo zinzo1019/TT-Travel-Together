@@ -18,7 +18,6 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    // http://localhost:8080/weather/seoul&units=metric
     @GetMapping("/{city}")
     public WeatherData getWeatherByCity(@PathVariable String city) {
         return weatherService.getWeatherByCity(city);

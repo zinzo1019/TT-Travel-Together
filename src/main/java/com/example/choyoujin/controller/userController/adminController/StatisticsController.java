@@ -47,7 +47,7 @@ public class StatisticsController {
         model.addAttribute("countByProducts", statisticsService.countRefundsByProduct()); // 여행 상품별 환불 건수 담기
         model.addAttribute("countByContries", statisticsService.countRefundsByCountry()); // 나라별 환불 건수 담기
         model.addAttribute("refundProducts", statisticsService.findAllProductsByRefund()); // 환불된 여행 상품 정보 담기
-        model.addAttribute("refundReasons", statisticsService.findAllRefundReasonByRefund()); // 환불 사유 담기
+        model.addAttribute("refundReasons", statisticsService.countRefundReason()); // 환불된 여행 상품 정보 담기
         return "admin/statistics/product_refund";
     }
 
@@ -68,5 +68,4 @@ public class StatisticsController {
     public List<Map<String, Object>> getRefnudChart() {
         return statisticsService.countRefundByMonth(); // 달별 환불 건수
     }
-
 }

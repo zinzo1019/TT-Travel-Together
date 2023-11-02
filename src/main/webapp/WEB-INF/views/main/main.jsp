@@ -77,7 +77,7 @@
     }
 
     .shadowed {
-        flex: 0.24; /* 모든 <a> 태그의 너비를 동일하게 설정합니다. */
+        flex: 0.25; /* 모든 <a> 태그의 너비를 동일하게 설정합니다. */
         text-decoration: none;
         color: inherit;
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); /* 그림자 스타일을 유지합니다. */
@@ -128,6 +128,7 @@
     .product-img {
         border-radius: 10px;
         height: 350px;
+        width: 100%;
     }
 
     .product-img img {

@@ -89,6 +89,7 @@ public class TravelTogetherController {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
         model.addAttribute("post", togetherService.findOneByPostId(postId)); // 게시글 정보 담기
+        model.addAttribute("recruitedMember", togetherService.findRecruitedMember(postId)); // 모집 정보 담기
         model.addAttribute("comments", commentService.findAllTogetherCommentsByPostId(postId)); // 댓글 정보 담기
         return "community/travel_together_view";
     }

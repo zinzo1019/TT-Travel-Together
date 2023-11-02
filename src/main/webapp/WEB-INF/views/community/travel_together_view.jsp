@@ -208,7 +208,6 @@
                 <h2>${post.title}</h2>
             </div>
 
-
             <div class="background-container">
                 <div class="country-container">
                     <label class="info-label">어디로 갈까요?</label>
@@ -228,6 +227,32 @@
                     <p class="info-text">${post.deadline}</p>
                 </div>
             </div>
+
+
+            <c:choose>
+                <c:when test="${empty recruitedMember}">
+                    <!-- recruitedMember가 비어있을 때 보여줄 내용 -->
+                    <div class="background-container">
+                        <div class="country-container">
+                            <label class="info-label">모집된 멤버</label>
+                        </div>
+                        <p class="info-text">모집 멤버가 없습니다.</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <!-- recruitedMember에 값이 있는 경우 보여줄 내용 -->
+                    <div class="background-container">
+                        <div class="country-container">
+                            <label class="info-label">모집된 멤버</label>
+                        </div>
+                        <c:forEach var="member" items="${recruitedMember}">
+                            <p class="info-text" style="font-weight: bold;">${member.name}</p>
+                            <p class="info-text"> | ${member.email}</p><br>
+                        </c:forEach>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
             <div class="post">
                 <p>${post.content}</p>
             </div>

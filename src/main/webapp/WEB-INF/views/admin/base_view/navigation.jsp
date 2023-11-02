@@ -6,11 +6,11 @@
         position: fixed;
         top: 50px; /* 헤더의 높이만큼 여백 추가 */
         left: 0;
+        max-width: 300px;
         width: 18%; /* 화면 너비의 18%로 설정 */
         height: 100%; /* 화면 전체 높이에 맞추세요. */
         background-color: #333;
         color: white;
-        max-height: 800px; /* 원하는 높이로 설정합니다. */
         overflow-y: scroll; /* 세로 스크롤을 추가합니다. */
         scrollbar-width: thin; /* 스크롤 바의 두께 설정 */
         scrollbar-color: transparent transparent; /* 스크롤 바 색상 설정 */
@@ -30,7 +30,7 @@
         margin: 0;
         margin-top: 15%;
         padding: 0;
-        padding-bottom: 70px;
+        height: 85%;
     }
 
     nav ul li {

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.choyoujin.controller.userController.adminController.AdminMainController.getPagination;
-
 @Controller
 public class MainController {
 
@@ -141,9 +139,6 @@ public class MainController {
     public String searchMainPage(String keyword, Model model, @RequestParam(defaultValue = "1") int page) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("searchResults", countryService.findAllCountriesByKeyword(keyword, page, 4)); // 검색 결과 담기
-        Pagination pagination = travelProductService.getPagination();
-        pagination.setTotalCount(countryService.countAllCountriesByKeyword(keyword)); // 나라 이름으로 검색된 개수
-        model.addAttribute("pagination", pagination); // 페이징 담기
         return "main/main_search_result";
     }
 
@@ -268,19 +263,22 @@ public class MainController {
      * ROLE_USER 회원가입 로직
      */
     @RequestMapping("/guest/signup-process")
-    public String signUpProcess(UserDto userDto) {
-        // todo 유효성 처리
-        int imageId = userService.saveImageAndGetImageId(userDto); // 이미지 저장
-        userService.saveUser(userDto, "ROLE_USER", 1, imageId); // 사용자 저장
-        return "login";
+    public ResponseEntity<String> signUpProcess(UserDto userDto) {
+        try {
+            userService.saveUser(userDto, "ROLE_USER");
+            return ResponseEntity.ok("회원가입에 성공했습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("회원가입에 실패했습니다.");
+        }
     }
 
     /**
      * 이메일 중복 확인
      */
-    @GetMapping("/guest/email/check")
-    public ResponseEntity<String> checkIdDuplication(@RequestParam(value = "email") String email) {
-        if (userService.isUser(email) == true) {
+    @RequestMapping("/guest/email/check")
+    public ResponseEntity<String> checkIdDuplication(UserDto userDto) {
+        if (userService.isUser(userDto.getEmail()) == true) {
+            System.out.println("중복된 아이디입니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 사용 중인 아이디입니다.");
         } else {
             return ResponseEntity.ok("사용 가능한 아이디 입니다.");

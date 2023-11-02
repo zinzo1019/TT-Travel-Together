@@ -1,22 +1,19 @@
 package com.example.choyoujin.service;
 
 import com.example.choyoujin.dao.PaymentDao;
-import com.example.choyoujin.dto.ProductDto;
-import com.example.choyoujin.dto.RefundDto;
-import com.example.choyoujin.dto.StatisticsDto;
+import com.example.choyoujin.dto.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class StatisticsService {
@@ -108,6 +105,27 @@ public class StatisticsService {
         return percentageMap;
     }
 
+
+    /**
+     * 환불 사유 퍼센티지
+     */
+    public String countRefundReason() throws JsonProcessingException {
+        Map<String, Double> map = new HashMap<>();
+        int totalRefunds = paymentDao.countAllRefunds(); // 총 환불 개수
+        List<RefundReasonDto> refundDtos = paymentDao.countRefundByRefundReason(); // 환불 사유별 환불 개수
+
+        refundDtos.forEach(dto -> {
+            double percentage = dto.getCountReason() * 100.0 / totalRefunds; // 퍼센티지 계산
+            BigDecimal bd = new BigDecimal(percentage);
+            bd = bd.setScale(1, RoundingMode.HALF_UP); // 1자리에서 반올림
+            percentage = bd.doubleValue();
+            dto.setRefundDouble(percentage);
+        });
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(refundDtos);
+    }
+
     /**
      * 여행 상품별 결제 건수 가져오기
      */
@@ -151,10 +169,5 @@ public class StatisticsService {
             refundDto.setProductDto(productService.findProductByProductId(refundDto.getProductId()));
         });
         return refundDtos;
-    }
-
-    /** 환불 사유 리스트 가져오기 */
-    public List<String > findAllRefundReasonByRefund() {
-        return paymentDao.findAllRefundReasonByRefund();
     }
 }
