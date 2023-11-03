@@ -33,13 +33,14 @@
         padding: 20px; /* 적절한 여백 */
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
-        margin-bottom: 5%;
+        margin-bottom: 8%;
         overflow-y: auto; /* 네비게이션 바 내용이 화면을 벗어날 경우 스크롤 바 추가 */
     }
 
     .main-container {
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
+        margin-bottom: 5%;
     }
 
     /* 검색창 컨테이너 스타일 */
