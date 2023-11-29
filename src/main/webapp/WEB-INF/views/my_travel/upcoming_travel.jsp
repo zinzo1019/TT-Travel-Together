@@ -211,7 +211,7 @@
                 if (!isNaN(refundReasonNumber) && refundReasonNumber >= 1 && refundReasonNumber <= 5) { // 1부터 5 사이의 숫자
                     var paymentId = $(this).data("payment-id");
                     $.ajax({
-                        url: "refund",
+                        url: "/user/mytravel/upcoming/refund",
                         type: "POST",
                         data: {
                             "paymentId": paymentId,

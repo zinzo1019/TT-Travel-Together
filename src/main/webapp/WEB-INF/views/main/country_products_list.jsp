@@ -26,6 +26,9 @@
         background-attachment: fixed; /* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) */
         background-position: center center; /* 배경 이미지를 중앙에 위치시킴 */
         height: 100vh; /* 화면 높이만큼 배경 이미지 표시 */
+        width: 100%;
+        max-width: 2000px;
+        margin: 0 auto;
     }
 
     .content {

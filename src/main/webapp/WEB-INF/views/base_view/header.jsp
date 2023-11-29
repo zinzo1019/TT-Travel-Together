@@ -3,7 +3,7 @@
 <style>
     /* 기본 여백 제거 */
     body {
-        margin: 0;
+        margin: 0 auto;
         padding: 0; /* 추가로 body의 padding도 제거해 주세요. */
     }
 
@@ -63,7 +63,7 @@
     <c:if test="${empty pageContext.request.userPrincipal }">
     <div class="welcome-message">
         <button type="button" onclick="location.href='/login'">로그인</button>
-        <button type="button" onclick="location.href='signup'">회원가입</button>
+        <button type="button" onclick="location.href='/signup'">회원가입</button>
     </div>
     </c:if>
 </header>

@@ -18,6 +18,22 @@
 <meta charset="UTF-8">
 <title>이 여행지에 관심있어요.</title>
 <style>
+    body {
+        /*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*/
+        background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');
+        background-size: cover; /* 배경 이미지를 뷰포트에 맞게 확대/축소 */
+        background-repeat: no-repeat; /* 배경 이미지 반복 비활성화 */
+        background-attachment: fixed; /* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) */
+        background-position: center center; /* 배경 이미지를 중앙에 위치시킴 */
+        height: 100vh; /* 화면 높이만큼 배경 이미지 표시 */
+        width: 100%;
+        max-width: 2000px;
+        margin: 0 auto;
+        width: 100%;
+        max-width: 2000px;
+        margin: 0 auto;
+    }
+
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
