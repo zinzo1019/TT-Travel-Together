@@ -287,7 +287,7 @@
                 <div class="change-container" style="padding-bottom: 8%;">
                     <div class="img-container">
                         <c:forEach var="country" items="${countries.content}">
-                            <a href="/admin/country?country_id=${country.countryId}" class="shadowed">
+                            <a href="/guest/country?country_id=${country.countryId}" class="shadowed">
                                 <div class="img">
                                     <img src="${country.image}">
                                     <div class="img-text">

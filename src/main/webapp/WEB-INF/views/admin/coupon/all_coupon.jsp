@@ -68,7 +68,7 @@
 
     .coupon-container {
         position: relative;
-        margin-bottom: 5%;
+        margin-bottom: 3%;
         background-color: #f0f0f0; /* 원하는 배경 색상으로 설정 */
         padding: 20px; /* 내부 여백 추가 */
         border-radius: 10px; /* 모서리 둥글게 만들기 */

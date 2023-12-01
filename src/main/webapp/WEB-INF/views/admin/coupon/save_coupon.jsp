@@ -107,7 +107,7 @@
         border-radius: 4px;
         cursor: pointer;
         position: absolute; /* 절대 위치 지정 - 게시글 div 우측 상단 버튼 위치 시키기 */
-        bottom: 4%;
+        bottom: 2%;
         right: 3%;
     }
 

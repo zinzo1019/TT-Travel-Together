@@ -81,7 +81,7 @@
     }
 
     .button-container {
-        margin-top: 2%;
+        margin-top: 1%;
     }
 
     .search-button {
@@ -126,19 +126,19 @@
                                 # ${tag.tag}&nbsp;&nbsp;
                             </c:forEach>
                         </div>
-                        <div class="like-container">
-                                <%-- 로그인 상태 --%>
-                            <c:if test="${not empty pageContext.request.userPrincipal}">
-                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}"
-                                     class="like-img">
-                                <p>${product.like}</p>
-                            </c:if>
-                                <%-- 로그아웃 상태 --%>
-                            <c:if test="${empty pageContext.request.userPrincipal}">
-                                <img src='/images/empty-like.png' class="like-img">
-                                <p>${product.like}</p>
-                            </c:if>
-                        </div>
+<%--                        <div class="like-container">--%>
+<%--                                &lt;%&ndash; 로그인 상태 &ndash;%&gt;--%>
+<%--                            <c:if test="${not empty pageContext.request.userPrincipal}">--%>
+<%--                                <img src="${product.userLiked ? '/images/like.png' : '/images/empty-like.png'}"--%>
+<%--                                     class="like-img">--%>
+<%--                                <p>${product.like}</p>--%>
+<%--                            </c:if>--%>
+<%--                                &lt;%&ndash; 로그아웃 상태 &ndash;%&gt;--%>
+<%--                            <c:if test="${empty pageContext.request.userPrincipal}">--%>
+<%--                                <img src='/images/empty-like.png' class="like-img">--%>
+<%--                                <p>${product.like}</p>--%>
+<%--                            </c:if>--%>
+<%--                        </div>--%>
                         <div class="button-container">
                                 <%-- 수정하기 버튼 --%>
                             <c:if test="${not empty pageContext.request.userPrincipal }">

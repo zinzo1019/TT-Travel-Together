@@ -21,7 +21,7 @@
 <title>통계 - 환불 건수</title>
 <style>
     .content {
-        margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
+        margin-left: 15%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
         display: flex;
         justify-content: center; /* 가로 중앙 정렬 */
@@ -33,6 +33,7 @@
         width: 70%;
         padding: 20px; /* 내부 여백 추가 */
         margin-top: 3%;
+        max-width: 3000px;
     }
 
     .chart-container {
@@ -69,6 +70,7 @@
         display: flex;
         gap: 30px;
         height: 320px;
+        max-width: 1000px;
     }
 
     .shadowed {

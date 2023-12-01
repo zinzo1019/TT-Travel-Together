@@ -211,13 +211,13 @@
                                 <c:choose>
                                     <c:when test="${post.email eq user.email}">
                                         <!-- 만약 현재 사용자가 글의 작성자라면 '모집 마감하기' 버튼을 표시 -->
-                                        <button class="support-button closeRecruitmentButton" data-post-id="${post.postId}" style="background-color: green">모집 마감하기</button>
+                                        <button class="support-button closeRecruitmentButton" data-post-id="${post.postId}" style="background-color: darkblue">모집 마감하기</button>
                                     </c:when>
                                     <c:otherwise>
                                         <!-- post.isSupported 변수를 사용하여 버튼을 설정 -->
                                         <c:choose>
                                             <c:when test="${post.supported}"> <!-- post.isSupported 변수가 true일 경우 -->
-                                                <button class="support-button cancelSupportButton" data-post-id="${post.postId}" style="background-color: blue">지원 취소하기</button>
+                                                <button class="support-button cancelSupportButton" data-post-id="${post.postId}" style="background-color: darkred">지원 취소하기</button>
                                             </c:when>
                                             <c:otherwise>
                                                 <button class="support-button pushRecruitmentButton" data-post-id="${post.postId}" style="background-color: red">지원하기</button>

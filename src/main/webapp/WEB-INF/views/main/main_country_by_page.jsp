@@ -4,7 +4,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="img-container">
     <c:forEach var="country" items="${countries.content}">
-        <a href="/admin/country?country_id=${country.countryId}" class="shadowed">
+        <a href="/guest/country?country_id=${country.countryId}" class="shadowed">
             <div class="img">
                 <img src="${country.image}">
                 <div class="img-text">

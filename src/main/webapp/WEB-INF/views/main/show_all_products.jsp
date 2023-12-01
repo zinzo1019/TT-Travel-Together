@@ -219,7 +219,7 @@
                 </div>
             </div>
             <div class="popular-container">
-                <h1>모든 여행지 둘러보기</h1>
+                <h1>모든 여행 상품 둘러보기</h1>
                 <div class="change-container">
                     <div class="img-container" style="height: 350px;">
                         <c:forEach var="product" items="${products.content}">

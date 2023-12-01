@@ -93,7 +93,8 @@
             content = #{content},
             country_id = #{countryId},
             total_number = #{totalNum},
-            deadline = #{deadline}
+            deadline = #{deadline},
+            enabled = true
         where travel_together_post_id = #{postId}
     </update>
 
@@ -101,7 +102,7 @@
     <delete id="deletetogetherPost">
         delete
         from travel_together_post
-        where travel_together_post_id = #{id}
+        where travel_together_post_id = #{postId}
     </delete>
 
     <!--    모집 기한이 지나면 모집 마감 처리-->

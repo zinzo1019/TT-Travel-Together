@@ -188,6 +188,32 @@
         margin: 0;
         display: inline-block;
     }
+
+    .background-container {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .country-container {
+        margin-bottom: 10px; /* Adjust the margin as needed */
+        background-color: #f2f2f2; /* Optional background color for better visibility */
+    }
+
+    .country-container td {
+        padding: 20px; /* Adjust the padding as needed */
+    }
+
+    .info-label {
+        display: inline-block;
+        width: 30%; /* Adjust the width as needed */
+        margin-right: 3.5%;
+    }
+
+    .info-text {
+        display: inline-block;
+        width: 65%; /* Adjust the width as needed */
+        margin: 0;
+    }
 </style>
 <body>
 <div class="content">
@@ -208,32 +234,38 @@
                 <h2>${post.title}</h2>
             </div>
 
-            <div class="background-container">
-                <div class="country-container">
-                    <label class="info-label">어디로 갈까요?</label>
-                    <p class="info-text">${post.country} - ${post.city}</p>
-                </div>
-                <div class="country-container" style="margin-top: 3%">
-                    <label class="info-label" style="margin-right: 3.5%">언제 갈까요?</label>
-                    <p class="info-text">${post.startDate}부터</p>
-                    <p class="info-text">${post.endDate}까지</p>
-                </div>
-                <div class="country-container" style="margin-top: 3%">
-                    <label class="info-label" style="margin-right: 7%">모집 인원</label>
-                    <p class="info-text">${post.recruitedNumber} / ${post.totalNum}</p>
-                </div>
-                <div class="country-container" style="margin-top: 3%">
-                    <label class="info-label">모집 마감 날짜</label>
-                    <p class="info-text">${post.deadline}</p>
-                </div>
-            </div>
-
+            <table class="background-container">
+                <tr class="country-container">
+                    <td colspan="2">
+                        <label class="info-label">어디로 갈까요?</label>
+                        <p class="info-text">${post.country} - ${post.city}</p>
+                    </td>
+                </tr>
+                <tr class="country-container">
+                    <td colspan="2">
+                        <label class="info-label">언제 갈까요?</label>
+                        <p class="info-text">${post.startDate}부터 ${post.endDate}까지</p>
+                    </td>
+                </tr>
+                <tr class="country-container">
+                    <td colspan="2">
+                        <label class="info-label">모집 인원</label>
+                        <p class="info-text">${post.recruitedNumber} / ${post.totalNum}</p>
+                    </td>
+                </tr>
+                <tr class="country-container">
+                    <td colspan="2">
+                        <label class="info-label">모집 마감 날짜</label>
+                        <p class="info-text">${post.deadline}</p>
+                    </td>
+                </tr>
+            </table>
 
             <c:choose>
                 <c:when test="${empty recruitedMember}">
                     <!-- recruitedMember가 비어있을 때 보여줄 내용 -->
-                    <div class="background-container">
-                        <div class="country-container">
+                    <div class="post" style="margin-bottom: 3%">
+                        <div style="padding-bottom: 10px;">
                             <label class="info-label">모집된 멤버</label>
                         </div>
                         <p class="info-text">모집 멤버가 없습니다.</p>
@@ -241,13 +273,13 @@
                 </c:when>
                 <c:otherwise>
                     <!-- recruitedMember에 값이 있는 경우 보여줄 내용 -->
-                    <div class="background-container">
-                        <div class="country-container">
+                    <div class="post" style="margin-bottom: 3%">
+                        <div style="padding-bottom: 10px;">
                             <label class="info-label">모집된 멤버</label>
                         </div>
                         <c:forEach var="member" items="${recruitedMember}">
-                            <p class="info-text" style="font-weight: bold;">${member.name}</p>
-                            <p class="info-text"> | ${member.email}</p><br>
+                            <span style="font-weight: bold;">${member.name}</span>
+                            <span> | ${member.email}</span><br>
                         </c:forEach>
                     </div>
                 </c:otherwise>
@@ -321,7 +353,7 @@
                 method: "POST",
                 data: {
                     userId: ${post.userId},
-                    id: ${post.postId},
+                    postId: ${post.postId},
                 },
                 success: function(data) {
                     alert("게시글을 삭제했습니다.");

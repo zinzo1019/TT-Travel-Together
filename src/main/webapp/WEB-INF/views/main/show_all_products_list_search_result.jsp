@@ -113,7 +113,7 @@
         var keyword = document.getElementById('searchInput').value;
         $.ajax({
             type: 'POST',
-            url: '../products/search',
+            url: '/guest/all/products/search',
             data: {"keyword": keyword},
             success: function (response) {
                 $("#main_search_result").html(response);

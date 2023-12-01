@@ -114,6 +114,7 @@
                  left join country ct
                            on tp.country_id = ct.country_id
         where c.tb_user_id = #{userId}
+        order by coupon_id desc
     </select>
 
     <!--    쿠폰 아이디로 쿠폰 가져오기-->

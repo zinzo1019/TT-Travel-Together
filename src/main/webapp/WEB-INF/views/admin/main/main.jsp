@@ -186,7 +186,7 @@
             <h1>인기 많은 여행지 Top 4</h1>
             <div class="img-container">
                 <c:forEach var="country" items="${countries4}">
-                    <a href="/admin/country?country_id=${country.countryId}"
+                    <a href="/guest/country?country_id=${country.countryId}"
                        style="text-decoration: none; color: inherit;">
                         <div class="img">
                             <img src="${country.image}">
@@ -207,7 +207,7 @@
                 <h1>모든 여행지</h1>
                 <div class="img-container">
                     <c:forEach var="country" items="${countries.content}">
-                        <a href="/admin/country?country_id=${country.countryId}"
+                        <a href="/guest/country?country_id=${country.countryId}"
                            style="text-decoration: none; color: inherit;">
                             <div class="img">
                                 <img src="${country.image}">
