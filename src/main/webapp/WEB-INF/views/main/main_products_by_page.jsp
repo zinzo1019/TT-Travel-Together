@@ -27,12 +27,14 @@
 <!-- 페이징 처리 -->
 <div>
     <ul class="product-pagination pagination">
-        <c:forEach begin="1" end="${products.totalPages}" varStatus="status">
-            <li class="page-item">
-                <a class="page-link" data-page="${status.index}">${status.index}</a>
-            </li>
-        </c:forEach>
-        </c:when>
+        <c:choose>
+            <c:when test="${products.totalPages > 0}">
+                <c:forEach begin="1" end="${products.totalPages}" varStatus="status">
+                    <li class="page-item">
+                        <a class="page-link" data-page="${status.index}">${status.index}</a>
+                    </li>
+                </c:forEach>
+            </c:when>
         </c:choose>
     </ul>
 </div>
