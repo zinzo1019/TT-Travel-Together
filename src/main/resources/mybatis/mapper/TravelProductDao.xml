@@ -88,7 +88,7 @@
                            on tp.travel_product_id = tpt.travel_product_id
                  left join travel_tags tt
                            on tpt.travel_tags_id = tt.travel_tags_id
-                 left join second_project.country c
+                 left join country c
                            on tp.country_id = c.country_id
         where tt.tag = #{travelTag}
         order by tp.like desc
@@ -114,7 +114,7 @@
                            on tp.travel_product_id = tpt.travel_product_id
                  left join travel_tags tt
                            on tpt.travel_tags_id = tt.travel_tags_id
-                 left join second_project.country c
+                 left join country c
                            on tp.country_id = c.country_id
         where tt.tag = #{tag}
         order by tp.like desc
@@ -140,7 +140,7 @@
                            on tp.travel_product_id = tpt.travel_product_id
                  left join travel_tags tt
                            on tpt.travel_tags_id = tt.travel_tags_id
-                 left join second_project.country c
+                 left join country c
                            on tp.country_id = c.country_id
         where tt.travel_tags_id = #{tagId}
         order by tp.like desc

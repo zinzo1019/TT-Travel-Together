@@ -73,12 +73,16 @@
     </c:forEach>
 </div>
 <!-- 페이징 처리 -->
-<ul class="pagination">
+                    <ul class="pagination">
+                        <c:choose>
+                            <c:when test="${pagination.endPage > 0}">
     <c:forEach begin="1" end="${pagination.endPage}" varStatus="status">
         <li class="page-item">
             <a class="page-link" href="?page=${status.index}">${status.index}</a>
         </li>
     </c:forEach>
+                            </c:when>
+                        </c:choose>
 </ul>
 <script>
     /** 최근 게시글 중 검색 */

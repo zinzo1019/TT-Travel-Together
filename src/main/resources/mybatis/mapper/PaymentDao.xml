@@ -146,8 +146,8 @@
     <!--    여행 상품별 결제 건수 가져오기-->
     <select id="countPaymentsByProduct" resultType="com.example.choyoujin.dto.StatisticsDto">
         select tp.travel_product_id, tp.name, count(tpp.travel_product_payment_id)
-        from second_project.travel_product tp
-                 left join second_project.travel_product_payment tpp
+        from travel_product tp
+                 left join travel_product_payment tpp
                            on tp.travel_product_id = tpp.travel_product_id
         group by tp.travel_product_id, tp.name
         having count(tpp.travel_product_payment_id) >= 1
@@ -157,10 +157,10 @@
     <!--    여행 상품별 환불 건수 가져오기-->
     <select id="countRefundsByProduct" resultType="com.example.choyoujin.dto.StatisticsDto">
         select tp.travel_product_id, tp.name, count(tpr.travel_product_refund_id)
-        from second_project.travel_product tp
-                 left join second_project.travel_product_payment tpp
+        from travel_product tp
+                 left join travel_product_payment tpp
                            on tp.travel_product_id = tpp.travel_product_id
-                 left join second_project.travel_product_refund tpr
+                 left join travel_product_refund tpr
                            on tpp.travel_product_payment_id = tpr.travel_product_payment_id
         group by tp.travel_product_id, tp.name
         having count(tpr.travel_product_refund_id) >= 1
@@ -170,10 +170,10 @@
     <!--    나라별 결제 건수-->
     <select id="countPaymentsByCountry" resultType="com.example.choyoujin.dto.StatisticsDto">
         select c.country_id, c.country as name, count(tpp.travel_product_payment_id)
-        from second_project.country c
-                 left join second_project.travel_product tp
+        from country c
+                 left join travel_product tp
                            on c.country_id = tp.country_id
-                 left join second_project.travel_product_payment tpp
+                 left join travel_product_payment tpp
                            on tp.travel_product_id = tpp.travel_product_id
         group by c.country_id
         having count(tpp.travel_product_payment_id) >= 1
@@ -183,12 +183,12 @@
     <!--    나라별 환불 건수-->
     <select id="countRefundsByCountry" resultType="com.example.choyoujin.dto.StatisticsDto">
         select c.country_id, c.country as name, count(tpr.travel_product_refund_id)
-        from second_project.country c
-                 left join second_project.travel_product tp
+        from country c
+                 left join travel_product tp
                            on c.country_id = tp.country_id
-                 left join second_project.travel_product_payment tpp
+                 left join travel_product_payment tpp
                            on tp.travel_product_id = tpp.travel_product_id
-                 left join second_project.travel_product_refund tpr
+                 left join travel_product_refund tpr
                            on tpp.travel_product_payment_id = tpr.travel_product_payment_id
         group by c.country_id
         having count(tpr.travel_product_refund_id) >= 1
@@ -253,7 +253,7 @@
                            on tpp.travel_product_id = tp.travel_product_id
                  left join travel_product_image tpi
                            on tp.travel_product_image_id = tpi.travel_product_image_id
-                 left join second_project.tb_user tu2
+                 left join tb_user tu2
                            on tp.tb_user_id = tu2.tb_user_id
         where tpp.available = true
         order by tpp.create_date desc

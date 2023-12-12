@@ -246,7 +246,9 @@
                         </div>
                         <!-- 페이징 처리 -->
                         <div>
-                            <ul class="pagination">
+                                                <ul class="pagination">
+                        <c:choose>
+                            <c:when test="${productsByTag.pagination.endPage > 0}">
                                 <c:forEach begin="${productsByTag.pagination.startPage + 1}"
                                            end="${productsByTag.pagination.endPage}" varStatus="status">
                                     <li class="page-item">
@@ -254,6 +256,8 @@
                                            data-tag-id=${productsByTag.tagId} data-page="${status.index}">${status.index}</a>
                                     </li>
                                 </c:forEach>
+                            </c:when>
+                        </c:choose>
                             </ul>
                         </div>
                     </div>

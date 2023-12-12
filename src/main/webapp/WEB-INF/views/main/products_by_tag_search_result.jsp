@@ -34,6 +34,8 @@
                         <a class="page-link" data-page="${status.index}">${status.index}</a>
                     </li>
                 </c:forEach>
+                </c:when>
+                </c:choose>
             </ul>
         </div>
     </div>

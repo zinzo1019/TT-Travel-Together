@@ -24,11 +24,15 @@
 
 <!-- 페이징 처리 -->
 <ul class="country-pagination pagination">
-    <c:forEach begin="1" end="${countries.totalPages-1}" varStatus="status">
-        <li class="page-item">
-            <a class="page-link" data-page="${status.index}">${status.index}</a>
-        </li>
-    </c:forEach>
+    <c:choose>
+        <c:when test="${countries.totalPages-1 > 0}">
+            <c:forEach begin="1" end="${countries.totalPages-1}" varStatus="status">
+                <li class="page-item">
+                    <a class="page-link" data-page="${status.index}">${status.index}</a>
+                </li>
+            </c:forEach>
+        </c:when>
+    </c:choose>
 </ul>
 </div>
 <script>
