@@ -1,10 +1,14 @@
 package com.example.choyoujin.service;
 
+import com.example.choyoujin.dao.ChatDao;
 import com.example.choyoujin.dao.RecruitedDao;
 import com.example.choyoujin.dao.TravelTogetherDao;
 import com.example.choyoujin.dto.PostDto;
 import com.example.choyoujin.dto.SearchDto;
 import com.example.choyoujin.dto.UserDto;
+import com.example.choyoujin.websocket.ChatMessageDto;
+import com.example.choyoujin.websocket.ChatRoom;
+import com.example.choyoujin.websocket.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,8 @@ public class TravelTogetherService {
     private CommentServiceImpl commentService;
     @Autowired
     private RecruitedDao recruitedDao;
+    @Autowired
+    private ChatService chatService;
 
     /**
      * 모집 게시글 저장하기
@@ -31,6 +37,12 @@ public class TravelTogetherService {
         postDto.setUserId(userService.getUserData().getUserId()); // 작성자 아이디 Set
         postDto.setCreateDate(LocalDate.now()); // 생성 날짜 set
         togetherDao.saveTogetherPost(postDto);
+
+        // 채팅방 생성하기
+        chatService.createRoom(ChatRoom.builder()
+                .name("travel_together_room_" + postDto.getPostId())
+                .postId(postDto.getPostId())
+                .build());
     }
 
     /**

@@ -276,6 +276,7 @@
                     <div class="post" style="margin-bottom: 3%">
                         <div style="padding-bottom: 10px;">
                             <label class="info-label">모집된 멤버</label>
+                            <button class="post-button" style="float: right;" onclick="enterRoom(${post.postId})">채팅방 입장하기</button>
                         </div>
                         <c:forEach var="member" items="${recruitedMember}">
                             <span style="font-weight: bold;">${member.name}</span>
@@ -365,6 +366,34 @@
             });
         }
     });
+
+    /** 채팅방 입장하기 */
+    function enterRoom(postId) {
+        let roomName = "travel_together_room_" + postId;
+
+        let form = $('<form>', {
+            'style': 'display:none',
+            'method': 'post',
+            'action': '/user/chat/createRoom'
+        });
+
+        let nameInput = $('<input>', {
+            'type': 'hidden',
+            'name': 'name',
+            'value': roomName
+        });
+        let postIdInput = $('<input>', {
+            'type': 'hidden',
+            'name': 'postId',
+            'value': postId
+        });
+
+        form.append(nameInput);
+        form.append(postIdInput);
+        $('body').append(form);
+        form.submit();
+    }
+
 
     /** 댓글 작성 */
     $(document).ready(function () {
