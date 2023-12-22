@@ -9,11 +9,11 @@
     <select id="findOneByPostId" resultType="com.example.choyoujin.dto.PostDto">
         SELECT ttp.travel_together_post_id as postId,
                ttp.*,
-               ttp.recruited_number AS recruitedNumber,
-               ttp.total_number     AS totalNum,
-               tu.tb_user_id as userId,
+               ttp.recruited_number        AS recruitedNumber,
+               ttp.total_number            AS totalNum,
+               tu.tb_user_id               as userId,
                tu.email,
-               tu.name              AS userName,
+               tu.name                     AS userName,
                c.country,
                c.city,
                CASE
@@ -33,12 +33,17 @@
     <!--    모든 모집글 가져오기-->
     <select id="findAllTogetherPostsByEnabled" resultType="com.example.choyoujin.dto.PostDto">
         SELECT ttp.travel_together_post_id as postId,
-               ttp.*, tu.email
+               ttp.*,
+               tu.email
         FROM travel_together_post ttp
                  LEFT JOIN tb_user tu
                            ON ttp.tb_user_id = tu.tb_user_id
         where ttp.enabled = #{enabled}
-        ORDER BY ttp.deadline ASC
+        ORDER BY case
+                     when ttp.tb_user_id = #{userId}
+                         then 1
+                     else 0 end,
+                 ttp.deadline ASC
     </select>
 
     <!--    마이페이지 - 사용자별 모집글 가져오기-->
@@ -53,7 +58,7 @@
     <!--    모집글 검색하기 (나라와 날짜)-->
     <select id="findAllByCountryIdAndEnabled" resultType="com.example.choyoujin.dto.PostDto">
         SELECT ttp.travel_together_post_id as postId,
-               ttp.*, tu.email
+        ttp.*, tu.email
         FROM travel_together_post ttp
         LEFT JOIN tb_user tu
         ON ttp.tb_user_id = tu.tb_user_id
@@ -89,12 +94,12 @@
     <!--    게시글 수정하기-->
     <update id="updateTogetherPostByPostDto">
         UPDATE travel_together_post
-        SET title = #{title},
-            content = #{content},
-            country_id = #{countryId},
+        SET title        = #{title},
+            content      = #{content},
+            country_id   = #{countryId},
             total_number = #{totalNum},
-            deadline = #{deadline},
-            enabled = true
+            deadline     = #{deadline},
+            enabled      = true
         where travel_together_post_id = #{postId}
     </update>
 
@@ -137,14 +142,17 @@
 
     <!--    사용자 아이디와 게시글 아이디로 지원 여부 확인하기-->
     <select id="findIsSupportedByPostIdAndUserId" resultType="boolean">
-        SELECT
-            CASE
-                WHEN EXISTS(
-                    SELECT 1
-                    FROM recruited_member
-                    WHERE travel_together_post_id = #{postId} AND tb_user_id = #{userId}
-                ) THEN true
-                ELSE false
-                END AS supported
+        SELECT CASE
+                   WHEN EXISTS(SELECT 1
+                               FROM recruited_member
+                               WHERE travel_together_post_id = #{postId}
+                                 AND tb_user_id = #{userId}) THEN true
+                   ELSE false
+                   END AS supported
+    </select>
+
+    <select id="getMaxId" resultType="int">
+        select max(travel_together_post_id)
+        from travel_together_post ttp
     </select>
 </mapper>

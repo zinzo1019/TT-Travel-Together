@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface TravelTogetherDao {
     void saveTogetherPost(PostDto postDto);
-    List<PostDto> findAllTogetherPostsByEnabled(boolean enabled);
+    List<PostDto> findAllTogetherPostsByEnabled(boolean enabled, int userId);
     void disableExpiredPosts(LocalDate now);
     void updateEnabledByPostId(int postId, boolean enabled);
     void updateRecruitedNumber(int postId);
@@ -21,4 +21,5 @@ public interface TravelTogetherDao {
     void updateTogetherPostByPostDto(PostDto postDto);
     void deletetogetherPost(PostDto postDto);
     boolean findIsSupportedByPostIdAndUserId(int userId, int postId);
+    int getMaxId();
 }

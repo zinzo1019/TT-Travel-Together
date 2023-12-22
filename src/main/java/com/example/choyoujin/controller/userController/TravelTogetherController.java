@@ -3,7 +3,9 @@ package com.example.choyoujin.controller.userController;
 import com.example.choyoujin.dto.CommentDto;
 import com.example.choyoujin.dto.PostDto;
 import com.example.choyoujin.dto.SearchDto;
+import com.example.choyoujin.dto.UserDto;
 import com.example.choyoujin.service.*;
+import com.example.choyoujin.websocket.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,16 +32,20 @@ public class TravelTogetherController {
     private RecruitedService recruitedService;
     @Autowired
     private CommentServiceImpl commentService;
+    @Autowired
+    private ChatService chatService;
 
     /**
      * 같이 여행 가요 - 리스트 페이지
      */
     @GetMapping("")
     public String travelTogetherPage(Model model) {
-        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+        UserDto userDto = userService.getUserData();
+        model.addAttribute("user", userDto); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
-        List<PostDto> postsByTrue = togetherService.findAllTogetherPostsByEnabled(true); // 마감 전
-        List<PostDto> postsByFalse = togetherService.findAllTogetherPostsByEnabled(false); // 마감 후
+
+        List<PostDto> postsByTrue = togetherService.findAllTogetherPostsByEnabled(true, userDto.getUserId()); // 마감 전
+        List<PostDto> postsByFalse = togetherService.findAllTogetherPostsByEnabled(false, userDto.getUserId()); // 마감 후
         model.addAttribute("postsByTrue", postsByTrue); // 모집 게시글 리스트 담기 (마감 전)
         model.addAttribute("postsByFalse", postsByFalse); // 모집 게시글 리스트 담기 (마감 후)
         return "community/travel_together";
@@ -85,12 +91,17 @@ public class TravelTogetherController {
      * 같이 여행 가요 - 뷰 페이지
      */
     @GetMapping("/view")
-    public String travelTogetherViewPage(@RequestParam("postId") int postId, Model model) {
+    public String travelTogetherViewPage(@RequestParam("postId") int postId, Model model, @RequestParam(name = "error", required = false) String error) {
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
         model.addAttribute("options", countryService.findAllCountries()); // 나라 정보 담기
         model.addAttribute("post", togetherService.findOneByPostId(postId)); // 게시글 정보 담기
         model.addAttribute("recruitedMember", togetherService.findRecruitedMember(postId)); // 모집 정보 담기
         model.addAttribute("comments", commentService.findAllTogetherCommentsByPostId(postId)); // 댓글 정보 담기
+        model.addAttribute("chatRoom", chatService.findRoomById("travel_together_room_" + postId)); // 채팅방 정보 담기
+
+        if (error != null && error.equals("NQ")) {
+            model.addAttribute("error", "모집글에 지원하지 않은 경우, 채팅방 접근 권한이 없습니다."); // 에러 메세지 담기
+        }
         return "community/travel_together_view";
     }
 

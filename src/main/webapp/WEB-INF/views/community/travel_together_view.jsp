@@ -17,16 +17,6 @@
 <meta charset="UTF-8">
 <title>여행에 대해 궁금해요.</title>
 <style>
-    /*body {*/
-    /*    !*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*!*/
-    /*    background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');*/
-    /*    background-size: cover; !* 배경 이미지를 뷰포트에 맞게 확대/축소 *!*/
-    /*    background-repeat: no-repeat; !* 배경 이미지 반복 비활성화 *!*/
-    /*    background-attachment: fixed; !* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) *!*/
-    /*    background-position: center center; !* 배경 이미지를 중앙에 위치시킴 *!*/
-    /*    height: 100vh; !* 화면 높이만큼 배경 이미지 표시 *!*/
-    /*}*/
-
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -267,6 +257,7 @@
                     <div class="post" style="margin-bottom: 3%">
                         <div style="padding-bottom: 10px;">
                             <label class="info-label">모집된 멤버</label>
+                            <button onclick="window.location.href='/user/chat/chatRoom/${chatRoom.roomid}'" class="post-button" style="float: right;">채팅방 입장하기</button>
                         </div>
                         <p class="info-text">모집 멤버가 없습니다.</p>
                     </div>
@@ -276,7 +267,7 @@
                     <div class="post" style="margin-bottom: 3%">
                         <div style="padding-bottom: 10px;">
                             <label class="info-label">모집된 멤버</label>
-                            <button class="post-button" style="float: right;" onclick="enterRoom(${post.postId})">채팅방 입장하기</button>
+                            <button onclick="window.location.href='/user/chat/chatRoom/${chatRoom.roomid}'" class="post-button" style="float: right;">채팅방 입장하기</button>
                         </div>
                         <c:forEach var="member" items="${recruitedMember}">
                             <span style="font-weight: bold;">${member.name}</span>
@@ -326,6 +317,11 @@
     </div>
 </div>
 <script>
+    /** 채팅방 입장 에러 */
+    if ('${error}') {
+        alert('${error}')
+    }
+
     /** 수정하기 & 삭제하기 버튼 */
     document.addEventListener("DOMContentLoaded", function () {
         var loggedInUserId = "${user.userId}"; // 로그인한 사용자

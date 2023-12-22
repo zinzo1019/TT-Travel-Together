@@ -29,7 +29,6 @@ public class WebSocketChatHandler implements WebSocketHandler {
     // 소켓 연결 성공
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // todo auto generated method stub
         log.info("{} 연결됨", session.getId());
         sessions.add(session);
     }
@@ -43,20 +42,20 @@ public class WebSocketChatHandler implements WebSocketHandler {
         // 페이로드 -> chatMessageDto 변환
         ChatMessageDto chatMessageDto = mapper.readValue(payload, ChatMessageDto.class);
 
-        // room1의 아이디
+        // room의 아이디
         String chatRoomId = chatMessageDto.getChatRoomId();
 
         // 메모리 상에 채팅방에 대한 세션이 없으면 만들어줌
         if (!chatRoomSessionMap.containsKey(chatRoomId)) {
-            // room1을 sessionMap에 추가
+            // room을 sessionMap에 추가
             chatRoomSessionMap.put(chatRoomId, new HashSet<>());
         }
 
-        // room1과 연결된 모든 세션 가져오기
+        // room과 연결된 모든 세션 가져오기
         Set<WebSocketSession> chatRoomSession = chatRoomSessionMap.get(chatRoomId);
 
-        if (chatMessageDto.getMessageType().equals(MessageType.ENTER)) { // 메세지에 담긴 타입 확인
-            chatRoomSession.add(session); // room1에 세션 추가
+        if (chatMessageDto.getMessageType().equals("ENTER")) { // 메세지에 담긴 타입 확인
+            chatRoomSession.add(session); // room에 세션 추가
         }
 
         if (chatRoomSession.size() >= 3) {
@@ -86,7 +85,6 @@ public class WebSocketChatHandler implements WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
-        // todo auto generated method stub
         log.info("{} 연결 끊김", session.getId());
         sessions.remove(session);
     }

@@ -26,7 +26,7 @@ public class WebSecurityConfig {
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
     @Autowired
-    private AuthenticationSuccessHandler authenticationSuccessHandler; // 로그인 성공 시
+    private CustomAuthenticationSuccessHandler authenticationSuccessHandler; // 로그인 성공 시
 
     @Order(1)
     @Configuration
@@ -44,7 +44,7 @@ public class WebSecurityConfig {
 
             http.formLogin()
                     .loginPage("/login") // 사용자 로그인 페이지
-                    .successHandler(authenticationSuccessHandler) // 커스텀 AuthenticationSuccessHandler 등록
+                    .successHandler(authenticationSuccessHandler)
                     .failureHandler(authenticationFailureHandler)
                     .usernameParameter("email") // "login.jsp"에서 지정한 변수명으로 파라미터명 설정
                     .passwordParameter("password")

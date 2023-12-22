@@ -19,7 +19,7 @@
     <c:forEach var="room" items="${roomList}">
         <tr>
             <td>
-                <a id="room_${room.roomId}" href="/user/chat/chatRoom/${room.roomId}" class="chatRoom" data-room-id="${room.roomId}">${room.name}</a>
+                <a id="room_${room.roomid}" href="/user/chat/chatRoom/${room.roomid}" class="chatRoom" data-room-id="${room.roomid}">${room.roomid}</a>
             </td>
         </tr>
     </c:forEach>

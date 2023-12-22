@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.choyoujin.dao.ChatDao">
+
+    <!--   채팅방 저장하기-->
+    <insert id="saveChatRoom">
+        insert into chat_room(chat_room_id, post_id)
+        values (#{roomId}, #{postId})
+    </insert>
+
+    <!--    채팅 메세지 저장하기-->
+    <insert id="saveChatMessage">
+        insert into chat_message (message_type,
+                                  chat_room_id,
+                                  sender_id,
+                                  message,
+                                  create_time)
+        values (#{messageType},
+                #{chatRoomId},
+                #{senderId},
+                #{message},
+                now())
+    </insert>
+
+<!--    채팅 내역 삭제하기-->
+    <update id="deleteChatMessagesByCRoomId">
+        update chat_message
+        set use_yn = false,
+            update_time = now()
+        where chat_room_id = #{roomId}
+    </update>
+
+<!--    채팅방 삭제하기-->
+    <update id="deleteChatRoom">
+        update chat_room
+        set use_yn = false
+        where chat_room_id = #{roomId}
+    </update>
+
+    <!--    채팅방 리스트 가져오기-->
+    <select id="findAllChatRoom" resultType="java.util.Map">
+        select chat_room_id as roomId
+             , post_id      as postId
+        from chat_room
+        where use_yn = true
+    </select>
+
+    <!--    채팅방 아이디로 채팅방 정보 가져오기-->
+    <select id="findRoomByRoomId" resultType="java.util.Map">
+        select chat_room_id as roomId
+             , post_id      as postId
+        from chat_room
+        where chat_room_id = #{roomId}
+    </select>
+
+    <!--    채팅방별 채팅 내역 가져오기-->
+    <select id="findAllChatByRoomId" resultType="java.util.Map">
+        select chat_room_id as "chatRoomId",
+               message,
+               sender_id    as "senderId",
+               tu."name"    as "senderName",
+               message_type as "messageType",
+               create_time  as "createTime"
+        from chat_message cm
+                 left join tb_user tu
+                           on cm.sender_id = tu.tb_user_id
+        where chat_room_id = #{roomId}
+        and use_yn = true
+        order by create_time
+    </select>
+</mapper>

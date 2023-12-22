@@ -1,12 +1,10 @@
 package com.example.choyoujin.service;
 
-import com.example.choyoujin.dao.ChatDao;
 import com.example.choyoujin.dao.RecruitedDao;
 import com.example.choyoujin.dao.TravelTogetherDao;
 import com.example.choyoujin.dto.PostDto;
 import com.example.choyoujin.dto.SearchDto;
 import com.example.choyoujin.dto.UserDto;
-import com.example.choyoujin.websocket.ChatMessageDto;
 import com.example.choyoujin.websocket.ChatRoom;
 import com.example.choyoujin.websocket.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,19 +35,20 @@ public class TravelTogetherService {
         postDto.setUserId(userService.getUserData().getUserId()); // 작성자 아이디 Set
         postDto.setCreateDate(LocalDate.now()); // 생성 날짜 set
         togetherDao.saveTogetherPost(postDto);
+        int seq = togetherDao.getMaxId();
 
         // 채팅방 생성하기
         chatService.createRoom(ChatRoom.builder()
-                .name("travel_together_room_" + postDto.getPostId())
-                .postId(postDto.getPostId())
+                .roomId("travel_together_room_" + seq)
+                .postId(seq)
                 .build());
     }
 
     /**
      * 모집 마감 여부에 따른 모집글 리스트 가져오기
      */
-    public List<PostDto> findAllTogetherPostsByEnabled(boolean enabled) {
-        List<PostDto> posts = togetherDao.findAllTogetherPostsByEnabled(enabled); // 모집글 리스트 가져오기
+    public List<PostDto> findAllTogetherPostsByEnabled(boolean enabled, int userId) {
+        List<PostDto> posts = togetherDao.findAllTogetherPostsByEnabled(enabled, userId); // 모집글 리스트 가져오기
         for (PostDto dto : posts) {
             boolean supported = togetherDao.findIsSupportedByPostIdAndUserId(userService.getUserData().getUserId(), dto.getPostId()); // 모집 지원 여부
             dto.setSupported(supported);
@@ -79,7 +78,9 @@ public class TravelTogetherService {
         togetherDao.updateRecruitedNumber(postId);
     }
 
-    /** 지원자 수 1 감소 */
+    /**
+     * 지원자 수 1 감소
+     */
     public void cancelRecruitedNumber(int postId) {
         togetherDao.cancelRecruitedNumber(postId);
     }
@@ -132,8 +133,11 @@ public class TravelTogetherService {
         if (userService.compareWriterAndUser(postDto.getUserId())) { // 삭제 권한 확인
             commentService.deleteTogetherCommentsByPostId(postDto.getPostId()); // 댓글 리스트 삭제
             recruitedDao.deleteAllByPostId(postDto.getPostId()); // 모집된 인원 삭제
+
+            chatService.deleteChatMessagesByCRoomId("travel_together_room_" + postDto.getPostId()); // 채팅 내역 삭제
+            chatService.deleteChatRoom("travel_together_room_" + postDto.getPostId());// 채팅방 삭제
+
             togetherDao.deletetogetherPost(postDto); // 게시글 삭제
-        }
-        else throw new Exception("수정 권한이 없습니다.");
+        } else throw new Exception("수정 권한이 없습니다.");
     }
 }
