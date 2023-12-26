@@ -171,9 +171,6 @@
         let messageDto = e.data;
         let splitMessageDto = messageDto.split('"');
 
-        console.log(messageDto)
-        console.log(splitMessageDto)
-
         let username = splitMessageDto[splitMessageDto.indexOf('name') + 2]
         let message = splitMessageDto[splitMessageDto.indexOf('message') + 2]
 

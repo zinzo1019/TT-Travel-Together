@@ -23,21 +23,21 @@ public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
 
-    /** 채팅방 생성 */
-    @PostMapping("/createRoom")
-    public String createRoom(ChatRoom chatRoom, Model model) {
-        ChatRoom room = chatService.createRoom(chatRoom);
-        model.addAttribute("room",room);
-        return "chat/chatRoom";
-    }
-
-    /** 채팅방 입장하기 */
-    @PostMapping("/enterRoom")
-    public String enterRoom(ChatRoom chatRoom, Model model) {
-        ChatRoom room = chatService.createRoom(chatRoom);
-        model.addAttribute("room",room);
-        return "chat/chatRoom";
-    }
+//    /** 채팅방 생성 */
+//    @PostMapping("/createRoom")
+//    public String createRoom(ChatRoom chatRoom, Model model) {
+//        ChatRoom room = chatService.createRoom(chatRoom);
+//        model.addAttribute("room",room);
+//        return "chat/chatRoom";
+//    }
+//
+//    /** 채팅방 입장하기 */
+//    @PostMapping("/enterRoom")
+//    public String enterRoom(ChatRoom chatRoom, Model model) {
+//        ChatRoom room = chatService.createRoom(chatRoom);
+//        model.addAttribute("room",room);
+//        return "chat/chatRoom";
+//    }
 
     /** 모든 채팅방 리스트 가져오기 */
     @RequestMapping("/chatList")
