@@ -12,7 +12,7 @@
     <%--                모집 마감 전--%>
     <c:forEach var="post" items="${postsByTrue}">
         <li class="post-list-item">
-            <a href="together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
+            <a href="/user/community/together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
 
                 <div class="post">
                     <p style="margin: 1% 0; color: red; font-weight: bold; font-size: 13px;">${post.recruitedNumber}명이 함께하고 있어요!</p>

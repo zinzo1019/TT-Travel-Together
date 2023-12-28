@@ -160,6 +160,7 @@
 
     socket.onclose = function (e) {
         console.log('disconnet');
+        location.reload(); // 새로고침
     };
 
     socket.onerror = function (e) {
@@ -224,7 +225,7 @@
     function quit() {
         var quitMsg = {"messageType": "QUIT", "chatRoomId": roomId, "name": username, "message": ""};
         socket.send(JSON.stringify(quitMsg));
-        socket.close();
+        // socket.close();
         history.back();
     }
 </script>

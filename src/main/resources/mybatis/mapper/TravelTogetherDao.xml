@@ -155,4 +155,23 @@
         select max(travel_together_post_id)
         from travel_together_post ttp
     </select>
+
+    <!--    내가 지원한 여행 모집글 정보 가져오기-->
+    <select id="findAllTogetherPostsIAppliedFor" resultType="com.example.choyoujin.dto.PostDto">
+        select ttp.travel_together_post_id                                       as postId,
+               ttp.title,
+               ttp."content",
+               EXTRACT(day from (ttp.deadline - now()))                          AS remainingDays,
+               ttp.enabled,
+               (select count(rm.travel_together_post_id)
+                from recruited_member rm
+                group by rm.travel_together_post_id
+                having rm.travel_together_post_id = ttp.travel_together_post_id) as recruitedNumber
+        from travel_together_post ttp
+                 right join recruited_member rm ON ttp.travel_together_post_id = rm.travel_together_post_id
+                 left join tb_user tu on rm.tb_user_id = tu.tb_user_id
+        where ttp.enabled = #{enabled}
+          and rm.tb_user_id = #{userId}
+        group by ttp.travel_together_post_id
+    </select>
 </mapper>

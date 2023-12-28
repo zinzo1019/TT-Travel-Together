@@ -26,16 +26,6 @@
 <meta charset="UTF-8">
 <title>같이 여행 가요!</title>
 <style>
-    /*body {*/
-    /*    !*background-image: url('https://cdn.pixabay.com/photo/2020/03/18/14/48/clouds-4944276_640.jpg');*!*/
-    /*    background-image: url('https://cdn.pixabay.com/photo/2016/03/27/07/32/clouds-1282314_640.jpg');*/
-    /*    background-size: cover; !* 배경 이미지를 뷰포트에 맞게 확대/축소 *!*/
-    /*    background-repeat: no-repeat; !* 배경 이미지 반복 비활성화 *!*/
-    /*    background-attachment: fixed; !* 배경 이미지를 고정 (스크롤해도 배경 이미지가 고정됨) *!*/
-    /*    background-position: center center; !* 배경 이미지를 중앙에 위치시킴 *!*/
-    /*    height: 100vh; !* 화면 높이만큼 배경 이미지 표시 *!*/
-    /*}*/
-
     .content {
         margin-left: 18%; /* 네비게이션 바의 넓이와 일치하도록 설정 */
         padding: 20px; /* 적절한 여백 */
@@ -203,7 +193,7 @@
                 <%--                모집 마감 전--%>
                 <c:forEach var="post" items="${postsByTrue}">
                     <li class="post-list-item">
-                        <a href="together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
+                        <a href="/user/community/together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
                             <div class="post">
                                 <p style="margin: 1% 0; color: red; font-weight: bold; font-size: 13px;">${post.recruitedNumber}명이 함께하고 있어요!</p>
                                 <h2>${post.title}</h2>
@@ -243,7 +233,7 @@
                 </c:forEach>
                 <%--                모집 마감 후--%>
                 <c:forEach var="post" items="${postsByFalse}">
-                    <a href="together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
+                    <a href="/user/community/together/view?postId=${post.postId}" style="text-decoration: none; color: inherit;">
                     <li class="post-list-item">
                         <div class="post">
                             <p style="margin: 1% 0; color: red; font-weight: bold; font-size: 13px;">${post.recruitedNumber}명이 함께하고 있어요!</p>

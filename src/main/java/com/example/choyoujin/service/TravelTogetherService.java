@@ -140,4 +140,16 @@ public class TravelTogetherService {
             togetherDao.deletetogetherPost(postDto); // 게시글 삭제
         } else throw new Exception("수정 권한이 없습니다.");
     }
+
+    /**
+     * 내가 지원한 여행 모집글 리스트 가져오기
+     */
+    public List<PostDto> findAllTogetherPostsIAppliedFor(boolean enabled, int userId) {
+        try {
+            return togetherDao.findAllTogetherPostsIAppliedFor(enabled, userId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

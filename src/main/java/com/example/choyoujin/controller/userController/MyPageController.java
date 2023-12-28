@@ -1,5 +1,7 @@
 package com.example.choyoujin.controller.userController;
 
+import com.example.choyoujin.dto.PostDto;
+import com.example.choyoujin.dto.UserDto;
 import com.example.choyoujin.service.CountryService;
 import com.example.choyoujin.service.CuriousService;
 import com.example.choyoujin.service.TravelTogetherService;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/user")
 public class MyPageController {
@@ -21,11 +25,24 @@ public class MyPageController {
     @Autowired
     private UserService userService;
     @Autowired
-    private CountryService countryService;
-    @Autowired
     private TravelTogetherService togetherService;
     @Autowired
     private CuriousService curiousService;
+
+    /**
+     * 나의 '같이 여행 가요' - 내가 지원한 여행 모집글 리스트 페이지
+     */
+    @GetMapping("/mypage/together/apply")
+    public String travelTogetherIAppliedForPage(Model model) {
+        UserDto userDto = userService.getUserData();
+        model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
+
+        List<PostDto> postsByTrue = togetherService.findAllTogetherPostsIAppliedFor(true, userDto.getUserId()); // 마감 전
+        List<PostDto> postsByFalse = togetherService.findAllTogetherPostsIAppliedFor(false, userDto.getUserId()); // 마감 후
+        model.addAttribute("postsByTrue", postsByTrue); // 모집 게시글 리스트 담기 (마감 전)
+        model.addAttribute("postsByFalse", postsByFalse); // 모집 게시글 리스트 담기 (마감 후)
+        return "my_page/travel_together";
+    }
 
     /**
      * 나의 '같이 여행 가요' - 리스트 페이지

@@ -22,4 +22,5 @@ public interface TravelTogetherDao {
     void deletetogetherPost(PostDto postDto);
     boolean findIsSupportedByPostIdAndUserId(int userId, int postId);
     int getMaxId();
+    List<PostDto> findAllTogetherPostsIAppliedFor(boolean enabled, int userId);
 }
