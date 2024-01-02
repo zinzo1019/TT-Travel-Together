@@ -1,4 +1,4 @@
-package com.example.choyoujin.controller.userController.adminController;
+package com.example.choyoujin.controller.adminController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

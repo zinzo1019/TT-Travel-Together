@@ -1,4 +1,4 @@
-package com.example.choyoujin.controller.userController.adminController;
+package com.example.choyoujin.controller.adminController;
 
 import com.example.choyoujin.service.StatisticsService;
 import com.example.choyoujin.service.UserService;

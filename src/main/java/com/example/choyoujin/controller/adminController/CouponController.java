@@ -1,4 +1,4 @@
-package com.example.choyoujin.controller.userController.adminController;
+package com.example.choyoujin.controller.adminController;
 
 import com.example.choyoujin.dto.CouponDto;
 import com.example.choyoujin.dto.ProductDto;
