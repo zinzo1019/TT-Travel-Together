@@ -2,12 +2,18 @@ package com.example.choyoujin.service;
 
 import com.example.choyoujin.dao.CountryDao;
 import com.example.choyoujin.dto.CountryDto;
+import com.example.choyoujin.dto.NewsDto;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -54,5 +60,30 @@ public class CountryService {
         List<CountryDto> countryDtos = countryDao.findAllCountriesByKeyword(keyword, start, size);
         int total = countryDao.countAllCountriesByKeyword(keyword);
         return new PageImpl<>(countryDtos, PageRequest.of(page -1, size), total);
+    }
+
+    /** 나라별 기사 크롤링 */
+    public List<NewsDto> crawlNaverNewsHeadlines(String country) {
+        String url = "https://www.donga.com/news/search?query=" + country;
+        List<NewsDto> newsDtos = new ArrayList<>();
+        try {
+            Document doc = Jsoup.connect(url).get();
+            Elements headlines = doc.select(".articleList .tit a");
+
+            for (int i = 0; i < 5; i++) {
+                String title = headlines.get(i).attr("data-ep_button_name");
+                String href = headlines.get(i).attr("href");
+
+                NewsDto newsDto = NewsDto.builder()
+                        .title(title)
+                        .url(href)
+                        .build();
+                newsDtos.add(newsDto);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return newsDtos;
     }
 }

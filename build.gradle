@@ -97,6 +97,12 @@ dependencies {
 
     // websocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // JSoup
+    implementation 'org.jsoup:jsoup:1.15.3'
+
+    // Selinium
+    implementation 'org.seleniumhq.selenium:selenium-java'
 }
 
 tasks.named('test') {

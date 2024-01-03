@@ -147,9 +147,11 @@ public class MainController {
      */
     @GetMapping("/guest/country")
     public String countryProductsListPage(@RequestParam("country_id") int countryId, Model model) {
+        CountryDto countryDto = countryService.findCountryByCountryId(countryId);
         model.addAttribute("user", userService.getUserData()); // 사용자 정보 담기
-        model.addAttribute("country", countryService.findCountryByCountryId(countryId)); // 나라 정보 담기
+        model.addAttribute("country", countryDto); // 나라 정보 담기
         model.addAttribute("products", travelProductService.findAllProductsByCountryId(countryId)); // 여행 상품 리스트 담기
+        model.addAttribute("news", countryService.crawlNaverNewsHeadlines(countryDto.getCountry())); // 여행 상품 리스트 담기
         return "main/country_products_list";
     }
 

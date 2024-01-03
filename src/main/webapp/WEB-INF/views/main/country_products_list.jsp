@@ -164,6 +164,21 @@
         color: blue;
         font-weight: normal;
     }
+
+    .news-title {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .news-link {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .news-link:hover {
+        text-decoration: underline;
+    }
 </style>
 <body>
 <div class="content">
@@ -213,6 +228,13 @@
                 <br><br>
             </c:forEach>
         </div>
+
+        <c:forEach var="newsDto" items="${news}">
+            <a href="${newsDto.url}" class="news-link">
+                <p class="news-title">${newsDto.title}</p>
+            </a>
+        </c:forEach>
+
     </div>
 </div>
 <script>

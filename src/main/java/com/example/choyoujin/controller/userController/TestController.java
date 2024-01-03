@@ -1,5 +1,7 @@
 package com.example.choyoujin.controller.userController;
 
+import com.example.choyoujin.service.CountryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -16,7 +18,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class TestController {
 
+    @Autowired
+    private CountryService countryService;
+
     String apiKey = "AIzaSyCBjBB-HmcBRGNjJjXd3UUndRnsaoyk0gg"; // Google Maps API Key
+
+    @GetMapping("/guest/news")
+    public void crawlingTest() {
+        countryService.crawlNaverNewsHeadlines("인도네시아");
+    }
 
     /** 구글맵 API 테스트 */
     @GetMapping("/google/maps/test")
